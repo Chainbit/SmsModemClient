@@ -68,7 +68,8 @@ namespace SmsModemClient
                 {
                     //обработка выбора СОМ-порта
                     var portName = senderGrid.Rows[e.RowIndex].Cells["ComPortName"].Value.ToString();
-                    MessageBox.Show(string.Format("Выбран порт {0}", portName));
+                    //MessageBox.Show(string.Format("Выбран порт {0}", portName));
+                    (new CommForm(portName)).Show();
 
                 }
                 catch (NullReferenceException)
