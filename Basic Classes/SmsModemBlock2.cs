@@ -19,7 +19,7 @@ namespace SmsModemClient
         public string ICCID { get; set; }
         //public string TelNumber { get; set; }
         public IProtocol protocol;
-
+        public GsmPhone p;
         /// <summary>
         /// Создает новый объект класса <see cref="SmsModemBlock2"/>
         /// </summary>
@@ -29,6 +29,7 @@ namespace SmsModemClient
         public SmsModemBlock2(string portName, int baudRate, int timeout = 500) : base(portName, baudRate, timeout)
         {
             protocol = this;
+            p = this;
         }
 
         /// <summary>

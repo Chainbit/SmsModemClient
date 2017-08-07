@@ -30,11 +30,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CommForm));
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.commandsTab = new System.Windows.Forms.TabPage();
-            this.getResponseButton = new System.Windows.Forms.Button();
-            this.response = new System.Windows.Forms.TextBox();
-            this.sendButton = new System.Windows.Forms.Button();
-            this.request = new System.Windows.Forms.TextBox();
             this.SMSListTab = new System.Windows.Forms.TabPage();
             this.deleteAllButton = new System.Windows.Forms.Button();
             this.deleteMessageButton = new System.Windows.Forms.Button();
@@ -49,10 +44,15 @@
             this.timeStamp = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.text = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.getSMSListButton = new System.Windows.Forms.Button();
+            this.commandsTab = new System.Windows.Forms.TabPage();
+            this.getResponseButton = new System.Windows.Forms.Button();
+            this.response = new System.Windows.Forms.TextBox();
+            this.sendButton = new System.Windows.Forms.Button();
+            this.request = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
-            this.commandsTab.SuspendLayout();
             this.SMSListTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SMSList)).BeginInit();
+            this.commandsTab.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -65,62 +65,6 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(636, 386);
             this.tabControl1.TabIndex = 11;
-            // 
-            // commandsTab
-            // 
-            this.commandsTab.Controls.Add(this.getResponseButton);
-            this.commandsTab.Controls.Add(this.response);
-            this.commandsTab.Controls.Add(this.sendButton);
-            this.commandsTab.Controls.Add(this.request);
-            this.commandsTab.Location = new System.Drawing.Point(4, 22);
-            this.commandsTab.Name = "commandsTab";
-            this.commandsTab.Padding = new System.Windows.Forms.Padding(3);
-            this.commandsTab.Size = new System.Drawing.Size(628, 360);
-            this.commandsTab.TabIndex = 0;
-            this.commandsTab.Text = "Команды";
-            this.commandsTab.UseVisualStyleBackColor = true;
-            // 
-            // getResponseButton
-            // 
-            this.getResponseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.getResponseButton.Location = new System.Drawing.Point(508, 6);
-            this.getResponseButton.Name = "getResponseButton";
-            this.getResponseButton.Size = new System.Drawing.Size(112, 33);
-            this.getResponseButton.TabIndex = 8;
-            this.getResponseButton.Text = "Прочитать вручную";
-            this.getResponseButton.UseVisualStyleBackColor = true;
-            // 
-            // response
-            // 
-            this.response.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.response.Location = new System.Drawing.Point(6, 48);
-            this.response.Multiline = true;
-            this.response.Name = "response";
-            this.response.ReadOnly = true;
-            this.response.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.response.Size = new System.Drawing.Size(616, 306);
-            this.response.TabIndex = 7;
-            // 
-            // sendButton
-            // 
-            this.sendButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.sendButton.Location = new System.Drawing.Point(431, 6);
-            this.sendButton.Name = "sendButton";
-            this.sendButton.Size = new System.Drawing.Size(71, 33);
-            this.sendButton.TabIndex = 6;
-            this.sendButton.Text = "Отправить";
-            this.sendButton.UseVisualStyleBackColor = true;
-            // 
-            // request
-            // 
-            this.request.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.request.Location = new System.Drawing.Point(8, 13);
-            this.request.Name = "request";
-            this.request.Size = new System.Drawing.Size(417, 20);
-            this.request.TabIndex = 5;
             // 
             // SMSListTab
             // 
@@ -229,6 +173,7 @@
             this.SMSList.RowHeadersVisible = false;
             this.SMSList.Size = new System.Drawing.Size(175, 317);
             this.SMSList.TabIndex = 1;
+            this.SMSList.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.SMSList_CellContentClick);
             // 
             // index
             // 
@@ -268,6 +213,63 @@
             this.getSMSListButton.TabIndex = 0;
             this.getSMSListButton.Text = "Получить список СМС";
             this.getSMSListButton.UseVisualStyleBackColor = true;
+            this.getSMSListButton.Click += new System.EventHandler(this.getSMSListButton_Click);
+            // 
+            // commandsTab
+            // 
+            this.commandsTab.Controls.Add(this.getResponseButton);
+            this.commandsTab.Controls.Add(this.response);
+            this.commandsTab.Controls.Add(this.sendButton);
+            this.commandsTab.Controls.Add(this.request);
+            this.commandsTab.Location = new System.Drawing.Point(4, 22);
+            this.commandsTab.Name = "commandsTab";
+            this.commandsTab.Padding = new System.Windows.Forms.Padding(3);
+            this.commandsTab.Size = new System.Drawing.Size(628, 360);
+            this.commandsTab.TabIndex = 0;
+            this.commandsTab.Text = "Команды";
+            this.commandsTab.UseVisualStyleBackColor = true;
+            // 
+            // getResponseButton
+            // 
+            this.getResponseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.getResponseButton.Location = new System.Drawing.Point(508, 6);
+            this.getResponseButton.Name = "getResponseButton";
+            this.getResponseButton.Size = new System.Drawing.Size(112, 33);
+            this.getResponseButton.TabIndex = 8;
+            this.getResponseButton.Text = "Прочитать вручную";
+            this.getResponseButton.UseVisualStyleBackColor = true;
+            // 
+            // response
+            // 
+            this.response.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.response.Location = new System.Drawing.Point(6, 48);
+            this.response.Multiline = true;
+            this.response.Name = "response";
+            this.response.ReadOnly = true;
+            this.response.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.response.Size = new System.Drawing.Size(616, 306);
+            this.response.TabIndex = 7;
+            // 
+            // sendButton
+            // 
+            this.sendButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.sendButton.Location = new System.Drawing.Point(431, 6);
+            this.sendButton.Name = "sendButton";
+            this.sendButton.Size = new System.Drawing.Size(71, 33);
+            this.sendButton.TabIndex = 6;
+            this.sendButton.Text = "Отправить";
+            this.sendButton.UseVisualStyleBackColor = true;
+            // 
+            // request
+            // 
+            this.request.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.request.Location = new System.Drawing.Point(8, 13);
+            this.request.Name = "request";
+            this.request.Size = new System.Drawing.Size(417, 20);
+            this.request.TabIndex = 5;
             // 
             // CommForm
             // 
@@ -278,12 +280,13 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "CommForm";
             this.Text = "CommForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CommForm_FormClosing);
             this.tabControl1.ResumeLayout(false);
-            this.commandsTab.ResumeLayout(false);
-            this.commandsTab.PerformLayout();
             this.SMSListTab.ResumeLayout(false);
             this.SMSListTab.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SMSList)).EndInit();
+            this.commandsTab.ResumeLayout(false);
+            this.commandsTab.PerformLayout();
             this.ResumeLayout(false);
 
         }
