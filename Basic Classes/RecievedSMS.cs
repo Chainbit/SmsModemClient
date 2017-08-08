@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GsmComm.PduConverter;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -47,6 +48,33 @@ namespace SmsModemClient
             {
                 Date = tempdate;
             }
+
+            Message = message;            
+        }
+        /// <summary>
+        /// Конструктор класса полученного сообщения
+        /// </summary>
+        /// <param name="index">Порядковый номер смс</param>
+        /// <param name="status">Статус (“REC UNREAD” или “REC READ”)</param>
+        /// <param name="sender">отправитель</param>
+        /// <param name="SCTS">Service Center Time Stamp</param>
+        /// <param name="message">Текст сообщения</param>
+        public RecievedSMS(int index, string status, string sender, SmsTimestamp SCTS, string message)
+        {
+            Index = index;
+            Sender = sender;
+
+            if (status.ToLower().Contains("unread"))
+            {
+                Status = SMSStatus.Unread;
+            }
+            else
+            {
+                Status = SMSStatus.Read;
+            }
+
+            //парсим дату
+            Date = SCTS.ToDateTime();
 
             Message = message;            
         }

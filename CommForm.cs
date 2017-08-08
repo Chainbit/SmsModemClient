@@ -53,25 +53,8 @@ namespace SmsModemClient
                 SmsDeliverPdu data = new SmsDeliverPdu();
 
                 SmsPdu smsrec = message.Data;
-                
-
             }
         }
-
-        //private void ShowMessage(SmsPdu pdu)
-        //{// Received message
-        //    SmsDeliverPdu data = (SmsDeliverPdu)pdu;
-        //    string actualtext;
-        //    actualtext = data.UserDataText;
-        //    SetSomeText(actualtext);
-
-        //    return;
-        //}
-
-        //private void SetSomeText(string text)
-        //{
-        //    SMStext.Text = text;
-        //}
 
         private void getSMSListButton_Click(object sender, EventArgs e)
         {
@@ -90,93 +73,57 @@ namespace SmsModemClient
             var temp = getSMSListButton.Text;
             getSMSListButton.Text = "Зарузка...";
 
-            //ждем входящие
-            //var inbox = await LoadSmsInbox();
             LoadSmsInbox();
-            // заполняем таблицу
-            //FillSMSTable(inbox);
 
             getSMSListButton.Text = temp;
             getSMSListButton.Enabled = true;
         }
 
+        /// <summary>
+        /// Загружает список входящих сообщений
+        /// </summary>
         private void LoadSmsInbox()
         {
 
             DecodedShortMessage[] messages = Comm.ReadMessages(PhoneMessageStatus.All, PhoneStorageType.Sim);
             var msgs = Comm.ReadRawMessages(PhoneMessageStatus.All, PhoneStorageType.Sim);
 
-            //не нужно пока
-            foreach (ShortMessageFromPhone item in msgs)
-            {
-                SmsDeliverPdu pdu = new SmsDeliverPdu(item.Data,true,-1);
-                //byte[] ucs = item.Data
-                string r = PduParts.DecodeText(pdu.UserData, pdu.DataCodingScheme);
-                //MessageBox.Show(pdu.UserDataText);
-            }
             // тут начинается пиздец
             IList<SmsPdu> longMsg = new List<SmsPdu>();
-            SmsDeliverPdu prevMsg = null;
+
             foreach (DecodedShortMessage message in messages)
             {
-                SmsDeliverPdu SMSPDU;
-                SMSPDU = (SmsDeliverPdu)message.Data;
-                bool isMultiPart = SmartMessageDecoder.IsPartOfConcatMessage(SMSPDU);
-                if (SMSPDU.UserDataHeaderPresent)
-                {
-                    InformationElement[] info = SmartMessageDecoder.DecodeUserDataHeader(SMSPDU.GetUserDataHeader());
-                    int curr = ((ConcatMessageElement8)info[0]).CurrentNumber;
-                    int tot = ((ConcatMessageElement8)info[0]).TotalMessages;
-                    if (curr<tot)
-                    {
-                        longMsg.Add(SMSPDU);
-                    }
-                    else
-                    {
-                        longMsg.Add(SMSPDU);
-                        var msg = SmartMessageDecoder.CombineConcatMessage(longMsg);
-                        var txt = SmartMessageDecoder.CombineConcatMessageText(longMsg);
-                        var str = BitConverter.ToString(msg);
-                        str = str.Replace("-", "");
-                        SmsDeliverPdu big = new SmsDeliverPdu(str, true, -1);
-                    } 
-                }
-                #region govno
-                //if (isMultiPart)
-                //{
-                //    if (prevMsg != null)
-                //    {
-                //        if (SmartMessageDecoder.ArePartOfSameMessage(SMSPDU, prevMsg))
-                //        {
-                //            longMsg.Add(prevMsg);
-                //            prevMsg = SMSPDU;
-                //        }
-                //        else
-                //        {
-                //            longMsg.Add(prevMsg);
-                //            var txt = SmartMessageDecoder.CombineConcatMessageText(longMsg);
-                //            prevMsg = SMSPDU;
-                //            longMsg.Clear();
-                //        }
-                //    }
-                //    else
-                //    {
-                //        prevMsg = SMSPDU;
-                //    }
-                //}
-                //if (longMsg.Count>0)
-                //{
-                //    longMsg.Add(prevMsg);
-                //    var txt = SmartMessageDecoder.CombineConcatMessageText(longMsg);
-                //    longMsg.Clear();
-                //}
-                #endregion
-
                 i = message.Index;
-                DisplayMessage(message.Data);
+                SmsDeliverPdu SMSPDU = (SmsDeliverPdu)message.Data;
+                
+                bool isMultiPart = SmartMessageDecoder.IsPartOfConcatMessage(SMSPDU);
+
+                // если у сообщения есть датахедер, то скорее всего оно длинное
+                if (SMSPDU.UserDataHeaderPresent && isMultiPart)
+                {
+                    longMsg.Add(SMSPDU);
+                    if (SmartMessageDecoder.AreAllConcatPartsPresent(longMsg)) // is Complete
+                    {
+                        var txt = SmartMessageDecoder.CombineConcatMessageText(longMsg);
+                        // создаем сообщение
+                        RecievedSMS longMessage = new RecievedSMS(i, "REC_READ", SMSPDU.OriginatingAddress, SMSPDU.SCTimestamp, txt);
+                        // Показываем
+                        DisplayMessage(longMessage);
+                        // очищаем за собой
+                        longMsg.Clear();
+                    }
+                }
+                else
+                {
+                    DisplayMessage(message.Data);
+                }
             }
         }
 
+        /// <summary>
+        /// Отображает сообщение
+        /// </summary>
+        /// <param name="pdu">Сообщение</param>
         private void DisplayMessage(SmsPdu pdu)
         {
             if (pdu is SmsDeliverPdu)
@@ -186,10 +133,27 @@ namespace SmsModemClient
                 var msg = data.UserDataText;
                 var date = string.Format("{0:dd/MM/yyyy}", data.SCTimestamp.ToDateTime());
                 var time = string.Format("{0:HH:mm:ss}", data.SCTimestamp.ToDateTime());
+                var timestamp = data.SCTimestamp.ToDateTime();
 
                 //read message in datagrid
-                SMSList.Rows.Add(i, phoneNumber, date +" "+ time, msg);
+                SMSList.Rows.Add(i, phoneNumber, timestamp, msg);
             }
+        }
+
+        /// <summary>
+        /// Отображает сообщение
+        /// </summary>
+        /// <param name="LongSMS">Большое сообщение</param>
+        private void DisplayMessage(RecievedSMS LongSMS)
+        {
+            var phoneNumber = LongSMS.Sender;
+            var msg = LongSMS.Message;
+            var date = string.Format("{0:dd/MM/yyyy}", LongSMS.Date);
+            var time = string.Format("{0:HH:mm:ss}", LongSMS.Date);
+            var timestamp = LongSMS.Date.ToString();
+
+            //read message in datagrid
+            SMSList.Rows.Add(i, phoneNumber, timestamp, msg);
         }
 
         //Выбор СМСки

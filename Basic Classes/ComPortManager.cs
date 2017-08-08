@@ -30,7 +30,6 @@ namespace SmsModemClient
         public void InitializeManager()
         {
             GetModemPorts();
-            GetModemOperators();
         }
 
         /// <summary>
@@ -94,41 +93,19 @@ namespace SmsModemClient
         }
 
         /// <summary>
-        /// Получает значения ОпСоСа на блоке
-        /// </summary>
-        public void GetModemOperators()
-        {
-            foreach(var block in activeComs)
-            {
-                using (new CommStream(block))
-                {
-                    OperatorInfo info = block.GetCurrentOperator();
-                    if (info != null)
-                    {
-                        block.Operator = info.TheOperator;
-                    }
-                }
-            }
-        }
-
-
-        /// <summary>
         /// Получить значение оператора для блока
         /// <para>Необходимо выполнять внутри блока <see langword="using " cref="CommStream"/></para>
         /// </summary>
         /// <param name="block"></param>
         public void GetModemOperator(SmsModemBlock2 block)
-        {            
-            //block.protocol.ExecCommand("AT+COPS=3,0");
-            block.protocol.ExecAndReceiveMultiple("AT+COPS=3,0");
-
-            var info = block.GetCurrentOperator();
-            if (info != null)
-            {
-                block.Operator = info.TheOperator;
-            }
+        {
+            block.GetOperator();
         }
 
+        /// <summary>
+        /// Получить номер сим карты для блока
+        /// </summary>
+        /// <param name="block"></param>
         public void GetCurrentIMSI(SmsModemBlock2 block)
         {
             block.GetICCID();

@@ -28,12 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.loadComsButton = new System.Windows.Forms.Button();
             this.ComPortsDataGrid = new System.Windows.Forms.DataGridView();
             this.number = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ComPortName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SimID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TelNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SIMoperator = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.isOpen = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Select = new System.Windows.Forms.DataGridViewButtonColumn();
@@ -66,6 +68,7 @@
             this.number,
             this.ComPortName,
             this.SimID,
+            this.TelNumber,
             this.SIMoperator,
             this.isOpen,
             this.Select});
@@ -104,6 +107,16 @@
             this.SimID.HeaderText = "SIM ID";
             this.SimID.Name = "SimID";
             this.SimID.ReadOnly = true;
+            // 
+            // TelNumber
+            // 
+            this.TelNumber.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridViewCellStyle1.NullValue = "Загрузка...";
+            this.TelNumber.DefaultCellStyle = dataGridViewCellStyle1;
+            this.TelNumber.HeaderText = "TelNumber";
+            this.TelNumber.Name = "TelNumber";
+            this.TelNumber.ReadOnly = true;
+            this.TelNumber.Width = 84;
             // 
             // SIMoperator
             // 
@@ -156,6 +169,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn number;
         private System.Windows.Forms.DataGridViewTextBoxColumn ComPortName;
         private System.Windows.Forms.DataGridViewTextBoxColumn SimID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TelNumber;
         private System.Windows.Forms.DataGridViewTextBoxColumn SIMoperator;
         private System.Windows.Forms.DataGridViewTextBoxColumn isOpen;
         private System.Windows.Forms.DataGridViewButtonColumn Select;
