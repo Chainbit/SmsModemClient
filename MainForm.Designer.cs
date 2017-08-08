@@ -39,6 +39,7 @@
             this.SIMoperator = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.isOpen = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Select = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.ToggleAllPortsButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.ComPortsDataGrid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -146,11 +147,24 @@
             this.Select.UseColumnTextForButtonValue = true;
             this.Select.Width = 43;
             // 
+            // ToggleAllPortsButton
+            // 
+            this.ToggleAllPortsButton.Enabled = false;
+            this.ToggleAllPortsButton.Location = new System.Drawing.Point(512, 359);
+            this.ToggleAllPortsButton.Name = "ToggleAllPortsButton";
+            this.ToggleAllPortsButton.Size = new System.Drawing.Size(91, 30);
+            this.ToggleAllPortsButton.TabIndex = 4;
+            this.ToggleAllPortsButton.Text = "Открыть все";
+            this.ToggleAllPortsButton.UseVisualStyleBackColor = true;
+            this.ToggleAllPortsButton.Visible = false;
+            this.ToggleAllPortsButton.Click += new System.EventHandler(this.ToggleAllPortsButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(603, 390);
+            this.Controls.Add(this.ToggleAllPortsButton);
             this.Controls.Add(this.ComPortsDataGrid);
             this.Controls.Add(this.loadComsButton);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -173,6 +187,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn SIMoperator;
         private System.Windows.Forms.DataGridViewTextBoxColumn isOpen;
         private System.Windows.Forms.DataGridViewButtonColumn Select;
+        private System.Windows.Forms.Button ToggleAllPortsButton;
     }
 }
 

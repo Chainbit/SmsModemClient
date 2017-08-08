@@ -84,12 +84,24 @@ namespace SmsModemClient
                 if (comm.IsConnected())
                 {
                     GetModemOperator(comm);
-                    GetCurrentIMSI(comm);
+                    GetCurrentIMSI(comm);                    
                     activeComsQueue.Enqueue(comm);
                 }
             }
+            
+        }
 
-            Thread.CurrentThread.Abort();
+        private void GetModemTel(object com)
+        {
+            SmsModemBlock2 comm = (SmsModemBlock2)com;
+
+            using (new CommStream(comm))
+            {
+                if (comm.IsConnected())
+                {
+                    RequestTelNumber(comm);
+                }
+            }
         }
 
         /// <summary>
@@ -109,6 +121,25 @@ namespace SmsModemClient
         public void GetCurrentIMSI(SmsModemBlock2 block)
         {
             block.GetICCID();
+        }
+
+        public void RequestTelNumber(SmsModemBlock2 block)
+        {
+            try
+            {
+                switch (block.Operator.ToLower())
+                {
+                    case "beeline":
+                        block.GetNumBeeline();
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         /// <summary>

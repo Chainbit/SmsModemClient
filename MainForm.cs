@@ -22,7 +22,11 @@ namespace SmsModemClient
         private void MainForm_Load(object sender, EventArgs e)
         {
             manager = new ComPortManager(this);
-            FillDatagrid1();
+            foreach (var port in manager.activeComs)
+            {
+                port.NumberRecieved += FillDatagrid;
+            }
+            FillDatagrid();
         }
 
         // кнопка "загрузить ком-порты"
@@ -32,7 +36,7 @@ namespace SmsModemClient
             //Ждкм выполнения команды
             await manager.GetModemPortsAsync();
 
-            FillDatagrid1();
+            FillDatagrid();
 
             (sender as Button).Enabled = true;
         }
@@ -40,7 +44,7 @@ namespace SmsModemClient
         /// <summary>
         /// Заполнение датагрида
         /// </summary>
-        private void FillDatagrid1()
+        private void FillDatagrid()
         {
             //очищаем все
             ComPortsDataGrid.Rows.Clear();
@@ -96,6 +100,39 @@ namespace SmsModemClient
             else
             {
                 ComPortsDataGrid.Rows[i].Cells["isOpen"].Style.BackColor = Color.Green;
+            }
+        }
+
+        private bool isAllOpen = false;
+        private void ToggleAllPortsButton_Click(object sender, EventArgs e)
+        {
+            ToggleAllPorts();
+        }
+        
+
+        public void ToggleAllPorts()
+        {
+            if (!isAllOpen)
+            {
+                foreach (var port in manager.activeComs)
+                {
+                    if (!port.IsOpen())
+                        port.Open();
+                }
+                isAllOpen = true;
+                FillDatagrid();
+                ToggleAllPortsButton.Text = "Закрыть все";
+            }
+            else
+            {
+                foreach (var port in manager.activeComs)
+                {
+                    if (port.IsOpen())
+                        port.Close();
+                }
+                isAllOpen = false;
+                FillDatagrid();
+                ToggleAllPortsButton.Text = "Открыть все";
             }
         }
     }

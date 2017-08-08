@@ -51,6 +51,7 @@ namespace SmsModemClient
 
             Message = message;            
         }
+
         /// <summary>
         /// Конструктор класса полученного сообщения
         /// </summary>

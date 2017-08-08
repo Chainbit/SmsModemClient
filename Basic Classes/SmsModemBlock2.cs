@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using GsmComm.PduConverter.SmartMessaging;
+using System.Threading;
 
 namespace SmsModemClient
 {
@@ -22,6 +23,9 @@ namespace SmsModemClient
 
         public IProtocol protocol;
         public GsmPhone p;
+        private GsmCommMain comm;
+
+        public event Action NumberRecieved;
 
         /// <summary>
         /// Создает новый объект класса <see cref="SmsModemBlock2"/>
@@ -33,8 +37,8 @@ namespace SmsModemClient
         {
             protocol = this;
             p = this;
-
-            MessageReceived += new MessageReceivedEventHandler(comm_MessageReceived);
+            comm = new GsmCommMain(PortName);
+            
         }
 
         /// <summary>
@@ -51,6 +55,9 @@ namespace SmsModemClient
             }
         }
 
+        /// <summary>
+        /// Получает оператора
+        /// </summary>
         public void GetOperator()
         {
             ((IProtocol)this).ExecAndReceiveMultiple("AT+COPS=3,0");
@@ -59,27 +66,73 @@ namespace SmsModemClient
             if (info != null)
             {
                 this.Operator = info.TheOperator;
+                //Provider op = (Provider)Enum.Parse(typeof(Provider), Operator);
             }
         }
 
-        public void GetNumBeeline()
+        /// <summary>
+        /// Запрашивет номер у Билайна
+        /// </summary>
+        public async void GetNumBeeline()
         {
-            ((IProtocol)this).ExecAndReceiveMultiple("ATD*110*10#");
-
-
+            await WaitSMS();
+            Thread.CurrentThread.Abort();
         }
 
-        private void comm_MessageReceived(object sender, MessageReceivedEventArgs e)
+        /// <summary>
+        /// Находит сообщение от оператора
+        /// </summary>
+        /// <param name="messagelist">список сообщений</param>
+        private bool HasOperatorSms()
         {
-            var mesagelist = ListMessages(PhoneMessageStatus.ReceivedUnread);
-
-            foreach (ShortMessageFromPhone message in mesagelist)
+            var messagelist = ListMessages(PhoneMessageStatus.ReceivedUnread);
+            foreach (ShortMessageFromPhone message in messagelist)
             {
-                
-            }
-        }
-       
+                var pdu = new SmsDeliverPdu(message.Data, true, -1);
+                var origin = pdu.OriginatingAddress;
+                var txt = pdu.UserDataText;
 
+                bool isNumber = txt.ToLower().Contains("ваш номер");
+                bool isOperator = origin.ToLower().Contains(Operator.ToLower());
+                if (isOperator && isNumber)
+                {
+                    var tel = txt.Substring(txt.IndexOf('9'));
+                    tel = tel.Replace(".", "");
+                    TelNumber = "+7" + tel;
+                    NumberRecieved();
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private Task WaitSMS()
+        {
+            Task t = new Task(() =>
+            {
+                using (new CommStream(this))
+                {
+                    if (!HasOperatorSms())
+                    {
+                        ((IProtocol)this).ExecAndReceiveMultiple("ATD*110*10#");
+                        do
+                        {
+                            Thread.Sleep(5000);
+                        } while (!HasOperatorSms());
+                        return;
+                    }
+                    else
+                    {
+                        return;
+                    }
+                    return;
+                }
+            }
+                );
+            t.Start();
+            return t;
+        }
+        
         private string TrimLineBreaks(string input)
         {
             return input.Trim(new char[]
@@ -88,5 +141,17 @@ namespace SmsModemClient
                 '\n'
             });
         }
+    }
+
+    /// <summary>
+    /// Оператор Сотовой Связи
+    /// </summary>
+    public enum Provider
+    {
+        Unknown,
+        Beeline,
+        MTS,
+        MegaFon,
+        Tele2
     }
 }

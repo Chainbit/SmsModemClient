@@ -73,6 +73,8 @@ namespace SmsModemClient
             var temp = getSMSListButton.Text;
             getSMSListButton.Text = "Зарузка...";
 
+    
+
             LoadSmsInbox();
 
             getSMSListButton.Text = temp;
