@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.loadComsButton = new System.Windows.Forms.Button();
@@ -40,7 +41,22 @@
             this.isOpen = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Select = new System.Windows.Forms.DataGridViewButtonColumn();
             this.ToggleAllPortsButton = new System.Windows.Forms.Button();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.dataGridViewButtonColumn1 = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.button1 = new System.Windows.Forms.Button();
+            this.portNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.iCCIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.telNumberDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.operatorDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.portOpenDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.logLevelDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.baudRateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.timeoutDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.connectionCheckDelayDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.smsModemBlock2BindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.ComPortsDataGrid)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.smsModemBlock2BindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // loadComsButton
@@ -159,11 +175,140 @@
             this.ToggleAllPortsButton.Visible = false;
             this.ToggleAllPortsButton.Click += new System.EventHandler(this.ToggleAllPortsButton_Click);
             // 
+            // dataGridView1
+            // 
+            this.dataGridView1.AllowUserToAddRows = false;
+            this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridView1.AutoGenerateColumns = false;
+            this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCellsExceptHeaders;
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.portNameDataGridViewTextBoxColumn,
+            this.iCCIDDataGridViewTextBoxColumn,
+            this.telNumberDataGridViewTextBoxColumn,
+            this.operatorDataGridViewTextBoxColumn,
+            this.portOpenDataGridViewTextBoxColumn,
+            this.logLevelDataGridViewTextBoxColumn,
+            this.baudRateDataGridViewTextBoxColumn,
+            this.timeoutDataGridViewTextBoxColumn,
+            this.connectionCheckDelayDataGridViewTextBoxColumn,
+            this.dataGridViewButtonColumn1});
+            this.dataGridView1.DataSource = this.smsModemBlock2BindingSource;
+            this.dataGridView1.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.dataGridView1.ImeMode = System.Windows.Forms.ImeMode.Off;
+            this.dataGridView1.Location = new System.Drawing.Point(0, 161);
+            this.dataGridView1.MultiSelect = false;
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.ReadOnly = true;
+            this.dataGridView1.RowHeadersVisible = false;
+            this.dataGridView1.ShowEditingIcon = false;
+            this.dataGridView1.Size = new System.Drawing.Size(603, 192);
+            this.dataGridView1.TabIndex = 5;
+            this.dataGridView1.Visible = false;
+            // 
+            // dataGridViewButtonColumn1
+            // 
+            this.dataGridViewButtonColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.dataGridViewButtonColumn1.FillWeight = 20F;
+            this.dataGridViewButtonColumn1.HeaderText = "Select";
+            this.dataGridViewButtonColumn1.Name = "dataGridViewButtonColumn1";
+            this.dataGridViewButtonColumn1.ReadOnly = true;
+            this.dataGridViewButtonColumn1.Text = "Select";
+            this.dataGridViewButtonColumn1.UseColumnTextForButtonValue = true;
+            this.dataGridViewButtonColumn1.Width = 43;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(412, 363);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 6;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // portNameDataGridViewTextBoxColumn
+            // 
+            this.portNameDataGridViewTextBoxColumn.DataPropertyName = "PortName";
+            this.portNameDataGridViewTextBoxColumn.HeaderText = "PortName";
+            this.portNameDataGridViewTextBoxColumn.Name = "portNameDataGridViewTextBoxColumn";
+            this.portNameDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // iCCIDDataGridViewTextBoxColumn
+            // 
+            this.iCCIDDataGridViewTextBoxColumn.DataPropertyName = "ICCID";
+            this.iCCIDDataGridViewTextBoxColumn.HeaderText = "ICCID";
+            this.iCCIDDataGridViewTextBoxColumn.Name = "iCCIDDataGridViewTextBoxColumn";
+            this.iCCIDDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // telNumberDataGridViewTextBoxColumn
+            // 
+            this.telNumberDataGridViewTextBoxColumn.DataPropertyName = "TelNumber";
+            this.telNumberDataGridViewTextBoxColumn.HeaderText = "TelNumber";
+            this.telNumberDataGridViewTextBoxColumn.Name = "telNumberDataGridViewTextBoxColumn";
+            this.telNumberDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // operatorDataGridViewTextBoxColumn
+            // 
+            this.operatorDataGridViewTextBoxColumn.DataPropertyName = "Operator";
+            this.operatorDataGridViewTextBoxColumn.HeaderText = "Operator";
+            this.operatorDataGridViewTextBoxColumn.Name = "operatorDataGridViewTextBoxColumn";
+            this.operatorDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // portOpenDataGridViewTextBoxColumn
+            // 
+            this.portOpenDataGridViewTextBoxColumn.DataPropertyName = "portOpen";
+            this.portOpenDataGridViewTextBoxColumn.HeaderText = "portOpen";
+            this.portOpenDataGridViewTextBoxColumn.Name = "portOpenDataGridViewTextBoxColumn";
+            this.portOpenDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // logLevelDataGridViewTextBoxColumn
+            // 
+            this.logLevelDataGridViewTextBoxColumn.DataPropertyName = "LogLevel";
+            this.logLevelDataGridViewTextBoxColumn.HeaderText = "LogLevel";
+            this.logLevelDataGridViewTextBoxColumn.Name = "logLevelDataGridViewTextBoxColumn";
+            this.logLevelDataGridViewTextBoxColumn.ReadOnly = true;
+            this.logLevelDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // baudRateDataGridViewTextBoxColumn
+            // 
+            this.baudRateDataGridViewTextBoxColumn.DataPropertyName = "BaudRate";
+            this.baudRateDataGridViewTextBoxColumn.HeaderText = "BaudRate";
+            this.baudRateDataGridViewTextBoxColumn.Name = "baudRateDataGridViewTextBoxColumn";
+            this.baudRateDataGridViewTextBoxColumn.ReadOnly = true;
+            this.baudRateDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // timeoutDataGridViewTextBoxColumn
+            // 
+            this.timeoutDataGridViewTextBoxColumn.DataPropertyName = "Timeout";
+            this.timeoutDataGridViewTextBoxColumn.HeaderText = "Timeout";
+            this.timeoutDataGridViewTextBoxColumn.Name = "timeoutDataGridViewTextBoxColumn";
+            this.timeoutDataGridViewTextBoxColumn.ReadOnly = true;
+            this.timeoutDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // connectionCheckDelayDataGridViewTextBoxColumn
+            // 
+            this.connectionCheckDelayDataGridViewTextBoxColumn.DataPropertyName = "ConnectionCheckDelay";
+            this.connectionCheckDelayDataGridViewTextBoxColumn.HeaderText = "ConnectionCheckDelay";
+            this.connectionCheckDelayDataGridViewTextBoxColumn.Name = "connectionCheckDelayDataGridViewTextBoxColumn";
+            this.connectionCheckDelayDataGridViewTextBoxColumn.ReadOnly = true;
+            this.connectionCheckDelayDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // smsModemBlock2BindingSource
+            // 
+            this.smsModemBlock2BindingSource.DataSource = typeof(SmsModemClient.SmsModemBlock2);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(603, 390);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.ToggleAllPortsButton);
             this.Controls.Add(this.ComPortsDataGrid);
             this.Controls.Add(this.loadComsButton);
@@ -172,6 +317,8 @@
             this.Text = "SmsModemClient";
             this.Load += new System.EventHandler(this.MainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.ComPortsDataGrid)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.smsModemBlock2BindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -188,6 +335,19 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn isOpen;
         private System.Windows.Forms.DataGridViewButtonColumn Select;
         private System.Windows.Forms.Button ToggleAllPortsButton;
+        private System.Windows.Forms.BindingSource smsModemBlock2BindingSource;
+        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn portNameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn iCCIDDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn telNumberDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn operatorDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn portOpenDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn logLevelDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn baudRateDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn timeoutDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn connectionCheckDelayDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewButtonColumn dataGridViewButtonColumn1;
+        private System.Windows.Forms.Button button1;
     }
 }
 

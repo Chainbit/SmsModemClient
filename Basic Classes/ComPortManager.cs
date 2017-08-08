@@ -16,7 +16,7 @@ namespace SmsModemClient
     {
 
         public List<SmsModemBlock2> activeComs = new List<SmsModemBlock2>();
-        private ConcurrentQueue<SmsModemBlock2> activeComsQueue = new ConcurrentQueue<SmsModemBlock2>();
+        public ConcurrentQueue<SmsModemBlock2> activeComsQueue = new ConcurrentQueue<SmsModemBlock2>();
 
         public ComPortManager(MainForm mainForm)
         {
@@ -30,6 +30,7 @@ namespace SmsModemClient
         public void InitializeManager()
         {
             GetModemPorts();
+            GetModemTels();
         }
 
         /// <summary>
@@ -39,7 +40,7 @@ namespace SmsModemClient
         {
             //очищаем старую Queue
             activeComsQueue = new ConcurrentQueue<SmsModemBlock2>();
-            // List тоже
+
             activeComs.Clear();
 
             var ports = SerialPort.GetPortNames();
@@ -91,17 +92,34 @@ namespace SmsModemClient
             
         }
 
+        /// <summary>
+        /// Запрашивает номера телефонов
+        /// </summary>
+        private void GetModemTels()
+        {
+            foreach (SmsModemBlock2 item in activeComs)
+            {
+                try
+                {
+                    GetModemTel(item);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }                
+            }
+        }
+
         private void GetModemTel(object com)
         {
             SmsModemBlock2 comm = (SmsModemBlock2)com;
 
-            using (new CommStream(comm))
-            {
+
                 if (comm.IsConnected())
                 {
                     RequestTelNumber(comm);
                 }
-            }
+            
         }
 
         /// <summary>

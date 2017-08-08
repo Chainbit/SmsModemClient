@@ -21,6 +21,10 @@ namespace SmsModemClient
 
         int i = 1;
 
+        private delegate void ShowShortMessageDelegate(SmsPdu msg);
+        private delegate void ShowLongMessageDelegate(RecievedSMS msg);
+
+
         /// <summary>
         /// Создает новую форму
         /// </summary>
@@ -65,7 +69,7 @@ namespace SmsModemClient
         /// <summary>
         /// Заполняет таблицу входящими смс
         /// </summary>
-        private void GetSMSList()
+        private async void GetSMSList()
         {
             SMSList.Rows.Clear();
             // отключаем кнопку
@@ -73,12 +77,16 @@ namespace SmsModemClient
             var temp = getSMSListButton.Text;
             getSMSListButton.Text = "Зарузка...";
 
-    
-
-            LoadSmsInbox();
+            //LoadSmsInbox();
+            await LoadInbox();
 
             getSMSListButton.Text = temp;
             getSMSListButton.Enabled = true;
+        }
+
+        public Task LoadInbox()
+        {
+            return Task.Factory.StartNew(LoadSmsInbox);
         }
 
         /// <summary>
@@ -103,6 +111,7 @@ namespace SmsModemClient
                 // если у сообщения есть датахедер, то скорее всего оно длинное
                 if (SMSPDU.UserDataHeaderPresent && isMultiPart)
                 {
+                    if (longMsg.Count==0 || SmartMessageDecoder.ArePartOfSameMessage(longMsg.Last(), SMSPDU))
                     longMsg.Add(SMSPDU);
                     if (SmartMessageDecoder.AreAllConcatPartsPresent(longMsg)) // is Complete
                     {
@@ -122,12 +131,18 @@ namespace SmsModemClient
             }
         }
 
+
         /// <summary>
         /// Отображает сообщение
         /// </summary>
         /// <param name="pdu">Сообщение</param>
         private void DisplayMessage(SmsPdu pdu)
         {
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke(new ShowShortMessageDelegate(DisplayMessage), new object[] { pdu });
+                return;
+            }
             if (pdu is SmsDeliverPdu)
             {
                 SmsDeliverPdu data = (SmsDeliverPdu)pdu;
@@ -148,6 +163,11 @@ namespace SmsModemClient
         /// <param name="LongSMS">Большое сообщение</param>
         private void DisplayMessage(RecievedSMS LongSMS)
         {
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke(new ShowLongMessageDelegate(DisplayMessage), new object[] { LongSMS });
+                return;
+            }
             var phoneNumber = LongSMS.Sender;
             var msg = LongSMS.Message;
             var date = string.Format("{0:dd/MM/yyyy}", LongSMS.Date);

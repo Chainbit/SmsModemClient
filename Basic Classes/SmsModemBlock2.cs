@@ -20,6 +20,7 @@ namespace SmsModemClient
         public string Operator { get; set; }
         public string ICCID { get; set; }
         public string TelNumber { get; set; }
+        public string portOpen { get; set; }
 
         public IProtocol protocol;
         public GsmPhone p;
@@ -76,7 +77,6 @@ namespace SmsModemClient
         public async void GetNumBeeline()
         {
             await WaitSMS();
-            Thread.CurrentThread.Abort();
         }
 
         /// <summary>
@@ -110,8 +110,7 @@ namespace SmsModemClient
         {
             Task t = new Task(() =>
             {
-                using (new CommStream(this))
-                {
+
                     if (!HasOperatorSms())
                     {
                         ((IProtocol)this).ExecAndReceiveMultiple("ATD*110*10#");
@@ -126,7 +125,7 @@ namespace SmsModemClient
                         return;
                     }
                     return;
-                }
+                
             }
                 );
             t.Start();

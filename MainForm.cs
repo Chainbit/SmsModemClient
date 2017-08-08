@@ -59,6 +59,22 @@ namespace SmsModemClient
                 ComPortsDataGrid.Rows[i].Cells["isOpen"].Value = manager.activeComs[i].IsOpen();
                 CheckIfOpen(i);
             }
+            int j = 0;
+            foreach (var item in manager.activeComsQueue)
+            {
+                //ComPortsDataGrid.Rows.Add();
+                //ComPortsDataGrid.Rows[i].Cells["number"].Value = i;
+                //ComPortsDataGrid.Rows[i].Cells["ComPortName"].Value = item.PortName;
+                //ComPortsDataGrid.Rows[i].Cells["SimId"].Value = item.ICCID;
+                //ComPortsDataGrid.Rows[i].Cells["SIMoperator"].Value = item.Operator;
+                //ComPortsDataGrid.Rows[i].Cells["isOpen"].Value = item.IsOpen();
+                //CheckIfOpen(i);
+
+                item.portOpen = item.IsOpen().ToString();
+                smsModemBlock2BindingSource.Add(item);
+                j++;
+            }
+            
         }
 
         private void ComPortsDataGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -103,37 +119,69 @@ namespace SmsModemClient
             }
         }
 
-        private bool isAllOpen = false;
-        private void ToggleAllPortsButton_Click(object sender, EventArgs e)
+        /// <summary>
+        /// метод для перекраски ячеек
+        /// </summary>
+        /// <param name="i"> номер ячейки</param>
+        private void CheckIfOpen(SmsModemBlock2 port)
         {
-            ToggleAllPorts();
-        }
-        
-
-        public void ToggleAllPorts()
-        {
-            if (!isAllOpen)
+            int i=0;
+            foreach (DataGridViewRow row in ComPortsDataGrid.Rows)
             {
-                foreach (var port in manager.activeComs)
+                if (row.Cells["ComPortName"].Value.ToString().Contains(port.PortName))
                 {
-                    if (!port.IsOpen())
-                        port.Open();
+                    i = row.Index;
                 }
-                isAllOpen = true;
-                FillDatagrid();
-                ToggleAllPortsButton.Text = "Закрыть все";
+            }
+
+            ComPortsDataGrid.Rows[i].Cells["isOpen"].Value = port.IsOpen();
+
+            if (port.IsOpen() == false)
+            {
+                ComPortsDataGrid.Rows[i].Cells["isOpen"].Style.BackColor = Color.Red;
             }
             else
             {
-                foreach (var port in manager.activeComs)
-                {
-                    if (port.IsOpen())
-                        port.Close();
-                }
-                isAllOpen = false;
-                FillDatagrid();
-                ToggleAllPortsButton.Text = "Открыть все";
+                ComPortsDataGrid.Rows[i].Cells["isOpen"].Style.BackColor = Color.Green;
             }
         }
+
+        private bool isAllOpen = false;
+        private void ToggleAllPortsButton_Click(object sender, EventArgs e)
+        {
+            //ToggleAllPorts();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            FillDatagrid();
+        }
+
+
+        //public void ToggleAllPorts()
+        //{
+        //    if (!isAllOpen)
+        //    {
+        //        foreach (var port in manager.activeComs)
+        //        {
+        //            if (!port.IsOpen())
+        //                port.Open();
+        //        }
+        //        isAllOpen = true;
+        //        FillDatagrid();
+        //        ToggleAllPortsButton.Text = "Закрыть все";
+        //    }
+        //    else
+        //    {
+        //        foreach (var port in manager.activeComs)
+        //        {
+        //            if (port.IsOpen())
+        //                port.Close();
+        //        }
+        //        isAllOpen = false;
+        //        FillDatagrid();
+        //        ToggleAllPortsButton.Text = "Открыть все";
+        //    }
+        //}
     }
 }
