@@ -18,5 +18,6 @@ namespace SmsModemClient
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
         }
+        public static NotifyIcon ni = new NotifyIcon();
     }
 }

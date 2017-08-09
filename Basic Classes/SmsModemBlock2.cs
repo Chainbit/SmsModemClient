@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using GsmComm.PduConverter.SmartMessaging;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace SmsModemClient
 {
@@ -74,8 +75,8 @@ namespace SmsModemClient
         /// <summary>
         /// Запрашивет номер у Билайна
         /// </summary>
-        public async void GetNumBeeline()
-        {
+        public async Task GetNumBeeline()
+        {            
             await WaitSMS();
         }
 
@@ -85,7 +86,7 @@ namespace SmsModemClient
         /// <param name="messagelist">список сообщений</param>
         private bool HasOperatorSms()
         {
-            var messagelist = ListMessages(PhoneMessageStatus.ReceivedUnread);
+            var messagelist = ListMessages(PhoneMessageStatus.All);
             foreach (ShortMessageFromPhone message in messagelist)
             {
                 var pdu = new SmsDeliverPdu(message.Data, true, -1);
@@ -99,19 +100,26 @@ namespace SmsModemClient
                     var tel = txt.Substring(txt.IndexOf('9'));
                     tel = tel.Replace(".", "");
                     TelNumber = "+7" + tel;
-                    NumberRecieved();
+                    //NumberRecieved();
                     return true;
                 }
             }
             return false;
         }
 
+        /// <summary>
+        /// Задача ждать смс от оператора
+        /// </summary>
+        /// <returns></returns>
         private Task WaitSMS()
         {
             Task t = new Task(() =>
             {
-
-                    if (!HasOperatorSms())
+                //using (new CommStream(this))
+                {
+                    var isCon = IsConnected();
+                    var hasSms = HasOperatorSms();
+                    if (isCon && !hasSms) 
                     {
                         ((IProtocol)this).ExecAndReceiveMultiple("ATD*110*10#");
                         do
@@ -124,8 +132,7 @@ namespace SmsModemClient
                     {
                         return;
                     }
-                    return;
-                
+                }
             }
                 );
             t.Start();

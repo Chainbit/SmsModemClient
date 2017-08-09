@@ -30,11 +30,12 @@ namespace SmsModemClient
         public void InitializeManager()
         {
             GetModemPorts();
+            OpenAllPorts();
             GetModemTels();
         }
 
         /// <summary>
-        /// Получает порты на которых висят модемы
+        /// Получает порты на которых висят модемы (в несколько потоков)
         /// </summary>
         public void GetModemPorts()
         {
@@ -67,6 +68,12 @@ namespace SmsModemClient
 
         public Task GetModemPortsAsync()
         {
+            foreach (var port in activeComs)
+            {
+                Thread tclose = new Thread(port.Close);
+                tclose.Start();
+            }
+
             Task t = new Task(InitializeManager);
             t.Start();
             return t;
@@ -79,7 +86,7 @@ namespace SmsModemClient
         private void GetModemData(object com)
         {
             SmsModemBlock2 comm = (SmsModemBlock2)com;
-
+            //открываем соединение
             using (new CommStream(comm))
             {
                 if (comm.IsConnected())
@@ -99,14 +106,9 @@ namespace SmsModemClient
         {
             foreach (SmsModemBlock2 item in activeComs)
             {
-                try
-                {
-                    GetModemTel(item);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }                
+                Thread thread = new Thread(new ParameterizedThreadStart(RequestTelNumber));
+                thread.Name = item.PortName + "Get TelNumber";
+                thread.Start(item);
             }
         }
 
@@ -114,12 +116,31 @@ namespace SmsModemClient
         {
             SmsModemBlock2 comm = (SmsModemBlock2)com;
 
+            RequestTelNumber(comm);                
+        }
 
-                if (comm.IsConnected())
+        /// <summary>
+        /// Выполняет запрос номера телефона в зависимости от оператора
+        /// </summary>
+        /// <param name="block"></param>
+        public async void RequestTelNumber(object b)
+        {
+            SmsModemBlock2 block = (SmsModemBlock2)b;
+            try
+            {
+                switch (block.Operator.ToLower())
                 {
-                    RequestTelNumber(comm);
+                    case "beeline":
+                        await block.GetNumBeeline();
+                        break;
+                    default:
+                        break;
                 }
-            
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, block.PortName);
+            }
         }
 
         /// <summary>
@@ -141,22 +162,16 @@ namespace SmsModemClient
             block.GetICCID();
         }
 
-        public void RequestTelNumber(SmsModemBlock2 block)
+        private void OpenAllPorts()
         {
-            try
+            foreach (var port in activeComs)
             {
-                switch (block.Operator.ToLower())
+                if (!port.IsOpen())
                 {
-                    case "beeline":
-                        block.GetNumBeeline();
-                        break;
-                    default:
-                        break;
+                    Thread openPort = new Thread(port.Open);
+                    openPort.Name = port.PortName + " Open";
+                    openPort.Start();
                 }
-            }
-            catch (Exception ex)
-            {
-
             }
         }
 

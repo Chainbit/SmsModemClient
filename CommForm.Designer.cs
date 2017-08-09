@@ -33,7 +33,6 @@
             this.SMSListTab = new System.Windows.Forms.TabPage();
             this.deleteAllButton = new System.Windows.Forms.Button();
             this.deleteMessageButton = new System.Windows.Forms.Button();
-            this.DecodeButton = new System.Windows.Forms.Button();
             this.SMStext = new System.Windows.Forms.TextBox();
             this.SMStime = new System.Windows.Forms.TextBox();
             this.SMSindex = new System.Windows.Forms.TextBox();
@@ -70,7 +69,6 @@
             // 
             this.SMSListTab.Controls.Add(this.deleteAllButton);
             this.SMSListTab.Controls.Add(this.deleteMessageButton);
-            this.SMSListTab.Controls.Add(this.DecodeButton);
             this.SMSListTab.Controls.Add(this.SMStext);
             this.SMSListTab.Controls.Add(this.SMStime);
             this.SMSListTab.Controls.Add(this.SMSindex);
@@ -105,16 +103,6 @@
             this.deleteMessageButton.Text = "Удалить";
             this.deleteMessageButton.UseVisualStyleBackColor = true;
             // 
-            // DecodeButton
-            // 
-            this.DecodeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.DecodeButton.Location = new System.Drawing.Point(542, 6);
-            this.DecodeButton.Name = "DecodeButton";
-            this.DecodeButton.Size = new System.Drawing.Size(75, 22);
-            this.DecodeButton.TabIndex = 5;
-            this.DecodeButton.Text = "Decode";
-            this.DecodeButton.UseVisualStyleBackColor = true;
-            // 
             // SMStext
             // 
             this.SMStext.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -132,10 +120,10 @@
             // 
             this.SMStime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.SMStime.Location = new System.Drawing.Point(369, 7);
+            this.SMStime.Location = new System.Drawing.Point(389, 7);
             this.SMStime.Name = "SMStime";
             this.SMStime.ReadOnly = true;
-            this.SMStime.Size = new System.Drawing.Size(167, 20);
+            this.SMStime.Size = new System.Drawing.Size(228, 20);
             this.SMStime.TabIndex = 3;
             // 
             // SMSindex
@@ -151,7 +139,7 @@
             this.SMSsender.Location = new System.Drawing.Point(219, 7);
             this.SMSsender.Name = "SMSsender";
             this.SMSsender.ReadOnly = true;
-            this.SMSsender.Size = new System.Drawing.Size(144, 20);
+            this.SMSsender.Size = new System.Drawing.Size(164, 20);
             this.SMSsender.TabIndex = 2;
             // 
             // SMSList
@@ -302,7 +290,6 @@
         private System.Windows.Forms.TabPage SMSListTab;
         private System.Windows.Forms.Button deleteAllButton;
         private System.Windows.Forms.Button deleteMessageButton;
-        private System.Windows.Forms.Button DecodeButton;
         private System.Windows.Forms.TextBox SMStext;
         private System.Windows.Forms.TextBox SMStime;
         private System.Windows.Forms.TextBox SMSindex;

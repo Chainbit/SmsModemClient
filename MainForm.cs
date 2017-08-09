@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -14,6 +15,8 @@ namespace SmsModemClient
     {
         private ComPortManager manager;
 
+        private System.Windows.Forms.Timer timer;
+
         public MainForm()
         {
             InitializeComponent();
@@ -22,11 +25,15 @@ namespace SmsModemClient
         private void MainForm_Load(object sender, EventArgs e)
         {
             manager = new ComPortManager(this);
-            foreach (var port in manager.activeComs)
-            {
-                port.NumberRecieved += FillDatagrid;
-            }
+            //foreach (var port in manager.activeComs)
+            //{
+            //    port.NumberRecieved += FillDatagrid;
+            //}
             FillDatagrid();
+            // создаем таймер 
+            timer = new System.Windows.Forms.Timer();
+            timer.Interval = (1 * 1000);
+            timer.Tick += Timer_Tick;
         }
 
         // кнопка "загрузить ком-порты"
@@ -55,28 +62,32 @@ namespace SmsModemClient
                 ComPortsDataGrid.Rows[i].Cells["number"].Value = i;
                 ComPortsDataGrid.Rows[i].Cells["ComPortName"].Value = manager.activeComs[i].PortName;
                 ComPortsDataGrid.Rows[i].Cells["SimId"].Value = manager.activeComs[i].ICCID;
+                ComPortsDataGrid.Rows[i].Cells["TelNumber"].Value = manager.activeComs[i].TelNumber;
                 ComPortsDataGrid.Rows[i].Cells["SIMoperator"].Value = manager.activeComs[i].Operator;
                 ComPortsDataGrid.Rows[i].Cells["isOpen"].Value = manager.activeComs[i].IsOpen();
                 CheckIfOpen(i);
             }
             int j = 0;
-            foreach (var item in manager.activeComsQueue)
-            {
-                //ComPortsDataGrid.Rows.Add();
-                //ComPortsDataGrid.Rows[i].Cells["number"].Value = i;
-                //ComPortsDataGrid.Rows[i].Cells["ComPortName"].Value = item.PortName;
-                //ComPortsDataGrid.Rows[i].Cells["SimId"].Value = item.ICCID;
-                //ComPortsDataGrid.Rows[i].Cells["SIMoperator"].Value = item.Operator;
-                //ComPortsDataGrid.Rows[i].Cells["isOpen"].Value = item.IsOpen();
-                //CheckIfOpen(i);
+            //foreach (var item in manager.activeComsQueue)
+            //{
+            //    //ComPortsDataGrid.Rows.Add();
+            //    //ComPortsDataGrid.Rows[i].Cells["number"].Value = i;
+            //    //ComPortsDataGrid.Rows[i].Cells["ComPortName"].Value = item.PortName;
+            //    //ComPortsDataGrid.Rows[i].Cells["SimId"].Value = item.ICCID;
+            //    //ComPortsDataGrid.Rows[i].Cells["SIMoperator"].Value = item.Operator;
+            //    //ComPortsDataGrid.Rows[i].Cells["isOpen"].Value = item.IsOpen();
+            //    //CheckIfOpen(i);
 
-                item.portOpen = item.IsOpen().ToString();
-                smsModemBlock2BindingSource.Add(item);
-                j++;
-            }
+            //    item.portOpen = item.IsOpen().ToString();
+            //    smsModemBlock2BindingSource.Add(item);
+            //    j++;
+            //}
             
         }
 
+        /// <summary>
+        /// Нажатие на кнопку Select
+        /// </summary>
         private void ComPortsDataGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             var senderGrid = (DataGridView)sender;
@@ -91,7 +102,6 @@ namespace SmsModemClient
                     var port = manager.activeComs.Find(com => com.PortName == portName);
                     //MessageBox.Show(string.Format("Выбран порт {0}", portName));
                     (new CommForm(port)).Show();
-
                 }
                 catch (NullReferenceException)
                 {
@@ -149,10 +159,37 @@ namespace SmsModemClient
         private bool isAllOpen = false;
         private void ToggleAllPortsButton_Click(object sender, EventArgs e)
         {
-            //ToggleAllPorts();
+
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private bool isRefreshOn = false;
+
+        /// <summary>
+        /// Меняет значение <see cref="isRefreshOn"/> на противоположное
+        /// </summary>
+        private void ToggleRefresh()
+        {
+            isRefreshOn = !isRefreshOn;
+        }
+
+        private void toggleAutoUpdateBtn_Click(object sender, EventArgs e)
+        {
+            ToggleRefresh();
+
+            switch (isRefreshOn)
+            {
+                case true:
+                    timer.Start();
+                    toggleAutoUpdateBtn.Text = "Автообновление: вкл.";
+                    break;
+                case false:
+                    timer.Stop();
+                    toggleAutoUpdateBtn.Text = "Автообновление: выкл.";
+                    break;
+            }            
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
         {
             FillDatagrid();
         }

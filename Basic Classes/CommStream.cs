@@ -22,7 +22,7 @@ namespace SmsModemClient
         public CommStream(SmsModemBlock c)
         {
             comm = c;
-            comm.Open();
+            if (!comm.IsOpen()) comm.Open();            
         }
         /// <summary>
         /// Инициализатор класса <see cref="CommStream"/>
@@ -31,7 +31,8 @@ namespace SmsModemClient
         public CommStream(SmsModemBlock2 c)
         {
             phone = c;
-            phone.Open();
+            if (!phone.IsOpen()) phone.Open();
+            
         }
 
         public void Dispose()

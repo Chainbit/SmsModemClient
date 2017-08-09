@@ -42,8 +42,6 @@
             this.Select = new System.Windows.Forms.DataGridViewButtonColumn();
             this.ToggleAllPortsButton = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.dataGridViewButtonColumn1 = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.button1 = new System.Windows.Forms.Button();
             this.portNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iCCIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.telNumberDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -53,7 +51,9 @@
             this.baudRateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.timeoutDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.connectionCheckDelayDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewButtonColumn1 = new System.Windows.Forms.DataGridViewButtonColumn();
             this.smsModemBlock2BindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.toggleAutoUpdateBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.ComPortsDataGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.smsModemBlock2BindingSource)).BeginInit();
@@ -210,27 +210,6 @@
             this.dataGridView1.TabIndex = 5;
             this.dataGridView1.Visible = false;
             // 
-            // dataGridViewButtonColumn1
-            // 
-            this.dataGridViewButtonColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.dataGridViewButtonColumn1.FillWeight = 20F;
-            this.dataGridViewButtonColumn1.HeaderText = "Select";
-            this.dataGridViewButtonColumn1.Name = "dataGridViewButtonColumn1";
-            this.dataGridViewButtonColumn1.ReadOnly = true;
-            this.dataGridViewButtonColumn1.Text = "Select";
-            this.dataGridViewButtonColumn1.UseColumnTextForButtonValue = true;
-            this.dataGridViewButtonColumn1.Width = 43;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(412, 363);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 6;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
             // portNameDataGridViewTextBoxColumn
             // 
             this.portNameDataGridViewTextBoxColumn.DataPropertyName = "PortName";
@@ -298,16 +277,37 @@
             this.connectionCheckDelayDataGridViewTextBoxColumn.ReadOnly = true;
             this.connectionCheckDelayDataGridViewTextBoxColumn.Visible = false;
             // 
+            // dataGridViewButtonColumn1
+            // 
+            this.dataGridViewButtonColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.dataGridViewButtonColumn1.FillWeight = 20F;
+            this.dataGridViewButtonColumn1.HeaderText = "Select";
+            this.dataGridViewButtonColumn1.Name = "dataGridViewButtonColumn1";
+            this.dataGridViewButtonColumn1.ReadOnly = true;
+            this.dataGridViewButtonColumn1.Text = "Select";
+            this.dataGridViewButtonColumn1.UseColumnTextForButtonValue = true;
+            this.dataGridViewButtonColumn1.Width = 43;
+            // 
             // smsModemBlock2BindingSource
             // 
             this.smsModemBlock2BindingSource.DataSource = typeof(SmsModemClient.SmsModemBlock2);
+            // 
+            // toggleAutoUpdateBtn
+            // 
+            this.toggleAutoUpdateBtn.Location = new System.Drawing.Point(0, 330);
+            this.toggleAutoUpdateBtn.Name = "toggleAutoUpdateBtn";
+            this.toggleAutoUpdateBtn.Size = new System.Drawing.Size(151, 23);
+            this.toggleAutoUpdateBtn.TabIndex = 6;
+            this.toggleAutoUpdateBtn.Text = "Автообновление: ";
+            this.toggleAutoUpdateBtn.UseVisualStyleBackColor = true;
+            this.toggleAutoUpdateBtn.Click += new System.EventHandler(this.toggleAutoUpdateBtn_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(603, 390);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.toggleAutoUpdateBtn);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.ToggleAllPortsButton);
             this.Controls.Add(this.ComPortsDataGrid);
@@ -347,7 +347,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn timeoutDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn connectionCheckDelayDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewButtonColumn dataGridViewButtonColumn1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button toggleAutoUpdateBtn;
     }
 }
 

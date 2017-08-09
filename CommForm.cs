@@ -16,8 +16,8 @@ namespace SmsModemClient
     public partial class CommForm : Form
     {
 
-        SmsModemBlock2 Phone;
-        SmsModemBlock Comm;
+        SmsModemBlock2 Comm;
+        //SmsModemBlock Comm;
 
         int i = 1;
 
@@ -31,14 +31,14 @@ namespace SmsModemClient
         /// <param name="portname">Имя порта</param>
         public CommForm(SmsModemBlock2 phone)
         {
-            Phone = phone;
-            Comm = new SmsModemBlock(phone.PortName, phone.BaudRate);
+            Comm = phone;
+            //Comm = new SmsModemBlock(phone.PortName, phone.BaudRate);
 
             InitializeComponent();
             this.Text = phone.PortName;
             this.Name = "CommForm" + phone.PortName;
 
-            if (!Comm.IsOpen()) Comm.Open();
+            //if (!Comm.IsOpen()) Comm.Open();
             //Comm.EnableMessageNotifications();
             //Comm.MessageReceived += new MessageReceivedEventHandler(comm_MessageReceived);
         }
@@ -95,8 +95,8 @@ namespace SmsModemClient
         private void LoadSmsInbox()
         {
 
-            DecodedShortMessage[] messages = Comm.ReadMessages(PhoneMessageStatus.All, PhoneStorageType.Sim);
-            var msgs = Comm.ReadRawMessages(PhoneMessageStatus.All, PhoneStorageType.Sim);
+            var messages = Comm.ListMessages(PhoneMessageStatus.All);
+            //var msgs = Comm.ReadRawMessages(PhoneMessageStatus.All, PhoneStorageType.Sim);
 
             // тут начинается пиздец
             IList<SmsPdu> longMsg = new List<SmsPdu>();
@@ -204,7 +204,7 @@ namespace SmsModemClient
         //закрываем за собой порт
         private void CommForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (Comm.IsOpen()) Comm.Close();
+            //if (Comm.IsOpen()) Comm.Close();
         }
     }
 }
