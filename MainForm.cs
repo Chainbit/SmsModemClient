@@ -194,6 +194,11 @@ namespace SmsModemClient
             FillDatagrid();
         }
 
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+              SmsModemBlock2.cts.Cancel();
+        }
+
 
         //public void ToggleAllPorts()
         //{

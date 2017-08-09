@@ -21,11 +21,9 @@ namespace SmsModemClient
         public string Operator { get; set; }
         public string ICCID { get; set; }
         public string TelNumber { get; set; }
-        public string portOpen { get; set; }
 
-        public IProtocol protocol;
-        public GsmPhone p;
-        private GsmCommMain comm;
+        public static CancellationTokenSource cts = new CancellationTokenSource();
+        private CancellationToken ct = cts.Token;
 
         public event Action NumberRecieved;
 
@@ -37,10 +35,6 @@ namespace SmsModemClient
         /// <param name="timeout"></param>
         public SmsModemBlock2(string portName, int baudRate, int timeout = 5000) : base(portName, baudRate, timeout)
         {
-            protocol = this;
-            p = this;
-            comm = new GsmCommMain(PortName);
-            
         }
 
         /// <summary>
@@ -115,25 +109,27 @@ namespace SmsModemClient
         {
             Task t = new Task(() =>
             {
-                //using (new CommStream(this))
+                var isCon = IsConnected();
+                var hasSms = HasOperatorSms();
+                if (isCon && !hasSms)
                 {
-                    var isCon = IsConnected();
-                    var hasSms = HasOperatorSms();
-                    if (isCon && !hasSms) 
+                    int i = 0;
+                    ((IProtocol)this).ExecAndReceiveMultiple("ATD*110*10#");
+                    do
                     {
-                        ((IProtocol)this).ExecAndReceiveMultiple("ATD*110*10#");
-                        do
-                        {
-                            Thread.Sleep(5000);
-                        } while (!HasOperatorSms());
-                        return;
-                    }
-                    else
+                        Thread.Sleep(5000);
+                    } while (!HasOperatorSms() && i < 6);
+                    if (i < 6) 
                     {
-                        return;
+                        TelNumber = "Ошибка!";
                     }
+                    return;
                 }
-            }
+                else
+                {
+                    return;
+                }
+            }, ct
                 );
             t.Start();
             return t;

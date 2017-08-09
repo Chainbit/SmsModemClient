@@ -41,22 +41,15 @@ namespace SmsModemClient
             //if (!Comm.IsOpen()) Comm.Open();
             //Comm.EnableMessageNotifications();
             //Comm.MessageReceived += new MessageReceivedEventHandler(comm_MessageReceived);
-        }
-
-        
+        }        
 
         private void comm_MessageReceived(object sender, MessageReceivedEventArgs e)
         {
-            IMessageIndicationObject obj = e.IndicationObject;
-            MemoryLocation loc = (MemoryLocation)obj;
-            DecodedShortMessage[] messages;
-            messages = Comm.ReadMessages(PhoneMessageStatus.ReceivedUnread, loc.Storage);
+            var messages = Comm.ListMessages(PhoneMessageStatus.ReceivedUnread);
 
-            foreach (DecodedShortMessage message in messages)
+            foreach (ShortMessageFromPhone message in messages)
             {
-                SmsDeliverPdu data = new SmsDeliverPdu();
-
-                SmsPdu smsrec = message.Data;
+                SmsDeliverPdu data = new SmsDeliverPdu(message.Data, true, -1);
             }
         }
 
@@ -101,10 +94,10 @@ namespace SmsModemClient
             // тут начинается пиздец
             IList<SmsPdu> longMsg = new List<SmsPdu>();
 
-            foreach (DecodedShortMessage message in messages)
+            foreach (ShortMessageFromPhone message in messages)
             {
                 i = message.Index;
-                SmsDeliverPdu SMSPDU = (SmsDeliverPdu)message.Data;
+                SmsDeliverPdu SMSPDU = new SmsDeliverPdu(message.Data, true, -1);
                 
                 bool isMultiPart = SmartMessageDecoder.IsPartOfConcatMessage(SMSPDU);
 
@@ -126,7 +119,7 @@ namespace SmsModemClient
                 }
                 else
                 {
-                    DisplayMessage(message.Data);
+                    DisplayMessage(SMSPDU);
                 }
             }
         }
