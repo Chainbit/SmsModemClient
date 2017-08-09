@@ -118,8 +118,9 @@ namespace SmsModemClient
                     do
                     {
                         Thread.Sleep(5000);
-                    } while (!HasOperatorSms() && i < 6);
-                    if (i < 6) 
+                        i++;
+                    } while (!HasOperatorSms() && i < 4);
+                    if (i >= 4) 
                     {
                         TelNumber = "Ошибка!";
                     }
@@ -129,8 +130,7 @@ namespace SmsModemClient
                 {
                     return;
                 }
-            }, ct
-                );
+            }, ct);
             t.Start();
             return t;
         }

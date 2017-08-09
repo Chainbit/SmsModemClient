@@ -61,11 +61,10 @@
             // 
             // loadComsButton
             // 
-            this.loadComsButton.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.loadComsButton.Enabled = false;
             this.loadComsButton.Location = new System.Drawing.Point(0, 359);
             this.loadComsButton.Name = "loadComsButton";
-            this.loadComsButton.Size = new System.Drawing.Size(603, 31);
+            this.loadComsButton.Size = new System.Drawing.Size(161, 31);
             this.loadComsButton.TabIndex = 2;
             this.loadComsButton.Text = "Обновить список портов";
             this.loadComsButton.UseVisualStyleBackColor = true;
@@ -223,9 +222,9 @@
             // 
             // toggleAutoUpdateBtn
             // 
-            this.toggleAutoUpdateBtn.Location = new System.Drawing.Point(0, 330);
+            this.toggleAutoUpdateBtn.Location = new System.Drawing.Point(167, 359);
             this.toggleAutoUpdateBtn.Name = "toggleAutoUpdateBtn";
-            this.toggleAutoUpdateBtn.Size = new System.Drawing.Size(151, 23);
+            this.toggleAutoUpdateBtn.Size = new System.Drawing.Size(151, 31);
             this.toggleAutoUpdateBtn.TabIndex = 6;
             this.toggleAutoUpdateBtn.Text = "Автообновление: ";
             this.toggleAutoUpdateBtn.UseVisualStyleBackColor = true;

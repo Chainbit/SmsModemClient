@@ -17,13 +17,14 @@ namespace SmsModemClient
     {
 
         SmsModemBlock2 Comm;
-        //SmsModemBlock Comm;
+        SmsModemBlock main;
 
-        int i = 1;
+        private int i = 1;
 
         private delegate void ShowShortMessageDelegate(SmsPdu msg);
         private delegate void ShowLongMessageDelegate(RecievedSMS msg);
 
+        private ShortMessageFromPhone[] inbox;
 
         /// <summary>
         /// Создает новую форму
@@ -38,9 +39,7 @@ namespace SmsModemClient
             this.Text = phone.PortName;
             this.Name = "CommForm" + phone.PortName;
 
-            //if (!Comm.IsOpen()) Comm.Open();
-            //Comm.EnableMessageNotifications();
-            //Comm.MessageReceived += new MessageReceivedEventHandler(comm_MessageReceived);
+            Comm.MessageReceived += new MessageReceivedEventHandler(comm_MessageReceived);
         }        
 
         private void comm_MessageReceived(object sender, MessageReceivedEventArgs e)
@@ -55,7 +54,6 @@ namespace SmsModemClient
 
         private void getSMSListButton_Click(object sender, EventArgs e)
         {
-            i = 1;
             GetSMSList();
         }
 
@@ -89,6 +87,7 @@ namespace SmsModemClient
         {
 
             var messages = Comm.ListMessages(PhoneMessageStatus.All);
+            inbox = messages;
             //var msgs = Comm.ReadRawMessages(PhoneMessageStatus.All, PhoneStorageType.Sim);
 
             // тут начинается пиздец
@@ -199,5 +198,38 @@ namespace SmsModemClient
         {
             //if (Comm.IsOpen()) Comm.Close();
         }
+
+        private void deleteAllButton_Click(object sender, EventArgs e)
+        {
+            switch (MessageBox.Show("Удалить все входящие?", "Вы уверены?", MessageBoxButtons.YesNo))
+            {               
+                case DialogResult.Yes:
+                    DeleteAllInbox();
+                    break;
+                case DialogResult.No:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Очищает входящие
+        /// </summary>
+        private void DeleteAllInbox()
+        {
+            foreach (var message in inbox)
+            {
+                Comm.DeleteMessage(message.Index);
+            }
+        }
+
+        private void getSignalLevel_Click(object sender, EventArgs e)
+        {
+            var signal = Comm.GetSignalQuality();
+            signalLevel.Text = signal.SignalStrength.ToString();
+
+        }
+
     }
 }

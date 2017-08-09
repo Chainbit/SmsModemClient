@@ -32,7 +32,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.SMSListTab = new System.Windows.Forms.TabPage();
             this.deleteAllButton = new System.Windows.Forms.Button();
-            this.deleteMessageButton = new System.Windows.Forms.Button();
+            this.getSignalLevel = new System.Windows.Forms.Button();
             this.SMStext = new System.Windows.Forms.TextBox();
             this.SMStime = new System.Windows.Forms.TextBox();
             this.SMSindex = new System.Windows.Forms.TextBox();
@@ -48,6 +48,7 @@
             this.response = new System.Windows.Forms.TextBox();
             this.sendButton = new System.Windows.Forms.Button();
             this.request = new System.Windows.Forms.TextBox();
+            this.signalLevel = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.SMSListTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SMSList)).BeginInit();
@@ -67,8 +68,9 @@
             // 
             // SMSListTab
             // 
+            this.SMSListTab.Controls.Add(this.signalLevel);
             this.SMSListTab.Controls.Add(this.deleteAllButton);
-            this.SMSListTab.Controls.Add(this.deleteMessageButton);
+            this.SMSListTab.Controls.Add(this.getSignalLevel);
             this.SMSListTab.Controls.Add(this.SMStext);
             this.SMSListTab.Controls.Add(this.SMStime);
             this.SMSListTab.Controls.Add(this.SMSindex);
@@ -86,22 +88,24 @@
             // deleteAllButton
             // 
             this.deleteAllButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.deleteAllButton.Location = new System.Drawing.Point(443, 329);
+            this.deleteAllButton.Location = new System.Drawing.Point(524, 329);
             this.deleteAllButton.Name = "deleteAllButton";
             this.deleteAllButton.Size = new System.Drawing.Size(93, 23);
             this.deleteAllButton.TabIndex = 6;
             this.deleteAllButton.Text = "Удалить все";
             this.deleteAllButton.UseVisualStyleBackColor = true;
+            this.deleteAllButton.Click += new System.EventHandler(this.deleteAllButton_Click);
             // 
-            // deleteMessageButton
+            // getSignalLevel
             // 
-            this.deleteMessageButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.deleteMessageButton.Location = new System.Drawing.Point(542, 329);
-            this.deleteMessageButton.Name = "deleteMessageButton";
-            this.deleteMessageButton.Size = new System.Drawing.Size(75, 23);
-            this.deleteMessageButton.TabIndex = 6;
-            this.deleteMessageButton.Text = "Удалить";
-            this.deleteMessageButton.UseVisualStyleBackColor = true;
+            this.getSignalLevel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.getSignalLevel.Location = new System.Drawing.Point(190, 329);
+            this.getSignalLevel.Name = "getSignalLevel";
+            this.getSignalLevel.Size = new System.Drawing.Size(103, 23);
+            this.getSignalLevel.TabIndex = 6;
+            this.getSignalLevel.Text = "Уровень сигнала";
+            this.getSignalLevel.UseVisualStyleBackColor = true;
+            this.getSignalLevel.Click += new System.EventHandler(this.getSignalLevel_Click);
             // 
             // SMStext
             // 
@@ -259,6 +263,15 @@
             this.request.Size = new System.Drawing.Size(417, 20);
             this.request.TabIndex = 5;
             // 
+            // signalLevel
+            // 
+            this.signalLevel.AutoSize = true;
+            this.signalLevel.Location = new System.Drawing.Point(299, 334);
+            this.signalLevel.Name = "signalLevel";
+            this.signalLevel.Size = new System.Drawing.Size(16, 13);
+            this.signalLevel.TabIndex = 7;
+            this.signalLevel.Text = "...";
+            // 
             // CommForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -289,7 +302,7 @@
         private System.Windows.Forms.TextBox request;
         private System.Windows.Forms.TabPage SMSListTab;
         private System.Windows.Forms.Button deleteAllButton;
-        private System.Windows.Forms.Button deleteMessageButton;
+        private System.Windows.Forms.Button getSignalLevel;
         private System.Windows.Forms.TextBox SMStext;
         private System.Windows.Forms.TextBox SMStime;
         private System.Windows.Forms.TextBox SMSindex;
@@ -300,5 +313,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn timeStamp;
         private System.Windows.Forms.DataGridViewTextBoxColumn text;
         private System.Windows.Forms.Button getSMSListButton;
+        private System.Windows.Forms.Label signalLevel;
     }
 }
