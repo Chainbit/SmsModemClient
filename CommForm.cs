@@ -16,7 +16,7 @@ namespace SmsModemClient
     public partial class CommForm : Form
     {
 
-        SmsModemBlock2 Comm;
+        SmsModemBlock2 comm;
         SmsModemBlock main;
 
         private int i = 1;
@@ -32,19 +32,25 @@ namespace SmsModemClient
         /// <param name="portname">Имя порта</param>
         public CommForm(SmsModemBlock2 phone)
         {
-            Comm = phone;
+            comm = phone;
             //Comm = new SmsModemBlock(phone.PortName, phone.BaudRate);
 
             InitializeComponent();
             this.Text = phone.PortName;
             this.Name = "CommForm" + phone.PortName;
 
-            Comm.MessageReceived += new MessageReceivedEventHandler(comm_MessageReceived);
-        }        
+            comm.MessageReceived += new MessageReceivedEventHandler(comm_MessageReceived);
+            //main.LoglineAdded += new LoglineAddedEventHandler(Main_LoglineAdded);
+        }
+
+        private void Main_LoglineAdded(object sender, LoglineAddedEventArgs e)
+        {
+            LogMessage("{0,-10}{1}", e.Level, e.Text);
+        }
 
         private void comm_MessageReceived(object sender, MessageReceivedEventArgs e)
         {
-            var messages = Comm.ListMessages(PhoneMessageStatus.ReceivedUnread);
+            var messages = comm.ListMessages(PhoneMessageStatus.ReceivedUnread);
 
             foreach (ShortMessageFromPhone message in messages)
             {
@@ -86,7 +92,7 @@ namespace SmsModemClient
         private void LoadSmsInbox()
         {
 
-            var messages = Comm.ListMessages(PhoneMessageStatus.All);
+            var messages = comm.ListMessages(PhoneMessageStatus.All);
             inbox = messages;
             //var msgs = Comm.ReadRawMessages(PhoneMessageStatus.All, PhoneStorageType.Sim);
 
@@ -167,7 +173,7 @@ namespace SmsModemClient
             var timestamp = LongSMS.Date.ToString();
 
             //read message in datagrid
-            SMSList.Rows.Add(i, phoneNumber, timestamp, msg);
+            SMSList.Rows.Add(LongSMS.Index, phoneNumber, timestamp, msg);
         }
 
         //Выбор СМСки
@@ -201,6 +207,7 @@ namespace SmsModemClient
 
         private void deleteAllButton_Click(object sender, EventArgs e)
         {
+            deleteAllButton.Enabled = false;
             switch (MessageBox.Show("Удалить все входящие?", "Вы уверены?", MessageBoxButtons.YesNo))
             {               
                 case DialogResult.Yes:
@@ -211,6 +218,7 @@ namespace SmsModemClient
                 default:
                     break;
             }
+            deleteAllButton.Enabled = true;
         }
 
         /// <summary>
@@ -218,18 +226,49 @@ namespace SmsModemClient
         /// </summary>
         private void DeleteAllInbox()
         {
-            foreach (var message in inbox)
+            if (InvokeRequired)
             {
-                Comm.DeleteMessage(message.Index);
+                Invoke(new Action<int, DeleteFlag>(comm.DeleteMessage), new object[] { inbox[0].Index, DeleteFlag.DeleteAll });
             }
+            else
+            {
+                comm.DeleteMessage(inbox[0].Index, DeleteFlag.DeleteAll);
+            }            
         }
 
         private void getSignalLevel_Click(object sender, EventArgs e)
         {
-            var signal = Comm.GetSignalQuality();
+            var signal = comm.GetSignalQuality();
             signalLevel.Text = signal.SignalStrength.ToString();
 
         }
 
+        private void LogMessage(string loggedData)
+        {
+            Log(loggedData);
+        }
+
+        /// <summary>
+        /// Пишет ответ в лог
+        /// </summary>
+        /// <param name="loggedData"></param>
+        /// <param name="args"></param>
+        private void LogMessage(string loggedData, params object[] args )
+        {
+            LogMessage(string.Format(loggedData, args));
+        }
+
+        private void Log(string text)
+        {
+            if (this.InvokeRequired)
+            {
+                Invoke(new Action<string>(Log), new object[] { text });
+            }
+            else
+            {
+                log.AppendText(text);
+                log.AppendText(Environment.NewLine);
+            }
+        }
     }
 }

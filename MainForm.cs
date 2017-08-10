@@ -67,22 +67,27 @@ namespace SmsModemClient
                 ComPortsDataGrid.Rows[i].Cells["isOpen"].Value = manager.activeComs[i].IsOpen();
                 CheckIfOpen(i);
             }
-            int j = 0;
-            //foreach (var item in manager.activeComsQueue)
-            //{
-            //    //ComPortsDataGrid.Rows.Add();
-            //    //ComPortsDataGrid.Rows[i].Cells["number"].Value = i;
-            //    //ComPortsDataGrid.Rows[i].Cells["ComPortName"].Value = item.PortName;
-            //    //ComPortsDataGrid.Rows[i].Cells["SimId"].Value = item.ICCID;
-            //    //ComPortsDataGrid.Rows[i].Cells["SIMoperator"].Value = item.Operator;
-            //    //ComPortsDataGrid.Rows[i].Cells["isOpen"].Value = item.IsOpen();
-            //    //CheckIfOpen(i);
+            int j = 0;            
+        }
 
-            //    item.portOpen = item.IsOpen().ToString();
-            //    smsModemBlock2BindingSource.Add(item);
-            //    j++;
-            //}
-            
+        /// <summary>
+        /// Асинхронное заполнение датагрида
+        /// </summary>
+        /// <returns></returns>
+        private Task FillDataGridAsync()
+        {
+            return Task.Run(() =>
+            {
+                if (InvokeRequired)
+                {
+                    Invoke(new Action(FillDatagrid));
+                }
+                else
+                {
+                    FillDatagrid();
+                }
+                return;
+            });
         }
 
         /// <summary>
@@ -156,12 +161,10 @@ namespace SmsModemClient
             }
         }
 
-        private bool isAllOpen = false;
-        private void ToggleAllPortsButton_Click(object sender, EventArgs e)
-        {
 
-        }
-
+        /// <summary>
+        /// Включено ли автообновление
+        /// </summary>
         private bool isRefreshOn = false;
 
         /// <summary>
@@ -189,41 +192,24 @@ namespace SmsModemClient
             }            
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
+        private async void Timer_Tick(object sender, EventArgs e)
         {
-            FillDatagrid();
+            await FillDataGridAsync();
         }
 
+        /// <summary>
+        /// Действие при закрытии формы
+        /// </summary>
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
               SmsModemBlock2.cts.Cancel();
         }
 
-
-        //public void ToggleAllPorts()
-        //{
-        //    if (!isAllOpen)
-        //    {
-        //        foreach (var port in manager.activeComs)
-        //        {
-        //            if (!port.IsOpen())
-        //                port.Open();
-        //        }
-        //        isAllOpen = true;
-        //        FillDatagrid();
-        //        ToggleAllPortsButton.Text = "Закрыть все";
-        //    }
-        //    else
-        //    {
-        //        foreach (var port in manager.activeComs)
-        //        {
-        //            if (port.IsOpen())
-        //                port.Close();
-        //        }
-        //        isAllOpen = false;
-        //        FillDatagrid();
-        //        ToggleAllPortsButton.Text = "Открыть все";
-        //    }
-        //}
+        private async void refreshButton_Click(object sender, EventArgs e)
+        {
+            refreshButton.Enabled = false;
+            await FillDataGridAsync();
+            refreshButton.Enabled = true;
+        }
     }
 }

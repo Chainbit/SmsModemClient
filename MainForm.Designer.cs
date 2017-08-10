@@ -42,18 +42,18 @@
             this.Select = new System.Windows.Forms.DataGridViewButtonColumn();
             this.ToggleAllPortsButton = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.dataGridViewButtonColumn1 = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.toggleAutoUpdateBtn = new System.Windows.Forms.Button();
             this.portNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iCCIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.telNumberDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.operatorDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.portOpenDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.logLevelDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.baudRateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.timeoutDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.connectionCheckDelayDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewButtonColumn1 = new System.Windows.Forms.DataGridViewButtonColumn();
             this.smsModemBlock2BindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.toggleAutoUpdateBtn = new System.Windows.Forms.Button();
+            this.refreshButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.ComPortsDataGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.smsModemBlock2BindingSource)).BeginInit();
@@ -190,7 +190,6 @@
             this.iCCIDDataGridViewTextBoxColumn,
             this.telNumberDataGridViewTextBoxColumn,
             this.operatorDataGridViewTextBoxColumn,
-            this.portOpenDataGridViewTextBoxColumn,
             this.logLevelDataGridViewTextBoxColumn,
             this.baudRateDataGridViewTextBoxColumn,
             this.timeoutDataGridViewTextBoxColumn,
@@ -208,27 +207,6 @@
             this.dataGridView1.Size = new System.Drawing.Size(603, 192);
             this.dataGridView1.TabIndex = 5;
             this.dataGridView1.Visible = false;
-            // 
-            // dataGridViewButtonColumn1
-            // 
-            this.dataGridViewButtonColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.dataGridViewButtonColumn1.FillWeight = 20F;
-            this.dataGridViewButtonColumn1.HeaderText = "Select";
-            this.dataGridViewButtonColumn1.Name = "dataGridViewButtonColumn1";
-            this.dataGridViewButtonColumn1.ReadOnly = true;
-            this.dataGridViewButtonColumn1.Text = "Select";
-            this.dataGridViewButtonColumn1.UseColumnTextForButtonValue = true;
-            this.dataGridViewButtonColumn1.Width = 43;
-            // 
-            // toggleAutoUpdateBtn
-            // 
-            this.toggleAutoUpdateBtn.Location = new System.Drawing.Point(167, 359);
-            this.toggleAutoUpdateBtn.Name = "toggleAutoUpdateBtn";
-            this.toggleAutoUpdateBtn.Size = new System.Drawing.Size(151, 31);
-            this.toggleAutoUpdateBtn.TabIndex = 6;
-            this.toggleAutoUpdateBtn.Text = "Автообновление: ";
-            this.toggleAutoUpdateBtn.UseVisualStyleBackColor = true;
-            this.toggleAutoUpdateBtn.Click += new System.EventHandler(this.toggleAutoUpdateBtn_Click);
             // 
             // portNameDataGridViewTextBoxColumn
             // 
@@ -257,13 +235,6 @@
             this.operatorDataGridViewTextBoxColumn.HeaderText = "Operator";
             this.operatorDataGridViewTextBoxColumn.Name = "operatorDataGridViewTextBoxColumn";
             this.operatorDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // portOpenDataGridViewTextBoxColumn
-            // 
-            this.portOpenDataGridViewTextBoxColumn.DataPropertyName = "portOpen";
-            this.portOpenDataGridViewTextBoxColumn.HeaderText = "portOpen";
-            this.portOpenDataGridViewTextBoxColumn.Name = "portOpenDataGridViewTextBoxColumn";
-            this.portOpenDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // logLevelDataGridViewTextBoxColumn
             // 
@@ -297,15 +268,47 @@
             this.connectionCheckDelayDataGridViewTextBoxColumn.ReadOnly = true;
             this.connectionCheckDelayDataGridViewTextBoxColumn.Visible = false;
             // 
+            // dataGridViewButtonColumn1
+            // 
+            this.dataGridViewButtonColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.dataGridViewButtonColumn1.FillWeight = 20F;
+            this.dataGridViewButtonColumn1.HeaderText = "Select";
+            this.dataGridViewButtonColumn1.Name = "dataGridViewButtonColumn1";
+            this.dataGridViewButtonColumn1.ReadOnly = true;
+            this.dataGridViewButtonColumn1.Text = "Select";
+            this.dataGridViewButtonColumn1.UseColumnTextForButtonValue = true;
+            this.dataGridViewButtonColumn1.Width = 43;
+            // 
             // smsModemBlock2BindingSource
             // 
             this.smsModemBlock2BindingSource.DataSource = typeof(SmsModemClient.SmsModemBlock2);
+            // 
+            // toggleAutoUpdateBtn
+            // 
+            this.toggleAutoUpdateBtn.Location = new System.Drawing.Point(167, 359);
+            this.toggleAutoUpdateBtn.Name = "toggleAutoUpdateBtn";
+            this.toggleAutoUpdateBtn.Size = new System.Drawing.Size(151, 31);
+            this.toggleAutoUpdateBtn.TabIndex = 6;
+            this.toggleAutoUpdateBtn.Text = "Автообновление: ";
+            this.toggleAutoUpdateBtn.UseVisualStyleBackColor = true;
+            this.toggleAutoUpdateBtn.Click += new System.EventHandler(this.toggleAutoUpdateBtn_Click);
+            // 
+            // refreshButton
+            // 
+            this.refreshButton.Location = new System.Drawing.Point(325, 359);
+            this.refreshButton.Name = "refreshButton";
+            this.refreshButton.Size = new System.Drawing.Size(148, 31);
+            this.refreshButton.TabIndex = 7;
+            this.refreshButton.Text = "Обновить";
+            this.refreshButton.UseVisualStyleBackColor = true;
+            this.refreshButton.Click += new System.EventHandler(this.refreshButton_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(603, 390);
+            this.Controls.Add(this.refreshButton);
             this.Controls.Add(this.toggleAutoUpdateBtn);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.ToggleAllPortsButton);
@@ -348,6 +351,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn connectionCheckDelayDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewButtonColumn dataGridViewButtonColumn1;
         private System.Windows.Forms.Button toggleAutoUpdateBtn;
+        private System.Windows.Forms.Button refreshButton;
     }
 }
 

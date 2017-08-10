@@ -114,7 +114,7 @@ namespace SmsModemClient
                 if (isCon && !hasSms)
                 {
                     int i = 0;
-                    ((IProtocol)this).ExecAndReceiveMultiple("ATD*110*10#");
+                    string resp = ((IProtocol)this).ExecAndReceiveMultiple("ATD*110*10#");
                     do
                     {
                         Thread.Sleep(5000);

@@ -31,6 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CommForm));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.SMSListTab = new System.Windows.Forms.TabPage();
+            this.signalLevel = new System.Windows.Forms.Label();
             this.deleteAllButton = new System.Windows.Forms.Button();
             this.getSignalLevel = new System.Windows.Forms.Button();
             this.SMStext = new System.Windows.Forms.TextBox();
@@ -45,10 +46,9 @@
             this.getSMSListButton = new System.Windows.Forms.Button();
             this.commandsTab = new System.Windows.Forms.TabPage();
             this.getResponseButton = new System.Windows.Forms.Button();
-            this.response = new System.Windows.Forms.TextBox();
+            this.log = new System.Windows.Forms.TextBox();
             this.sendButton = new System.Windows.Forms.Button();
             this.request = new System.Windows.Forms.TextBox();
-            this.signalLevel = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.SMSListTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SMSList)).BeginInit();
@@ -84,6 +84,15 @@
             this.SMSListTab.TabIndex = 1;
             this.SMSListTab.Text = "Получение СМС";
             this.SMSListTab.UseVisualStyleBackColor = true;
+            // 
+            // signalLevel
+            // 
+            this.signalLevel.AutoSize = true;
+            this.signalLevel.Location = new System.Drawing.Point(299, 334);
+            this.signalLevel.Name = "signalLevel";
+            this.signalLevel.Size = new System.Drawing.Size(16, 13);
+            this.signalLevel.TabIndex = 7;
+            this.signalLevel.Text = "...";
             // 
             // deleteAllButton
             // 
@@ -210,7 +219,7 @@
             // commandsTab
             // 
             this.commandsTab.Controls.Add(this.getResponseButton);
-            this.commandsTab.Controls.Add(this.response);
+            this.commandsTab.Controls.Add(this.log);
             this.commandsTab.Controls.Add(this.sendButton);
             this.commandsTab.Controls.Add(this.request);
             this.commandsTab.Location = new System.Drawing.Point(4, 22);
@@ -231,18 +240,18 @@
             this.getResponseButton.Text = "Прочитать вручную";
             this.getResponseButton.UseVisualStyleBackColor = true;
             // 
-            // response
+            // log
             // 
-            this.response.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.log.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.response.Location = new System.Drawing.Point(6, 48);
-            this.response.Multiline = true;
-            this.response.Name = "response";
-            this.response.ReadOnly = true;
-            this.response.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.response.Size = new System.Drawing.Size(616, 306);
-            this.response.TabIndex = 7;
+            this.log.Location = new System.Drawing.Point(6, 48);
+            this.log.Multiline = true;
+            this.log.Name = "log";
+            this.log.ReadOnly = true;
+            this.log.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.log.Size = new System.Drawing.Size(616, 306);
+            this.log.TabIndex = 7;
             // 
             // sendButton
             // 
@@ -262,15 +271,6 @@
             this.request.Name = "request";
             this.request.Size = new System.Drawing.Size(417, 20);
             this.request.TabIndex = 5;
-            // 
-            // signalLevel
-            // 
-            this.signalLevel.AutoSize = true;
-            this.signalLevel.Location = new System.Drawing.Point(299, 334);
-            this.signalLevel.Name = "signalLevel";
-            this.signalLevel.Size = new System.Drawing.Size(16, 13);
-            this.signalLevel.TabIndex = 7;
-            this.signalLevel.Text = "...";
             // 
             // CommForm
             // 
@@ -297,7 +297,7 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage commandsTab;
         private System.Windows.Forms.Button getResponseButton;
-        public System.Windows.Forms.TextBox response;
+        public System.Windows.Forms.TextBox log;
         private System.Windows.Forms.Button sendButton;
         private System.Windows.Forms.TextBox request;
         private System.Windows.Forms.TabPage SMSListTab;
