@@ -31,7 +31,10 @@ namespace SmsModemClient
         {
             GetModemPorts();
             OpenAllPorts();
-            GetModemTels();
+            GetModemData();
+            // дальше работаем с листом
+            activeComs = activeComsQueue.ToList();
+            GetModemTels();            
         }
 
         /// <summary>
@@ -51,10 +54,9 @@ namespace SmsModemClient
             foreach (var port in ports)
             {
                 //создаем объект устройства
-                //GsmCommMain comm = new GsmCommMain(port, 115200);
                 SmsModemBlock com = new SmsModemBlock(port, 115200);
                 //И поток
-                Thread myThread = new Thread(new ParameterizedThreadStart(GetModemData));
+                Thread myThread = new Thread(new ParameterizedThreadStart(CheckModemConncetion));
                 myThread.Name = port + " GetPort";
                 _threadList.Add(myThread);
                 // передаем в поток наш порт
@@ -63,16 +65,19 @@ namespace SmsModemClient
             // ждем всех
             WaitForAllThreadsToComplete(_threadList);
 
-            activeComs = activeComsQueue.ToList();
+            //activeComs = activeComsQueue.ToList();
         }
 
         public Task GetModemPortsAsync()
         {
+            List<Thread> _threadList = new List<Thread>();
             foreach (var port in activeComs)
             {
                 Thread tclose = new Thread(port.Close);
+                _threadList.Add(tclose);
                 tclose.Start();
             }
+            WaitForAllThreadsToComplete(_threadList);
 
             Task t = new Task(InitializeManager);
             t.Start();
@@ -83,7 +88,7 @@ namespace SmsModemClient
         /// Проверка на наличие нашего устройства на этом порте
         /// </summary>
         /// <param name="com"></param>
-        private void GetModemData(object com)
+        private void CheckModemConncetion(object com)
         {
             SmsModemBlock comm = (SmsModemBlock)com;
             //открываем соединение
@@ -91,12 +96,34 @@ namespace SmsModemClient
             {
                 if (comm.IsConnected())
                 {
-                    GetModemOperator(comm);
-                    GetCurrentIMSI(comm);                    
                     activeComsQueue.Enqueue(comm);
                 }
             }
-            
+        }
+
+        /// <summary>
+        /// Получает свойства устройства
+        /// </summary>
+        /// <param name="com"></param>
+        private void GetModemData()
+        {
+            List<Thread> _threadList = new List<Thread>();
+
+            foreach (SmsModemBlock comm in activeComsQueue)
+            {
+                //создаем поток со всеми нужными методами
+                Thread thread = new Thread(()=> 
+                {
+                    GetModemOperator(comm);
+                    GetCurrentIMSI(comm);
+                    GetSignalLevel(comm);
+                });
+                thread.Name = comm.PortName + " GetModemData";
+                _threadList.Add(thread);
+                thread.Start();
+            }
+            // ждем всех
+            WaitForAllThreadsToComplete(_threadList);
         }
 
         /// <summary>
@@ -107,16 +134,9 @@ namespace SmsModemClient
             foreach (SmsModemBlock item in activeComs)
             {
                 Thread thread = new Thread(new ParameterizedThreadStart(RequestTelNumber));
-                thread.Name = item.PortName + "Get TelNumber";
+                thread.Name = item.PortName + " GetTelNumber";
                 thread.Start(item);
             }
-        }
-
-        private void GetModemTel(object com)
-        {
-            SmsModemBlock comm = (SmsModemBlock)com;
-
-            RequestTelNumber(comm);                
         }
 
         /// <summary>
@@ -145,7 +165,7 @@ namespace SmsModemClient
 
         /// <summary>
         /// Получить значение оператора для блока
-        /// <para>Необходимо выполнять внутри блока <see langword="using " cref="CommStream"/></para>
+        /// <para>Необходимо выполнять при открытом порте</para>
         /// </summary>
         /// <param name="block"></param>
         public void GetModemOperator(SmsModemBlock block)
@@ -162,9 +182,12 @@ namespace SmsModemClient
             block.GetICCID();
         }
 
+        /// <summary>
+        /// Открывает все порты
+        /// </summary>
         private void OpenAllPorts()
         {
-            foreach (var port in activeComs)
+            foreach (var port in activeComsQueue)
             {
                 if (!port.IsOpen())
                 {
@@ -175,6 +198,35 @@ namespace SmsModemClient
             }
         }
 
+        /// <summary>
+        /// Получает уровень сигнала
+        /// </summary>
+        /// <param name="comm"></param>
+        private void GetSignalLevel(SmsModemBlock comm)
+        {
+            var signalStrength = comm.GetSignalQuality().SignalStrength;
+
+            if (signalStrength < 10)
+            {
+                comm.SignalLevel = SmsModemBlock.Signal.Poor;
+            }
+            else if (signalStrength >= 10 && signalStrength <= 14)
+            {
+                comm.SignalLevel = SmsModemBlock.Signal.Ok;
+            }
+            else if (signalStrength >= 15 && signalStrength <= 19)
+            {
+                comm.SignalLevel = SmsModemBlock.Signal.Good;
+            }
+            else if (signalStrength > 19)
+            {
+                comm.SignalLevel = SmsModemBlock.Signal.Excellent;
+            }
+            else
+            {
+                comm.SignalLevel = SmsModemBlock.Signal.None;
+            }
+        }
         /// <summary>
         /// Метод, блокирующий основной поток, пока не выполнятся заданные потоки
         /// </summary>

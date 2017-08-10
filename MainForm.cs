@@ -64,8 +64,9 @@ namespace SmsModemClient
                 ComPortsDataGrid.Rows[i].Cells["SimId"].Value = manager.activeComs[i].ICCID;
                 ComPortsDataGrid.Rows[i].Cells["TelNumber"].Value = manager.activeComs[i].TelNumber;
                 ComPortsDataGrid.Rows[i].Cells["SIMoperator"].Value = manager.activeComs[i].Operator;
-                ComPortsDataGrid.Rows[i].Cells["isOpen"].Value = manager.activeComs[i].IsOpen();
-                CheckIfOpen(i);
+                //ComPortsDataGrid.Rows[i].Cells["isOpen"].Value = manager.activeComs[i].IsOpen();
+                (ComPortsDataGrid.Rows[i].Cells["Signal"] as DataGridViewImageCell).Value = Properties.Resources.ResourceManager.GetObject(manager.activeComs[i].SignalLevel.ToString(), Properties.Resources.Culture);
+                //CheckIfOpen(i);
             }
             int j = 0;            
         }

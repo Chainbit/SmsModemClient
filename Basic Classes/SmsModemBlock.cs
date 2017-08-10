@@ -19,6 +19,7 @@ namespace SmsModemClient
         public string Operator { get; set; }
         public string ICCID { get; set; }
         public string TelNumber { get; set; }
+        public Signal SignalLevel { get; set; }
 
         public static CancellationTokenSource cts = new CancellationTokenSource();
         private CancellationToken ct = cts.Token;
@@ -35,7 +36,7 @@ namespace SmsModemClient
             //GsmPhone phone = new GsmPhone(PortName, BaudRate, Timeout);
             lock (this)
             {
-                string input = ((IProtocol)this).ExecAndReceiveMultiple("AT+CCID");
+                string input = GetProtocol().ExecAndReceiveMultiple("AT+CCID");
                 string text = TrimLineBreaks(input);
                 ICCID = Regex.Match(text, "\"([^\"]*)\"").Groups[1].Value;
             }
@@ -46,7 +47,7 @@ namespace SmsModemClient
         /// </summary>
         public void GetOperator()
         {
-            ((IProtocol)this).ExecAndReceiveMultiple("AT+COPS=3,0");
+            GetProtocol().ExecAndReceiveMultiple("AT+COPS=3,0");
 
             var info = this.GetCurrentOperator();
             if (info != null)
@@ -104,7 +105,7 @@ namespace SmsModemClient
                 if (isCon && !hasSms)
                 {
                     int i = 0;                    
-                    string resp = ((IProtocol)this).ExecAndReceiveMultiple("ATD*110*10#");
+                    string resp = GetProtocol().ExecAndReceiveMultiple("ATD*110*10#");
                     
                     do
                     {
@@ -134,6 +135,33 @@ namespace SmsModemClient
         '\r',
         '\n'
             });
+        }
+
+        /// <summary>
+        /// Уровень сигнала
+        /// </summary>
+        public enum Signal
+        {
+            /// <summary>
+            /// Нет сигнала
+            /// </summary>
+            None,
+            /// <summary>
+            /// Говно
+            /// </summary>
+            Poor,
+            /// <summary>
+            /// Сойдет
+            /// </summary>
+            Ok,
+            /// <summary>
+            /// Хорошо
+            /// </summary>
+            Good,
+            /// <summary>
+            /// Превосходно
+            /// </summary>
+            Excellent
         }
     }
 }
