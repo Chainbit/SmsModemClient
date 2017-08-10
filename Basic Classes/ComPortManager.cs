@@ -15,8 +15,8 @@ namespace SmsModemClient
     class ComPortManager
     {
 
-        public List<SmsModemBlock2> activeComs = new List<SmsModemBlock2>();
-        public ConcurrentQueue<SmsModemBlock2> activeComsQueue = new ConcurrentQueue<SmsModemBlock2>();
+        public List<SmsModemBlock> activeComs = new List<SmsModemBlock>();
+        public ConcurrentQueue<SmsModemBlock> activeComsQueue = new ConcurrentQueue<SmsModemBlock>();
 
         public ComPortManager(MainForm mainForm)
         {
@@ -40,7 +40,7 @@ namespace SmsModemClient
         public void GetModemPorts()
         {
             //очищаем старую Queue
-            activeComsQueue = new ConcurrentQueue<SmsModemBlock2>();
+            activeComsQueue = new ConcurrentQueue<SmsModemBlock>();
 
             activeComs.Clear();
 
@@ -52,7 +52,7 @@ namespace SmsModemClient
             {
                 //создаем объект устройства
                 //GsmCommMain comm = new GsmCommMain(port, 115200);
-                SmsModemBlock2 com = new SmsModemBlock2(port, 115200);
+                SmsModemBlock com = new SmsModemBlock(port, 115200);
                 //И поток
                 Thread myThread = new Thread(new ParameterizedThreadStart(GetModemData));
                 myThread.Name = port + " GetPort";
@@ -85,7 +85,7 @@ namespace SmsModemClient
         /// <param name="com"></param>
         private void GetModemData(object com)
         {
-            SmsModemBlock2 comm = (SmsModemBlock2)com;
+            SmsModemBlock comm = (SmsModemBlock)com;
             //открываем соединение
             using (new CommStream(comm))
             {
@@ -104,7 +104,7 @@ namespace SmsModemClient
         /// </summary>
         private void GetModemTels()
         {
-            foreach (SmsModemBlock2 item in activeComs)
+            foreach (SmsModemBlock item in activeComs)
             {
                 Thread thread = new Thread(new ParameterizedThreadStart(RequestTelNumber));
                 thread.Name = item.PortName + "Get TelNumber";
@@ -114,7 +114,7 @@ namespace SmsModemClient
 
         private void GetModemTel(object com)
         {
-            SmsModemBlock2 comm = (SmsModemBlock2)com;
+            SmsModemBlock comm = (SmsModemBlock)com;
 
             RequestTelNumber(comm);                
         }
@@ -125,7 +125,7 @@ namespace SmsModemClient
         /// <param name="block"></param>
         public async void RequestTelNumber(object b)
         {
-            SmsModemBlock2 block = (SmsModemBlock2)b;
+            SmsModemBlock block = (SmsModemBlock)b;
             try
             {
                 switch (block.Operator.ToLower())
@@ -148,7 +148,7 @@ namespace SmsModemClient
         /// <para>Необходимо выполнять внутри блока <see langword="using " cref="CommStream"/></para>
         /// </summary>
         /// <param name="block"></param>
-        public void GetModemOperator(SmsModemBlock2 block)
+        public void GetModemOperator(SmsModemBlock block)
         {
             block.GetOperator();
         }
@@ -157,7 +157,7 @@ namespace SmsModemClient
         /// Получить номер сим карты для блока
         /// </summary>
         /// <param name="block"></param>
-        public void GetCurrentIMSI(SmsModemBlock2 block)
+        public void GetCurrentIMSI(SmsModemBlock block)
         {
             block.GetICCID();
         }

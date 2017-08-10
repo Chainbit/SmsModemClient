@@ -138,7 +138,7 @@ namespace SmsModemClient
         /// метод для перекраски ячеек
         /// </summary>
         /// <param name="i"> номер ячейки</param>
-        private void CheckIfOpen(SmsModemBlock2 port)
+        private void CheckIfOpen(SmsModemBlock port)
         {
             int i=0;
             foreach (DataGridViewRow row in ComPortsDataGrid.Rows)
@@ -202,7 +202,7 @@ namespace SmsModemClient
         /// </summary>
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-              SmsModemBlock2.cts.Cancel();
+              SmsModemBlock.cts.Cancel();
         }
 
         private async void refreshButton_Click(object sender, EventArgs e)

@@ -16,8 +16,7 @@ namespace SmsModemClient
     public partial class CommForm : Form
     {
 
-        SmsModemBlock2 comm;
-        SmsModemBlock main;
+        SmsModemBlock comm;
 
         private int i = 1;
 
@@ -30,7 +29,7 @@ namespace SmsModemClient
         /// Создает новую форму
         /// </summary>
         /// <param name="portname">Имя порта</param>
-        public CommForm(SmsModemBlock2 phone)
+        public CommForm(SmsModemBlock phone)
         {
             comm = phone;
             //Comm = new SmsModemBlock(phone.PortName, phone.BaudRate);
@@ -40,7 +39,7 @@ namespace SmsModemClient
             this.Name = "CommForm" + phone.PortName;
 
             comm.MessageReceived += new MessageReceivedEventHandler(comm_MessageReceived);
-            //main.LoglineAdded += new LoglineAddedEventHandler(Main_LoglineAdded);
+            comm.LoglineAdded += new LoglineAddedEventHandler(Main_LoglineAdded);
         }
 
         private void Main_LoglineAdded(object sender, LoglineAddedEventArgs e)
@@ -50,7 +49,7 @@ namespace SmsModemClient
 
         private void comm_MessageReceived(object sender, MessageReceivedEventArgs e)
         {
-            var messages = comm.ListMessages(PhoneMessageStatus.ReceivedUnread);
+            var messages = comm.ReadRawMessages(PhoneMessageStatus.ReceivedUnread, "SM");
 
             foreach (ShortMessageFromPhone message in messages)
             {
@@ -92,7 +91,7 @@ namespace SmsModemClient
         private void LoadSmsInbox()
         {
 
-            var messages = comm.ListMessages(PhoneMessageStatus.All);
+            var messages = comm.ReadRawMessages(PhoneMessageStatus.All, "SM");
             inbox = messages;
             //var msgs = Comm.ReadRawMessages(PhoneMessageStatus.All, PhoneStorageType.Sim);
 
@@ -228,11 +227,11 @@ namespace SmsModemClient
         {
             if (InvokeRequired)
             {
-                Invoke(new Action<int, DeleteFlag>(comm.DeleteMessage), new object[] { inbox[0].Index, DeleteFlag.DeleteAll });
+                Invoke(new Action<DeleteScope, string>(comm.DeleteMessages), new object[] { DeleteScope.All, "SM" });
             }
             else
             {
-                comm.DeleteMessage(inbox[0].Index, DeleteFlag.DeleteAll);
+                comm.DeleteMessages(DeleteScope.All, "SM");
             }            
         }
 
