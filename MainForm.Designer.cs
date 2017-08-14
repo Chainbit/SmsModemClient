@@ -34,9 +34,6 @@
             this.loadComsButton = new System.Windows.Forms.Button();
             this.ComPortsDataGrid = new System.Windows.Forms.DataGridView();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.dataGridViewButtonColumn1 = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.toggleAutoUpdateBtn = new System.Windows.Forms.Button();
-            this.refreshButton = new System.Windows.Forms.Button();
             this.portNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iCCIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.telNumberDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -45,28 +42,34 @@
             this.baudRateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.timeoutDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.connectionCheckDelayDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewButtonColumn1 = new System.Windows.Forms.DataGridViewButtonColumn();
             this.smsModemBlock2BindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.toggleAutoUpdateBtn = new System.Windows.Forms.Button();
+            this.refreshButton = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.number = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ComPortName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SimID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TelNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SIMoperator = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Signal = new System.Windows.Forms.DataGridViewImageColumn();
-            this.isOpen = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SignalTxt = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Select = new System.Windows.Forms.DataGridViewButtonColumn();
             ((System.ComponentModel.ISupportInitialize)(this.ComPortsDataGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.smsModemBlock2BindingSource)).BeginInit();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // loadComsButton
             // 
+            this.loadComsButton.Dock = System.Windows.Forms.DockStyle.Left;
             this.loadComsButton.Enabled = false;
-            this.loadComsButton.Location = new System.Drawing.Point(0, 359);
+            this.loadComsButton.Location = new System.Drawing.Point(0, 0);
             this.loadComsButton.Name = "loadComsButton";
-            this.loadComsButton.Size = new System.Drawing.Size(161, 31);
+            this.loadComsButton.Size = new System.Drawing.Size(323, 36);
             this.loadComsButton.TabIndex = 2;
-            this.loadComsButton.Text = "Обновить список портов";
+            this.loadComsButton.Text = "Загрузить список портов";
             this.loadComsButton.UseVisualStyleBackColor = true;
             this.loadComsButton.Click += new System.EventHandler(this.loadComsButton_Click);
             // 
@@ -87,7 +90,7 @@
             this.TelNumber,
             this.SIMoperator,
             this.Signal,
-            this.isOpen,
+            this.SignalTxt,
             this.Select});
             this.ComPortsDataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.ComPortsDataGrid.ImeMode = System.Windows.Forms.ImeMode.Off;
@@ -97,7 +100,7 @@
             this.ComPortsDataGrid.ReadOnly = true;
             this.ComPortsDataGrid.RowHeadersVisible = false;
             this.ComPortsDataGrid.ShowEditingIcon = false;
-            this.ComPortsDataGrid.Size = new System.Drawing.Size(639, 354);
+            this.ComPortsDataGrid.Size = new System.Drawing.Size(649, 366);
             this.ComPortsDataGrid.TabIndex = 3;
             this.ComPortsDataGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ComPortsDataGrid_CellContentClick);
             // 
@@ -131,40 +134,9 @@
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.RowHeadersVisible = false;
             this.dataGridView1.ShowEditingIcon = false;
-            this.dataGridView1.Size = new System.Drawing.Size(639, 192);
+            this.dataGridView1.Size = new System.Drawing.Size(649, 204);
             this.dataGridView1.TabIndex = 5;
             this.dataGridView1.Visible = false;
-            // 
-            // dataGridViewButtonColumn1
-            // 
-            this.dataGridViewButtonColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.dataGridViewButtonColumn1.FillWeight = 20F;
-            this.dataGridViewButtonColumn1.HeaderText = "Select";
-            this.dataGridViewButtonColumn1.Name = "dataGridViewButtonColumn1";
-            this.dataGridViewButtonColumn1.ReadOnly = true;
-            this.dataGridViewButtonColumn1.Text = "Select";
-            this.dataGridViewButtonColumn1.UseColumnTextForButtonValue = true;
-            this.dataGridViewButtonColumn1.Width = 43;
-            // 
-            // toggleAutoUpdateBtn
-            // 
-            this.toggleAutoUpdateBtn.Location = new System.Drawing.Point(167, 359);
-            this.toggleAutoUpdateBtn.Name = "toggleAutoUpdateBtn";
-            this.toggleAutoUpdateBtn.Size = new System.Drawing.Size(151, 31);
-            this.toggleAutoUpdateBtn.TabIndex = 6;
-            this.toggleAutoUpdateBtn.Text = "Автообновление: ";
-            this.toggleAutoUpdateBtn.UseVisualStyleBackColor = true;
-            this.toggleAutoUpdateBtn.Click += new System.EventHandler(this.toggleAutoUpdateBtn_Click);
-            // 
-            // refreshButton
-            // 
-            this.refreshButton.Location = new System.Drawing.Point(325, 359);
-            this.refreshButton.Name = "refreshButton";
-            this.refreshButton.Size = new System.Drawing.Size(148, 31);
-            this.refreshButton.TabIndex = 7;
-            this.refreshButton.Text = "Обновить";
-            this.refreshButton.UseVisualStyleBackColor = true;
-            this.refreshButton.Click += new System.EventHandler(this.refreshButton_Click);
             // 
             // portNameDataGridViewTextBoxColumn
             // 
@@ -226,9 +198,53 @@
             this.connectionCheckDelayDataGridViewTextBoxColumn.ReadOnly = true;
             this.connectionCheckDelayDataGridViewTextBoxColumn.Visible = false;
             // 
+            // dataGridViewButtonColumn1
+            // 
+            this.dataGridViewButtonColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.dataGridViewButtonColumn1.FillWeight = 20F;
+            this.dataGridViewButtonColumn1.HeaderText = "Select";
+            this.dataGridViewButtonColumn1.Name = "dataGridViewButtonColumn1";
+            this.dataGridViewButtonColumn1.ReadOnly = true;
+            this.dataGridViewButtonColumn1.Text = "Select";
+            this.dataGridViewButtonColumn1.UseColumnTextForButtonValue = true;
+            this.dataGridViewButtonColumn1.Width = 43;
+            // 
             // smsModemBlock2BindingSource
             // 
             this.smsModemBlock2BindingSource.DataSource = typeof(SmsModemClient.SmsModemBlock2);
+            // 
+            // toggleAutoUpdateBtn
+            // 
+            this.toggleAutoUpdateBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.toggleAutoUpdateBtn.Location = new System.Drawing.Point(323, 0);
+            this.toggleAutoUpdateBtn.Name = "toggleAutoUpdateBtn";
+            this.toggleAutoUpdateBtn.Size = new System.Drawing.Size(178, 36);
+            this.toggleAutoUpdateBtn.TabIndex = 6;
+            this.toggleAutoUpdateBtn.Text = "Автообновление: ";
+            this.toggleAutoUpdateBtn.UseVisualStyleBackColor = true;
+            this.toggleAutoUpdateBtn.Click += new System.EventHandler(this.toggleAutoUpdateBtn_Click);
+            // 
+            // refreshButton
+            // 
+            this.refreshButton.Dock = System.Windows.Forms.DockStyle.Right;
+            this.refreshButton.Location = new System.Drawing.Point(501, 0);
+            this.refreshButton.Name = "refreshButton";
+            this.refreshButton.Size = new System.Drawing.Size(148, 36);
+            this.refreshButton.TabIndex = 7;
+            this.refreshButton.Text = "Обновить";
+            this.refreshButton.UseVisualStyleBackColor = true;
+            this.refreshButton.Click += new System.EventHandler(this.refreshButton_Click);
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.toggleAutoUpdateBtn);
+            this.panel1.Controls.Add(this.refreshButton);
+            this.panel1.Controls.Add(this.loadComsButton);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel1.Location = new System.Drawing.Point(0, 366);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(649, 36);
+            this.panel1.TabIndex = 8;
             // 
             // number
             // 
@@ -281,36 +297,32 @@
             this.Signal.ReadOnly = true;
             this.Signal.Width = 42;
             // 
-            // isOpen
+            // SignalTxt
             // 
-            this.isOpen.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.isOpen.FillWeight = 20F;
-            this.isOpen.HeaderText = "isOpen";
-            this.isOpen.Name = "isOpen";
-            this.isOpen.ReadOnly = true;
-            this.isOpen.Width = 65;
+            this.SignalTxt.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.SignalTxt.HeaderText = "SignalTxt";
+            this.SignalTxt.Name = "SignalTxt";
+            this.SignalTxt.ReadOnly = true;
+            this.SignalTxt.Width = 76;
             // 
             // Select
             // 
-            this.Select.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Select.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.Select.FillWeight = 20F;
             this.Select.HeaderText = "Select";
             this.Select.Name = "Select";
             this.Select.ReadOnly = true;
             this.Select.Text = "Select";
             this.Select.UseColumnTextForButtonValue = true;
-            this.Select.Width = 43;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(639, 390);
-            this.Controls.Add(this.refreshButton);
-            this.Controls.Add(this.toggleAutoUpdateBtn);
+            this.ClientSize = new System.Drawing.Size(649, 402);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.ComPortsDataGrid);
-            this.Controls.Add(this.loadComsButton);
+            this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.Text = "SmsModemClient";
@@ -319,6 +331,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.ComPortsDataGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.smsModemBlock2BindingSource)).EndInit();
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -341,13 +354,14 @@
         private System.Windows.Forms.DataGridViewButtonColumn dataGridViewButtonColumn1;
         private System.Windows.Forms.Button toggleAutoUpdateBtn;
         private System.Windows.Forms.Button refreshButton;
+        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.DataGridViewTextBoxColumn number;
         private System.Windows.Forms.DataGridViewTextBoxColumn ComPortName;
         private System.Windows.Forms.DataGridViewTextBoxColumn SimID;
         private System.Windows.Forms.DataGridViewTextBoxColumn TelNumber;
         private System.Windows.Forms.DataGridViewTextBoxColumn SIMoperator;
         private System.Windows.Forms.DataGridViewImageColumn Signal;
-        private System.Windows.Forms.DataGridViewTextBoxColumn isOpen;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SignalTxt;
         private System.Windows.Forms.DataGridViewButtonColumn Select;
     }
 }

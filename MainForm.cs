@@ -25,10 +25,9 @@ namespace SmsModemClient
         private void MainForm_Load(object sender, EventArgs e)
         {
             manager = new ComPortManager(this);
-            //foreach (var port in manager.activeComs)
-            //{
-            //    port.NumberRecieved += FillDatagrid;
-            //}
+
+            SmsModemBlock.NumberRecieved += FillDatagrid;
+
             FillDatagrid();
             // создаем таймер 
             timer = new System.Windows.Forms.Timer();
@@ -53,22 +52,45 @@ namespace SmsModemClient
         /// </summary>
         private void FillDatagrid()
         {
+            if (this.InvokeRequired)
+            {
+                Invoke(new Action(FillDatagrid));
+                return;
+            }
+            var list = manager.activeComs;
             //очищаем все
             ComPortsDataGrid.Rows.Clear();
-            for (int i = 0; i < manager.activeComs.Count; i++)
+            for (int i = 0; i < list.Count; i++)
             {
                 //заполняем датагрид
                 ComPortsDataGrid.Rows.Add();
                 ComPortsDataGrid.Rows[i].Cells["number"].Value = i;
-                ComPortsDataGrid.Rows[i].Cells["ComPortName"].Value = manager.activeComs[i].PortName;
-                ComPortsDataGrid.Rows[i].Cells["SimId"].Value = manager.activeComs[i].ICCID;
-                ComPortsDataGrid.Rows[i].Cells["TelNumber"].Value = manager.activeComs[i].TelNumber;
-                ComPortsDataGrid.Rows[i].Cells["SIMoperator"].Value = manager.activeComs[i].Operator;
-                //ComPortsDataGrid.Rows[i].Cells["isOpen"].Value = manager.activeComs[i].IsOpen();
-                (ComPortsDataGrid.Rows[i].Cells["Signal"] as DataGridViewImageCell).Value = Properties.Resources.ResourceManager.GetObject(manager.activeComs[i].SignalLevel.ToString(), Properties.Resources.Culture);
+                ComPortsDataGrid.Rows[i].Cells["ComPortName"].Value = list[i].PortName;
+                ComPortsDataGrid.Rows[i].Cells["SimId"].Value = list[i].ICCID;
+                ComPortsDataGrid.Rows[i].Cells["TelNumber"].Value = list[i].TelNumber;
+                ComPortsDataGrid.Rows[i].Cells["SIMoperator"].Value = list[i].Operator;
+                var img = Properties.Resources.none;
+                switch (list[i].SignalLevel)
+                {
+                    case SmsModemBlock.Signal.Poor:
+                        img = Properties.Resources.poor;
+                        break;
+                    case SmsModemBlock.Signal.Ok:
+                        img = Properties.Resources.ok;
+                        break;
+                    case SmsModemBlock.Signal.Good:
+                        img = Properties.Resources.good;
+                        break;
+                    case SmsModemBlock.Signal.Excellent:
+                        img = Properties.Resources.excellent;
+                        break;
+                    default:
+                        break;
+                }
+                ComPortsDataGrid.Rows[i].Cells["SignalTxt"].Value = list[i].SignalLevel.ToString();
+                (ComPortsDataGrid.Rows[i].Cells["Signal"] as DataGridViewImageCell).Value = img;
                 //CheckIfOpen(i);
-            }
-            int j = 0;            
+            }          
         }
 
         /// <summary>
@@ -203,14 +225,30 @@ namespace SmsModemClient
         /// </summary>
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-              SmsModemBlock.cts.Cancel();
+            SmsModemBlock.cts.Cancel();
+            manager.CloseAllPorts();            
         }
 
         private async void refreshButton_Click(object sender, EventArgs e)
         {
             refreshButton.Enabled = false;
+            //await GetAllSignalStrength();
             await FillDataGridAsync();
             refreshButton.Enabled = true;
+        }
+
+        private Task GetAllSignalStrength()
+        {
+            return Task.Run(() =>
+            {
+                foreach (SmsModemBlock comm in manager.activeComs)
+                {
+                    //создаем поток со всеми нужными методами
+                    Thread thread = new Thread(comm.GetSignalStrength);
+                    thread.Name = comm.PortName + " GetSignalStrength";
+                    thread.Start(comm);
+                }
+            });
         }
     }
 }

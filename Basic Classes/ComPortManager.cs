@@ -34,7 +34,7 @@ namespace SmsModemClient
             GetModemData();
             // дальше работаем с листом
             activeComs = activeComsQueue.ToList();
-            GetModemTels();            
+            GetModemTels();
         }
 
         /// <summary>
@@ -111,25 +111,30 @@ namespace SmsModemClient
 
             foreach (SmsModemBlock comm in activeComsQueue)
             {
+
                 //создаем поток со всеми нужными методами
-                Thread thread = new Thread(()=> 
-                {
-                    GetModemOperator(comm);
-                    GetCurrentIMSI(comm);
-                    GetSignalLevel(comm);
-                });
+                Thread thread = new Thread(new ParameterizedThreadStart(GetModemData));
                 thread.Name = comm.PortName + " GetModemData";
                 _threadList.Add(thread);
-                thread.Start();
+                thread.Start(comm);
             }
             // ждем всех
             WaitForAllThreadsToComplete(_threadList);
         }
 
+        private void GetModemData(object com)
+        {
+            SmsModemBlock comm = (SmsModemBlock)com;
+
+            GetModemOperator(comm);
+            GetCurrentIMSI(comm);
+            GetSignalLevel(comm);
+        }
+
         /// <summary>
         /// Запрашивает номера телефонов
         /// </summary>
-        private void GetModemTels()
+        private async void GetModemTels()
         {
             foreach (SmsModemBlock item in activeComs)
             {
@@ -143,7 +148,7 @@ namespace SmsModemClient
         /// Выполняет запрос номера телефона в зависимости от оператора
         /// </summary>
         /// <param name="block"></param>
-        public async void RequestTelNumber(object b)
+        public void RequestTelNumber(object b)
         {
             SmsModemBlock block = (SmsModemBlock)b;
             try
@@ -151,7 +156,7 @@ namespace SmsModemClient
                 switch (block.Operator.ToLower())
                 {
                     case "beeline":
-                        await block.GetNumBeeline();
+                        block.GetNumBeeline();
                         break;
                     default:
                         break;
@@ -183,6 +188,15 @@ namespace SmsModemClient
         }
 
         /// <summary>
+        /// Получает уровень сигнала
+        /// </summary>
+        /// <param name="comm">Модем, для которого делается запрос</param>
+        private void GetSignalLevel(SmsModemBlock comm)
+        {
+            comm.GetSignalStrength();
+        }
+
+        /// <summary>
         /// Открывает все порты
         /// </summary>
         private void OpenAllPorts()
@@ -199,34 +213,20 @@ namespace SmsModemClient
         }
 
         /// <summary>
-        /// Получает уровень сигнала
+        /// Закрывает все порты
         /// </summary>
-        /// <param name="comm"></param>
-        private void GetSignalLevel(SmsModemBlock comm)
+        public void CloseAllPorts()
         {
-            var signalStrength = comm.GetSignalQuality().SignalStrength;
-
-            if (signalStrength < 10)
+            foreach (SmsModemBlock comm in activeComs)
             {
-                comm.SignalLevel = SmsModemBlock.Signal.Poor;
-            }
-            else if (signalStrength >= 10 && signalStrength <= 14)
-            {
-                comm.SignalLevel = SmsModemBlock.Signal.Ok;
-            }
-            else if (signalStrength >= 15 && signalStrength <= 19)
-            {
-                comm.SignalLevel = SmsModemBlock.Signal.Good;
-            }
-            else if (signalStrength > 19)
-            {
-                comm.SignalLevel = SmsModemBlock.Signal.Excellent;
-            }
-            else
-            {
-                comm.SignalLevel = SmsModemBlock.Signal.None;
+                if (comm.IsOpen())
+                {
+                    Thread t = new Thread(comm.Close);
+                    t.Start();
+                }
             }
         }
+
         /// <summary>
         /// Метод, блокирующий основной поток, пока не выполнятся заданные потоки
         /// </summary>

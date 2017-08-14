@@ -20,12 +20,14 @@ namespace SmsModemClient
         public string ICCID { get; set; }
         public string TelNumber { get; set; }
         public Signal SignalLevel { get; set; }
-
+        public static event Action NumberRecieved;
         public static CancellationTokenSource cts = new CancellationTokenSource();
+
         private CancellationToken ct = cts.Token;
 
         public SmsModemBlock(string portName, int baudRate) : base(portName, baudRate)
         {
+            Operator = ICCID = TelNumber = "Загрузка...";
         }
 
         /// <summary>
@@ -36,9 +38,21 @@ namespace SmsModemClient
             //GsmPhone phone = new GsmPhone(PortName, BaudRate, Timeout);
             lock (this)
             {
-                string input = GetProtocol().ExecAndReceiveMultiple("AT+CCID");
-                string text = TrimLineBreaks(input);
-                ICCID = Regex.Match(text, "\"([^\"]*)\"").Groups[1].Value;
+                try
+                {
+                    string input = GetProtocol().ExecAndReceiveMultiple("AT+CCID");
+                    string text = TrimLineBreaks(input);
+                    ICCID = Regex.Match(text, "\"([^\"]*)\"").Groups[1].Value;
+                }
+                catch (Exception ex)
+                {
+                    ICCID = "Ошибка!";
+                    var x = ex.Message;
+                }
+                finally
+                {
+                    ReleaseProtocol();
+                }
             }
         }
 
@@ -47,20 +61,63 @@ namespace SmsModemClient
         /// </summary>
         public void GetOperator()
         {
-            GetProtocol().ExecAndReceiveMultiple("AT+COPS=3,0");
-
-            var info = this.GetCurrentOperator();
-            if (info != null)
+            lock (this)
             {
-                this.Operator = info.TheOperator;
-                //Provider op = (Provider)Enum.Parse(typeof(Provider), Operator);
+                try
+                {
+                    GetProtocol().ExecAndReceiveMultiple("AT+COPS=3,0");
+                    var info = this.GetCurrentOperator();
+                    if (info != null)
+                    {
+                        this.Operator = info.TheOperator;
+                        //Provider op = (Provider)Enum.Parse(typeof(Provider), Operator);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Operator = "Ошибка!";
+                    var x = ex.Message;
+                }
+                finally
+                {
+                    ReleaseProtocol();
+                }
+            }         
+        }
+
+        /// <summary>
+        /// Получает текщий уровень сигнала
+        /// </summary>
+        public void GetSignalStrength()
+        {
+            var signalStrength = GetSignalQuality().SignalStrength;
+
+            if (signalStrength < 10)
+            {
+                SignalLevel = Signal.Poor;
+            }
+            else if (signalStrength >= 10 && signalStrength <= 14)
+            {
+                SignalLevel = Signal.Ok;
+            }
+            else if (signalStrength >= 15 && signalStrength <= 19)
+            {
+                SignalLevel = Signal.Good;
+            }
+            else if (signalStrength > 19)
+            {
+                SignalLevel = Signal.Excellent;
+            }
+            else
+            {
+                SignalLevel = Signal.None;
             }
         }
 
         /// <summary>
         /// Запрашивет номер у Билайна
         /// </summary>
-        public async Task GetNumBeeline()
+        public async void GetNumBeeline()
         {
             await WaitSMS();
         }
@@ -71,7 +128,8 @@ namespace SmsModemClient
         /// <param name="messagelist">список сообщений</param>
         private bool HasOperatorSms()
         {
-            var messagelist = ReadRawMessages(PhoneMessageStatus.All, "SM");
+            var messagelist = ReadRawMessages(PhoneMessageStatus.All, PhoneStorageType.Sim);
+
             foreach (ShortMessageFromPhone message in messagelist)
             {
                 var pdu = new SmsDeliverPdu(message.Data, true, -1);
@@ -85,7 +143,7 @@ namespace SmsModemClient
                     var tel = txt.Substring(txt.IndexOf('9'));
                     tel = tel.Replace(".", "");
                     TelNumber = "+7" + tel;
-                    //NumberRecieved();
+                    NumberRecieved();
                     return true;
                 }
             }
@@ -116,6 +174,7 @@ namespace SmsModemClient
                     {
                         TelNumber = "Ошибка!";
                     }
+                    ReleaseProtocol();
                     return;
                 }
                 else

@@ -16,14 +16,36 @@ namespace SmsModemClient
     public partial class CommForm : Form
     {
 
+        /// <summary>
+        /// Наш модем
+        /// </summary>
         SmsModemBlock comm;
+        /// <summary>
+        /// Режим отображения сообщений
+        /// </summary>
+        enum MessageDisplayMode
+        {
+            Popup,
+            Datagrid
+        }
 
-        private int i = 1;
-
-        private delegate void ShowShortMessageDelegate(SmsPdu msg);
-        private delegate void ShowLongMessageDelegate(RecievedSMS msg);
-
+        private int i = 1;        
+        /// <summary>
+        /// Входящие сообщения
+        /// </summary>
         private ShortMessageFromPhone[] inbox;
+        /// <summary>
+        /// Коллекция объектов <see cref="SmsPdu"/>, являющихся частями длинного сообщения
+        /// </summary>
+        private IList<SmsPdu> longMsg;
+        /// <summary>
+        /// Предыдущиее сообщение
+        /// </summary>
+        private SmsDeliverPdu prevMsg;
+        /// <summary>
+        /// Текущий способ отображения сообщений
+        /// </summary>
+        private MessageDisplayMode DisplayMode = MessageDisplayMode.Popup;
 
         /// <summary>
         /// Создает новую форму
@@ -35,9 +57,10 @@ namespace SmsModemClient
             //Comm = new SmsModemBlock(phone.PortName, phone.BaudRate);
 
             InitializeComponent();
-            this.Text = phone.PortName;
+            this.Text = phone.PortName + " " + phone.TelNumber;
             this.Name = "CommForm" + phone.PortName;
 
+            comm.EnableMessageNotifications();
             comm.MessageReceived += new MessageReceivedEventHandler(comm_MessageReceived);
             comm.LoglineAdded += new LoglineAddedEventHandler(Main_LoglineAdded);
         }
@@ -49,12 +72,26 @@ namespace SmsModemClient
 
         private void comm_MessageReceived(object sender, MessageReceivedEventArgs e)
         {
-            var messages = comm.ReadRawMessages(PhoneMessageStatus.ReceivedUnread, "SM");
-
+            var messages = comm.ReadRawMessages(PhoneMessageStatus.ReceivedUnread, PhoneStorageType.Sim);
+            
             foreach (ShortMessageFromPhone message in messages)
             {
                 SmsDeliverPdu data = new SmsDeliverPdu(message.Data, true, -1);
+                bool isMultiPart = SmartMessageDecoder.IsPartOfConcatMessage(data);
+                if (isMultiPart)
+                {
+                    var longMessage = DecodeLongMessage(data);
+                    if (longMessage != null)
+                    {
+                        DisplayMessage(longMessage);
+                    }
+                }
+                else
+                {
+                    DisplayMessage(data);
+                }
             }
+
         }
 
         private void getSMSListButton_Click(object sender, EventArgs e)
@@ -72,10 +109,11 @@ namespace SmsModemClient
             getSMSListButton.Enabled = false;
             var temp = getSMSListButton.Text;
             getSMSListButton.Text = "Зарузка...";
+            DisplayMode = MessageDisplayMode.Datagrid;
 
-            //LoadSmsInbox();
             await LoadInbox();
 
+            DisplayMode = MessageDisplayMode.Popup;
             getSMSListButton.Text = temp;
             getSMSListButton.Enabled = true;
         }
@@ -90,14 +128,12 @@ namespace SmsModemClient
         /// </summary>
         private void LoadSmsInbox()
         {
-
-            var messages = comm.ReadRawMessages(PhoneMessageStatus.All, "SM");
+            var messages = comm.ReadRawMessages(PhoneMessageStatus.All, PhoneStorageType.Sim);
             inbox = messages;
-            //var msgs = Comm.ReadRawMessages(PhoneMessageStatus.All, PhoneStorageType.Sim);
 
             // тут начинается пиздец
-            IList<SmsPdu> longMsg = new List<SmsPdu>();
-
+            longMsg = new List<SmsPdu>();
+            prevMsg = null;
             foreach (ShortMessageFromPhone message in messages)
             {
                 i = message.Index;
@@ -108,17 +144,11 @@ namespace SmsModemClient
                 // если у сообщения есть датахедер, то скорее всего оно длинное
                 if (SMSPDU.UserDataHeaderPresent && isMultiPart)
                 {
-                    if (longMsg.Count==0 || SmartMessageDecoder.ArePartOfSameMessage(longMsg.Last(), SMSPDU))
-                    longMsg.Add(SMSPDU);
-                    if (SmartMessageDecoder.AreAllConcatPartsPresent(longMsg)) // is Complete
+                    var longMessage = DecodeLongMessage(SMSPDU);
+                    if (longMessage!=null)
                     {
-                        var txt = SmartMessageDecoder.CombineConcatMessageText(longMsg);
-                        // создаем сообщение
-                        RecievedSMS longMessage = new RecievedSMS(i, "REC_READ", SMSPDU.OriginatingAddress, SMSPDU.SCTimestamp, txt);
                         // Показываем
                         DisplayMessage(longMessage);
-                        // очищаем за собой
-                        longMsg.Clear();
                     }
                 }
                 else
@@ -128,51 +158,88 @@ namespace SmsModemClient
             }
         }
 
+        /// <summary>
+        /// Обрабатывает длинные сообщения
+        /// </summary>
+        /// <param name="SMSPDU">Само сообщение</param>
+        /// <param name="longMsg">Коллекция объектов <see cref="SmsPdu"/>, являющихся частями длинного сообщения</param>
+        /// <param name="prevMsg">Предыдущее сообщение</param>
+        private RecievedSMS DecodeLongMessage(SmsDeliverPdu SMSPDU)
+        {
+            if (longMsg.Count == 0 || SmartMessageDecoder.ArePartOfSameMessage(longMsg.Last(), SMSPDU))
+                longMsg.Add(SMSPDU);
+            else if (prevMsg != null && SmartMessageDecoder.ArePartOfSameMessage(SMSPDU, prevMsg))
+            {
+                longMsg.Clear();
+                longMsg.Add(SMSPDU);
+            }
+            prevMsg = SMSPDU;
+            if (SmartMessageDecoder.AreAllConcatPartsPresent(longMsg)) // is Complete
+            {
+                var txt = SmartMessageDecoder.CombineConcatMessageText(longMsg);
+                // создаем сообщение
+                RecievedSMS longMessage = new RecievedSMS(i, "REC_READ", SMSPDU.OriginatingAddress, SMSPDU.SCTimestamp, txt);
+                // очищаем за собой
+                longMsg.Clear();
+                return longMessage;
+            }
+            return null;
+        }
+
+        private delegate void ShowMessageDelegate(object msg);
 
         /// <summary>
         /// Отображает сообщение
         /// </summary>
         /// <param name="pdu">Сообщение</param>
-        private void DisplayMessage(SmsPdu pdu)
+        /// <param name="mode">Режим отображения</param>
+        private void DisplayMessage(object pdu)
         {
             if (this.InvokeRequired)
             {
-                this.BeginInvoke(new ShowShortMessageDelegate(DisplayMessage), new object[] { pdu });
+                this.BeginInvoke(new ShowMessageDelegate(DisplayMessage), new object[] { pdu});
                 return;
             }
+            //задаем переменные
+            int index = 0;
+            string phoneNumber = string.Empty;
+            string msg = string.Empty;
+            string timestamp = string.Empty;
+            //парсим обьект
             if (pdu is SmsDeliverPdu)
             {
                 SmsDeliverPdu data = (SmsDeliverPdu)pdu;
-                var phoneNumber = data.OriginatingAddress;
-                var msg = data.UserDataText;
-                var date = string.Format("{0:dd/MM/yyyy}", data.SCTimestamp.ToDateTime());
-                var time = string.Format("{0:HH:mm:ss}", data.SCTimestamp.ToDateTime());
-                var timestamp = data.SCTimestamp.ToDateTime();
-
-                //read message in datagrid
-                SMSList.Rows.Add(i, phoneNumber, timestamp, msg);
+                phoneNumber = data.OriginatingAddress;
+                msg = data.UserDataText;
+                timestamp = data.SCTimestamp.ToString();
+                index = i;                
             }
-        }
-
-        /// <summary>
-        /// Отображает сообщение
-        /// </summary>
-        /// <param name="LongSMS">Большое сообщение</param>
-        private void DisplayMessage(RecievedSMS LongSMS)
-        {
-            if (this.InvokeRequired)
+            else if (pdu is RecievedSMS)
             {
-                this.BeginInvoke(new ShowLongMessageDelegate(DisplayMessage), new object[] { LongSMS });
+                RecievedSMS LongSMS = (RecievedSMS)pdu;
+                phoneNumber = LongSMS.Sender;
+                msg = LongSMS.Message;
+                timestamp = LongSMS.Date.ToString();
+                index = LongSMS.Index;
+            }
+            else
+            {
                 return;
             }
-            var phoneNumber = LongSMS.Sender;
-            var msg = LongSMS.Message;
-            var date = string.Format("{0:dd/MM/yyyy}", LongSMS.Date);
-            var time = string.Format("{0:HH:mm:ss}", LongSMS.Date);
-            var timestamp = LongSMS.Date.ToString();
 
-            //read message in datagrid
-            SMSList.Rows.Add(LongSMS.Index, phoneNumber, timestamp, msg);
+            // отображаем смс
+            switch (DisplayMode)
+            {
+                case MessageDisplayMode.Popup:
+                    MessageBox.Show(string.Format("Получено новое сообщение от {0}: \r\n {1} \r\n {2}", phoneNumber, timestamp, msg));
+                    break;
+                case MessageDisplayMode.Datagrid:
+                    //read message in datagrid
+                    SMSList.Rows.Add(index, phoneNumber, timestamp, msg);
+                    break;
+                default:
+                    break;
+            }            
         }
 
         //Выбор СМСки
@@ -198,10 +265,13 @@ namespace SmsModemClient
         }
 
 
-        //закрываем за собой порт
         private void CommForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            //if (Comm.IsOpen()) Comm.Close();
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                e.Cancel = true;
+                Hide();
+            }
         }
 
         private void deleteAllButton_Click(object sender, EventArgs e)
@@ -227,12 +297,12 @@ namespace SmsModemClient
         {
             if (InvokeRequired)
             {
-                Invoke(new Action<DeleteScope, string>(comm.DeleteMessages), new object[] { DeleteScope.All, "SM" });
+                Invoke(new Action<DeleteScope, string>(comm.DeleteMessages), new object[] { DeleteScope.All, PhoneStorageType.Sim });
             }
             else
             {
-                comm.DeleteMessages(DeleteScope.All, "SM");
-            }            
+                comm.DeleteMessages(DeleteScope.All, PhoneStorageType.Sim);
+            }
         }
 
         private void getSignalLevel_Click(object sender, EventArgs e)
