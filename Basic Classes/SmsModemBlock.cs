@@ -28,6 +28,11 @@ namespace SmsModemClient
 
         private CancellationToken ct = cts.Token;
 
+        public SmsModemBlock() : base()
+        {
+
+        }
+
         public SmsModemBlock(string portName, int baudRate) : base(portName, baudRate)
         {
             Port = PortName;

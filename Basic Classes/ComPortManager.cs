@@ -25,7 +25,6 @@ namespace SmsModemClient
         public ComPortManager(MainForm mainForm)
         {
             MacAddress = GetMacAddress().ToString();
-            MessageBox.Show(MacAddress);
             InitializeManager();
             mainForm.loadComsButton.Enabled = true;
         }
@@ -152,7 +151,7 @@ namespace SmsModemClient
         }
 
         /// <summary>
-        /// Получает номера телефонов
+        /// Получает номера телефонов из БД либо запрашивает вручную
         /// </summary>
         private void GetModemTels()
         {
@@ -162,12 +161,13 @@ namespace SmsModemClient
             {
                 foreach (SmsModemBlock item in activeComs)
                 {
-                    var existing = db.activeComs.Find(item.Id);
-                    if (existing != null)
+                    //ищем сходства в БД
+                    var temp = FindItemInDb(item,db);
+                    if (temp != null) // если находим, присваиваем значение
                     {
-                        item.TelNumber = existing.TelNumber;
+                        item.TelNumber = temp.TelNumber;
                     }
-                    else
+                    else // если нет посылаем запрос
                     {
                         Thread thread = new Thread(new ParameterizedThreadStart(RequestTelNumber));
                         thread.Name = item.PortName + " GetTelNumber";
@@ -175,6 +175,17 @@ namespace SmsModemClient
                     }
                 }                
             }
+        }
+
+        /// <summary>
+        /// Выполняет поиск соответствующего элемента в БД
+        /// </summary>
+        /// <param name="item">Искомый элемент</param>
+        /// <param name="db">БД, по котороый выполняется поиск</param>
+        /// <returns>Соответствующий элемент или <see langword="null"/></returns>
+        private SmsModemBlock FindItemInDb(SmsModemBlock item, ComContext db)
+        {
+            return db.activeComs.Find(item.Id);
         }
 
         /// <summary>
