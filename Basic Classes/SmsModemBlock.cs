@@ -131,14 +131,43 @@ namespace SmsModemClient
         /// </summary>
         public async void GetNumBeeline()
         {
-            await WaitSMS();
+            await WaitSMSBeeline();
+        }
+
+        /// <summary>
+        /// Запрашивет номер у Билайна
+        /// </summary>
+        public async void GetNumMTS()
+        {
+            await WaitSMSMTS();
+        }
+
+        /// <summary>
+        /// Получает номер от Мегафона
+        /// </summary>
+        public void GetNumMegafon()
+        {
+            // тут вроде все просто
+            lock (this)
+            {
+                try
+                {
+                    var nums = this.GetSubscriberNumbers();
+                    TelNumber = nums.First().Number;
+                    // вызываем событие, чтобы симка добавилась в БД
+                    NumberReceived(this, new EventArgs());
+                }
+                catch (Exception ex)
+                {                    
+                }
+            }
         }
 
         /// <summary>
         /// Находит сообщение от оператора
         /// </summary>
         /// <param name="messagelist">список сообщений</param>
-        private bool HasOperatorSms()
+        private bool HasBeelineSms()
         {
             var messagelist = ReadRawMessages(PhoneMessageStatus.All, PhoneStorageType.Sim);
 
@@ -163,15 +192,43 @@ namespace SmsModemClient
         }
 
         /// <summary>
-        /// Задача ждать смс от оператора
+        /// Находит сообщение от оператора
+        /// </summary>
+        /// <param name="messagelist">список сообщений</param>
+        private bool HasMTSSms()
+        {
+            var messagelist = ReadRawMessages(PhoneMessageStatus.All, PhoneStorageType.Sim);
+
+            foreach (ShortMessageFromPhone message in messagelist)
+            {
+                var pdu = new SmsDeliverPdu(message.Data, true, -1);
+                var origin = pdu.OriginatingAddress;
+                var txt = pdu.UserDataText;
+
+                bool isNumber = txt.ToLower().Contains("ваш номер");
+                bool isOperator = origin.ToLower().Contains("111");
+                if (isOperator && isNumber)
+                {
+                    var tel = txt.Substring(txt.IndexOf('9'));
+                    tel = tel.Replace(".", "");
+                    TelNumber = "+7" + tel;
+                    NumberReceived(this, new EventArgs());
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Задача ждать смс от Билайна
         /// </summary>
         /// <returns></returns>
-        private Task WaitSMS()
+        private Task WaitSMSBeeline()
         {
             Task t = new Task(() =>
             {
                 var isCon = IsConnected();
-                var hasSms = HasOperatorSms();
+                var hasSms = HasBeelineSms();
                 if (isCon && !hasSms)
                 {
                     int i = 0;                    
@@ -181,7 +238,42 @@ namespace SmsModemClient
                     {
                         Thread.Sleep(5000);
                         i++;
-                    } while (!HasOperatorSms() && i < 4);
+                    } while (!HasBeelineSms() && i < 4);
+                    if (i >= 4)
+                    {
+                        TelNumber = "Ошибка!";
+                    }
+                    ReleaseProtocol();
+                    return;
+                }
+                else
+                {
+                    return;
+                }
+            }, ct);
+            t.Start();
+            return t;
+        }
+
+        /// <summary>
+        /// Задача ждать смс от МТС
+        /// </summary>
+        /// <returns></returns>
+        private Task WaitSMSMTS()
+        {
+            Task t = new Task(() =>
+            {
+                var isCon = IsConnected();
+                var hasSms = HasMTSSms();
+                if (isCon && !hasSms)
+                {
+                    int i = 0;                    
+                    string resp = GetProtocol().ExecAndReceiveMultiple("ATD*111*0887#");                    
+                    do
+                    {
+                        Thread.Sleep(5000);
+                        i++;
+                    } while (!HasMTSSms() && i < 4);
                     if (i >= 4)
                     {
                         TelNumber = "Ошибка!";

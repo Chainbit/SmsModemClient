@@ -202,6 +202,12 @@ namespace SmsModemClient
                     case "beeline":
                         block.GetNumBeeline();
                         break;
+                    case "megafon":
+                        block.GetNumMegafon();
+                        break;
+                    case "mts rus":
+                        block.GetNumMTS();
+                        break;
                     default:
                         break;
                 }
