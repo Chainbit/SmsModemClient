@@ -16,7 +16,7 @@ namespace SmsModemClient
     /// </summary>
     public class SmsModemBlock : GsmCommMain
     {
-        public string Port { get; private set; }
+        //public string Port { get; private set; }
         public string Operator { get; set; }
         public string Id { get; set; }
         public string TelNumber { get; set; }
@@ -35,7 +35,7 @@ namespace SmsModemClient
 
         public SmsModemBlock(string portName, int baudRate) : base(portName, baudRate)
         {
-            Port = PortName;
+            //Port = PortName;
             Operator = Id = TelNumber = "Загрузка...";
         }
 
@@ -65,8 +65,8 @@ namespace SmsModemClient
             }
         }
 
-        // <summary>
-        /// Получает оператора
+        /// <summary>
+        /// Получает оператора сим карты
         /// </summary>
         public void GetOperator()
         {
@@ -188,6 +188,10 @@ namespace SmsModemClient
                     return true;
                 }
             }
+            if (messagelist.Length==10)
+            {
+                ClearInbox();
+            }
             return false;
         }
 
@@ -215,6 +219,10 @@ namespace SmsModemClient
                     NumberReceived(this, new EventArgs());
                     return true;
                 }
+            }
+            if (messagelist.Length == 5)
+            {
+                ClearInbox();
             }
             return false;
         }

@@ -333,5 +333,16 @@ namespace SmsModemClient
                 DB.SaveChanges();
             }
         }
+
+        /// <summary>
+        /// Очищает все входящие смс у всех симок
+        /// </summary>
+        private void ClearAllInbox()
+        {
+            foreach (SmsModemBlock comm in activeComs)
+            {
+                comm.ClearInbox();
+            }
+        }
     }
 }
