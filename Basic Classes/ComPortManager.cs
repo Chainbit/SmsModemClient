@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Threading;
 using GsmComm.GsmCommunication;
 using GsmComm.PduConverter;
+using System.Net.NetworkInformation;
 
 namespace SmsModemClient
 {
@@ -18,10 +19,28 @@ namespace SmsModemClient
         public List<SmsModemBlock> activeComs = new List<SmsModemBlock>();
         public ConcurrentQueue<SmsModemBlock> activeComsQueue = new ConcurrentQueue<SmsModemBlock>();
 
+        //private ComContext DB = new ComContext();
+        public string MacAddress { get; private set; }
+
         public ComPortManager(MainForm mainForm)
         {
+            MacAddress = GetMacAddress().ToString();
+            MessageBox.Show(MacAddress);
             InitializeManager();
             mainForm.loadComsButton.Enabled = true;
+        }
+
+        /// <summary>
+        /// Обработчик события <see cref="SmsModemBlock.NumberReceived"/>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void ComPortManager_NumberReceived(object sender, EventArgs e)
+        {
+            if (sender is SmsModemBlock)
+            {
+                AddItemToDb((SmsModemBlock)sender);
+            }
         }
 
         /// <summary>
@@ -96,6 +115,7 @@ namespace SmsModemClient
             {
                 if (comm.IsConnected())
                 {
+                    comm.MacAddress = this.MacAddress;
                     activeComsQueue.Enqueue(comm);
                 }
             }
@@ -132,15 +152,28 @@ namespace SmsModemClient
         }
 
         /// <summary>
-        /// Запрашивает номера телефонов
+        /// Получает номера телефонов
         /// </summary>
-        private async void GetModemTels()
+        private void GetModemTels()
         {
-            foreach (SmsModemBlock item in activeComs)
+            List<SmsModemBlock> newComs = new List<SmsModemBlock>();
+
+            using (ComContext db = new ComContext())
             {
-                Thread thread = new Thread(new ParameterizedThreadStart(RequestTelNumber));
-                thread.Name = item.PortName + " GetTelNumber";
-                thread.Start(item);
+                foreach (SmsModemBlock item in activeComs)
+                {
+                    var existing = db.activeComs.Find(item.Id);
+                    if (existing != null)
+                    {
+                        item.TelNumber = existing.TelNumber;
+                    }
+                    else
+                    {
+                        Thread thread = new Thread(new ParameterizedThreadStart(RequestTelNumber));
+                        thread.Name = item.PortName + " GetTelNumber";
+                        thread.Start(item);
+                    }
+                }                
             }
         }
 
@@ -236,6 +269,51 @@ namespace SmsModemClient
             foreach (Thread thread in threadList)
             {
                 thread.Join();
+            }
+        }
+
+        /// <summary>
+        /// Получает мак адрес компухтера
+        /// </summary>
+        /// <returns></returns>
+        private static PhysicalAddress GetMacAddress()
+        {
+            foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                // Только рабочее устройство
+                if (nic.OperationalStatus == OperationalStatus.Up)
+                {
+                    return nic.GetPhysicalAddress();
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Добавляет все данные в бд
+        /// </summary>
+        private void AddAllToDb()
+        {
+            using (ComContext DB = new ComContext())
+            {
+                foreach (var item in activeComs)
+                {
+                    DB.activeComs.Add(item);
+                }
+                DB.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// Добавляет элемент в бд
+        /// </summary>
+        /// <param name="comm"></param>
+        public void AddItemToDb(SmsModemBlock comm)
+        {
+            using (ComContext DB = new ComContext())
+            {
+                DB.activeComs.Add(comm);
+                DB.SaveChanges();
             }
         }
     }

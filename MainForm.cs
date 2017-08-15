@@ -25,10 +25,20 @@ namespace SmsModemClient
         private void MainForm_Load(object sender, EventArgs e)
         {
             manager = new ComPortManager(this);
-
-            SmsModemBlock.NumberRecieved += FillDatagrid;
+            //подписываемся на события
+            foreach (var item in manager.activeComs)
+            {
+                item.NumberReceived += refreshButton_Click;
+                item.NumberReceived += manager.ComPortManager_NumberReceived;
+            }
 
             FillDatagrid();
+
+            foreach (var port in manager.activeComs)
+            {
+                AddOwnedForm(new CommForm(port));
+            }
+
             // создаем таймер 
             timer = new System.Windows.Forms.Timer();
             timer.Interval = (1 * 1000);
@@ -66,7 +76,7 @@ namespace SmsModemClient
                 ComPortsDataGrid.Rows.Add();
                 ComPortsDataGrid.Rows[i].Cells["number"].Value = i;
                 ComPortsDataGrid.Rows[i].Cells["ComPortName"].Value = list[i].PortName;
-                ComPortsDataGrid.Rows[i].Cells["SimId"].Value = list[i].ICCID;
+                ComPortsDataGrid.Rows[i].Cells["SimId"].Value = list[i].Id;
                 ComPortsDataGrid.Rows[i].Cells["TelNumber"].Value = list[i].TelNumber;
                 ComPortsDataGrid.Rows[i].Cells["SIMoperator"].Value = list[i].Operator;
                 var img = Properties.Resources.none;
@@ -129,7 +139,8 @@ namespace SmsModemClient
                     var portName = senderGrid.Rows[e.RowIndex].Cells["ComPortName"].Value.ToString();
                     var port = manager.activeComs.Find(com => com.PortName == portName);
                     //MessageBox.Show(string.Format("Выбран порт {0}", portName));
-                    (new CommForm(port)).Show();
+
+                   OwnedForms.First(f=>f.Name == "CommForm"+portName).Show();
                 }
                 catch (NullReferenceException)
                 {
@@ -226,11 +237,16 @@ namespace SmsModemClient
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             SmsModemBlock.cts.Cancel();
-            manager.CloseAllPorts();            
+            manager.CloseAllPorts();
         }
 
         private async void refreshButton_Click(object sender, EventArgs e)
         {
+            if (this.InvokeRequired)
+            {
+                Invoke(new EventHandler(refreshButton_Click));
+                return;
+            }
             refreshButton.Enabled = false;
             //await GetAllSignalStrength();
             await FillDataGridAsync();

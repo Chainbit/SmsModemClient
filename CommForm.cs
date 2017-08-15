@@ -57,12 +57,34 @@ namespace SmsModemClient
             //Comm = new SmsModemBlock(phone.PortName, phone.BaudRate);
 
             InitializeComponent();
-            this.Text = phone.PortName + " " + phone.TelNumber;
-            this.Name = "CommForm" + phone.PortName;
+            this.Text = comm.PortName + " " + comm.TelNumber;
+            this.Name = "CommForm" + comm.PortName;
+            comm.NumberReceived += Comm_NumberRecieved;
+        }
 
+        private void Comm_NumberRecieved(object sender, EventArgs e)
+        {
+            UpdateName();
+        }
+
+        private void CommForm_Load(object sender, EventArgs e)
+        {
             comm.EnableMessageNotifications();
             comm.MessageReceived += new MessageReceivedEventHandler(comm_MessageReceived);
             comm.LoglineAdded += new LoglineAddedEventHandler(Main_LoglineAdded);
+            
+        }
+
+        /// <summary>
+        /// Обновляет имя окна
+        /// </summary>
+        private void UpdateName()
+        {
+            if (this.InvokeRequired)
+            {
+                Invoke(new Action(UpdateName));
+            }
+            this.Text = comm.PortName + " " + comm.TelNumber;
         }
 
         private void Main_LoglineAdded(object sender, LoglineAddedEventArgs e)
@@ -297,11 +319,11 @@ namespace SmsModemClient
         {
             if (InvokeRequired)
             {
-                Invoke(new Action<DeleteScope, string>(comm.DeleteMessages), new object[] { DeleteScope.All, PhoneStorageType.Sim });
+                Invoke(new Action(comm.ClearInbox));
             }
             else
             {
-                comm.DeleteMessages(DeleteScope.All, PhoneStorageType.Sim);
+                comm.ClearInbox();
             }
         }
 
@@ -337,6 +359,18 @@ namespace SmsModemClient
             {
                 log.AppendText(text);
                 log.AppendText(Environment.NewLine);
+            }
+        }
+
+        private void sendButton_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(request.Text))
+            {
+                lock (this)
+                {
+                    comm.GetProtocol().ExecAndReceiveMultiple(request.Text);
+                    comm.ReleaseProtocol();
+                }                
             }
         }
     }

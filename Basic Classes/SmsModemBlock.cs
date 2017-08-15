@@ -16,18 +16,22 @@ namespace SmsModemClient
     /// </summary>
     public class SmsModemBlock : GsmCommMain
     {
+        public string Port { get; private set; }
         public string Operator { get; set; }
-        public string ICCID { get; set; }
+        public string Id { get; set; }
         public string TelNumber { get; set; }
         public Signal SignalLevel { get; set; }
-        public static event Action NumberRecieved;
+        public string MacAddress { get; set; }
+
+        public event EventHandler NumberReceived;
         public static CancellationTokenSource cts = new CancellationTokenSource();
 
         private CancellationToken ct = cts.Token;
 
         public SmsModemBlock(string portName, int baudRate) : base(portName, baudRate)
         {
-            Operator = ICCID = TelNumber = "Загрузка...";
+            Port = PortName;
+            Operator = Id = TelNumber = "Загрузка...";
         }
 
         /// <summary>
@@ -42,11 +46,11 @@ namespace SmsModemClient
                 {
                     string input = GetProtocol().ExecAndReceiveMultiple("AT+CCID");
                     string text = TrimLineBreaks(input);
-                    ICCID = Regex.Match(text, "\"([^\"]*)\"").Groups[1].Value;
+                    Id = Regex.Match(text, "\"([^\"]*)\"").Groups[1].Value;
                 }
                 catch (Exception ex)
                 {
-                    ICCID = "Ошибка!";
+                    Id = "Ошибка!";
                     var x = ex.Message;
                 }
                 finally
@@ -90,8 +94,11 @@ namespace SmsModemClient
         /// </summary>
         public void GetSignalStrength()
         {
-            var signalStrength = GetSignalQuality().SignalStrength;
-
+            int signalStrength;
+            lock (this)
+            {
+                signalStrength = GetSignalQuality().SignalStrength;
+            }
             if (signalStrength < 10)
             {
                 SignalLevel = Signal.Poor;
@@ -143,7 +150,7 @@ namespace SmsModemClient
                     var tel = txt.Substring(txt.IndexOf('9'));
                     tel = tel.Replace(".", "");
                     TelNumber = "+7" + tel;
-                    NumberRecieved();
+                    NumberReceived(this, new EventArgs());
                     return true;
                 }
             }
@@ -186,6 +193,13 @@ namespace SmsModemClient
             return t;
         }
 
+        /// <summary>
+        /// Очищает входящие сообщения
+        /// </summary>
+        public void ClearInbox()
+        {
+            DeleteMessages(DeleteScope.All, PhoneStorageType.Sim);
+        }
 
         private string TrimLineBreaks(string input)
         {

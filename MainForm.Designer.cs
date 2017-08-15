@@ -147,8 +147,8 @@
             // 
             // iCCIDDataGridViewTextBoxColumn
             // 
-            this.iCCIDDataGridViewTextBoxColumn.DataPropertyName = "ICCID";
-            this.iCCIDDataGridViewTextBoxColumn.HeaderText = "ICCID";
+            this.iCCIDDataGridViewTextBoxColumn.DataPropertyName = "Id";
+            this.iCCIDDataGridViewTextBoxColumn.HeaderText = "Id";
             this.iCCIDDataGridViewTextBoxColumn.Name = "iCCIDDataGridViewTextBoxColumn";
             this.iCCIDDataGridViewTextBoxColumn.ReadOnly = true;
             // 
