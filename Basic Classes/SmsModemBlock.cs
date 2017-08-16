@@ -14,6 +14,7 @@ namespace SmsModemClient
     /// <summary>
     /// Класс блока модема, унаследованный от <see cref="GsmCommMain"/>
     /// </summary>
+    [Serializable]
     public class SmsModemBlock : GsmCommMain
     {
         //public string Port { get; private set; }

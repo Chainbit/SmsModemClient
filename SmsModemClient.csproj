@@ -70,9 +70,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Basic Classes\ClientReceiver.cs" />
+    <Compile Include="Basic Classes\ClientSender.cs" />
     <Compile Include="Basic Classes\CommStream.cs" />
     <Compile Include="Basic Classes\ComPortManager.cs" />
-    <Compile Include="ComContext.cs" />
+    <Compile Include="Basic Classes\ComContext.cs" />
     <Compile Include="CommForm.cs">
       <SubType>Form</SubType>
     </Compile>
