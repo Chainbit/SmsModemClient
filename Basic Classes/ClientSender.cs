@@ -57,6 +57,37 @@ namespace SmsModemClient
             }
         }
 
+        /// <summary>
+        /// Отправляет текстовое сообщение на сервер
+        /// </summary>
+        /// <param name="txt"></param>
+        public void SendText(string txt)
+        {
+            using (NetworkStream stream = client.GetStream())
+            {
+                byte[] data = Encoding.Unicode.GetBytes(txt);
+                stream.Write(data, 0, data.Length);
+            }
+        }
+
+        /// <summary>
+        /// Посылает на сервер сообщение об ошибке какого-либо порта
+        /// </summary>
+        /// <param name="comm">Объект вызвавший ошибку</param>
+        public void SendObjectError(SmsModemBlock comm)
+        {
+            SendText(string.Format("MALFUNCTION: {0} {1}", comm.Id, comm.MacAddress));
+        }
+
+        /// <summary>
+        /// Послать SQL запрос на сервер
+        /// </summary>
+        /// <param name="query"></param>
+        public void SendSqlQuery(string query)
+        {
+            SendText(string.Format("SQL: {0}", query));
+        }
+
         public void Dispose()
         {
             client.Close();
