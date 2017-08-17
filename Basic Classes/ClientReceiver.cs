@@ -6,56 +6,102 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace SmsModemClient
 {
-    class ClientReceiver : IDisposable
+    class ClientReceiver 
     {
-        /// <summary>
-        /// Локальный адрес
-        /// </summary>
-        private IPAddress localAddr = IPAddress.Parse("127.0.0.1");
-        private int port = 8888;
-        private TcpListener client = null;
+        //адрес на сервере, который будет слушать программа
+        private string ServerAddress = "http://localhost:8888/connection/";
 
-        public string serverResponse = string.Empty;
+        HttpListener listener = new HttpListener();
+        ComPortManager manager;
+        ClientSender sender = new ClientSender();
 
-        public ClientReceiver()
+        public ClientReceiver(ComPortManager cpm)
         {
-            client = new TcpListener(localAddr, port);
-            client.Start();
+            manager = cpm;
         }
-        
-        /// <summary>
-        /// Слушаем что говорит сервер
-        /// </summary>
-        public void Listen()
+
+        public Task ListenForCommands()
         {
-            // получаем входящее подключение
-            TcpClient server = client.AcceptTcpClient();
-            using (NetworkStream stream = server.GetStream())
+            return Task.Run(() =>
             {
                 while (true)
                 {
-                    var data = new byte[256];// буфер считывания
-                    StringBuilder builder = new StringBuilder(); // строка
-                    int bytes = 0;// индекс
-
-                    while (stream.DataAvailable)
-                    {
-                        bytes = stream.Read(data, 0, data.Length);
-                        builder.Append(Encoding.Unicode.GetString(data, 0, bytes));
-                    }
-                    serverResponse = builder.ToString();
+                    sender.SendRequest(manager.MacAddress+"_listening");
+                    Thread.Sleep(3000);
                 }
+            });
+        }
+
+        private void ReturnCommand()
+        {
+
+        }
+
+        private void StartListen()
+        {
+            listener.AuthenticationSchemes = AuthenticationSchemes.Basic;
+            listener.Prefixes.Add(ServerAddress);
+            listener.Start();
+        }
+
+        private async void GetResponse()
+        {
+            // метод GetContext блокирует текущий поток, ожидая получение запроса 
+            HttpListenerContext context = await listener.GetContextAsync();
+            HttpListenerRequest request = context.Request;
+            var command = request.QueryString.Get("commandName");
+            var parameters = request.QueryString.Get("parameters");
+
+            if (command != null)
+            {
+                await ParseCommand(command);
             }
 
+            // получаем объект ответа
+            HttpListenerResponse response = context.Response;           
+
+            // создаем ответ в виде кода html
+            string responseStr = "<html><head><meta charset='utf8'></head><body>Привет мир!</body></html>";
+            byte[] buffer = Encoding.Unicode.GetBytes(responseStr);
+            // получаем поток ответа и пишем в него ответ
+            response.ContentLength64 = buffer.Length;
+            using (Stream output = response.OutputStream)
+            {
+                output.Write(buffer, 0, buffer.Length);
+            }
         }
 
-        public void Dispose()
+        private Task ParseCommand(string commandName)
         {
-            client.Stop();
+            return Task.Factory.StartNew(() =>
+            {
+                CommCommand command = (CommCommand)Enum.Parse(typeof(CommCommand), commandName);
+                switch (command)
+                {
+                    case CommCommand.SendActiveComs:
+                        break;
+                    case CommCommand.ReturnSMS:
+                        
+                        break;
+                    default:
+                        break;
+                }
+            });
         }
 
+        private void StopListen()
+        {
+            listener.Stop();
+        }
+
+        public enum CommCommand
+        {
+            SendActiveComs,
+            ReturnSMS
+        }
     }
 }

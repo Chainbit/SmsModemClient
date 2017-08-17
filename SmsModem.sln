@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmsModemClient", "SmsModemC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmsModemBlock", "..\SmsModemBlock\SmsModemBlock.csproj", "{261EB03F-89E2-42B0-97B1-622940AA4CF8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConnectionService", "ConnectionService\ConnectionService.csproj", "{206C1387-4474-4F70-A71A-8D3CD42310E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmsModemServer", "SmsModemServer\SmsModemServer.csproj", "{16D27570-DE5D-4A78-A86C-4F9EFE323318}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{261EB03F-89E2-42B0-97B1-622940AA4CF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{261EB03F-89E2-42B0-97B1-622940AA4CF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{261EB03F-89E2-42B0-97B1-622940AA4CF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{206C1387-4474-4F70-A71A-8D3CD42310E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{206C1387-4474-4F70-A71A-8D3CD42310E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{206C1387-4474-4F70-A71A-8D3CD42310E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{206C1387-4474-4F70-A71A-8D3CD42310E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16D27570-DE5D-4A78-A86C-4F9EFE323318}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16D27570-DE5D-4A78-A86C-4F9EFE323318}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16D27570-DE5D-4A78-A86C-4F9EFE323318}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16D27570-DE5D-4A78-A86C-4F9EFE323318}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

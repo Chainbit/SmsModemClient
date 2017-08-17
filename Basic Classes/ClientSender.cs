@@ -7,90 +7,160 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization.Formatters;
+using System.Runtime.Serialization;
+using System.IO;
+using System.Runtime.Serialization.Json;
+using System.Collections.Specialized;
 
 namespace SmsModemClient
 {
-    class ClientSender : IDisposable
+    class ClientSender
     {
-        // Данные для подключения
-        private const int port = 8888;
-        private const string server = "127.0.0.1";
+        private string ServerAddress = "http://localhost:8888/connection/";
 
-        TcpClient client;
-        BinaryFormatter formatter;
+        private NetworkCredential logoPass = new NetworkCredential("admin", "admin");
 
-        public ClientSender()
+        public async void SendRequest(string reqData)
         {
-            client = new TcpClient(server, port);
-            formatter = new BinaryFormatter();
+            await PostRequestAsync(reqData);
+        }
+
+        public async void SendRequest(byte[] reqData)
+        {
+            await PostRequestAsync(reqData);
+        }
+
+        public async Task RequestWithParams(NameValueCollection pars)
+        {
+            using (WebClient web = new WebClient())
+            {
+                web.UploadValuesAsync((new UriBuilder(ServerAddress)).Uri, pars);
+            } 
         }
 
         /// <summary>
-        /// Cериализует и отправляет объект на сервер
+        /// Отправляет данные пост запросом
         /// </summary>
-        /// <param name="comm">Объект для отправки</param>
-        public void SendObject(SmsModemBlock comm)
+        /// <param name="data">Строка с данными</param>
+        /// <returns></returns>
+        private async Task PostRequestAsync(string data)
         {
-            try
-            {
-                using (NetworkStream stream = client.GetStream())
-                {
-                    formatter.Serialize(stream, comm);
-                    System.Windows.Forms.MessageBox.Show("Object Serialized!");
-                    var data = new byte[256];// буфер считывания
-                    StringBuilder response = new StringBuilder(); // строка
-                    int bytes = 0;// индекс
-                    //считываем ответ
-                    do
-                    {
-                        bytes = stream.Read(data, 0, data.Length);
-                        response.Append(Encoding.Unicode.GetString(data, 0, bytes));
-                    }
-                    while (stream.DataAvailable);
+            WebRequest request = WebRequest.Create(ServerAddress);
+            request.Credentials = logoPass;
+            request.Method = "POST"; // для отправки используется метод Post
+            // данные для отправки
+            //data = "sName=Hello world!";
+            //название_параметра=данные
+            // преобразуем данные в массив байтов
+            byte[] byteArray = Encoding.Unicode.GetBytes(data);
+            // устанавливаем тип содержимого - параметр ContentType
+            request.ContentType = "application/x-www-form-urlencoded";
+            // Устанавливаем заголовок Content-Length запроса - свойство ContentLength
+            request.ContentLength = byteArray.Length;
 
-                    // работаем с ответом
+            //записываем данные в поток запроса
+            using (Stream dataStream = request.GetRequestStream())
+            {
+                dataStream.Write(byteArray, 0, byteArray.Length);
+            }
+
+            WebResponse response = await request.GetResponseAsync();
+
+            using (Stream stream = response.GetResponseStream())
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    Console.WriteLine(reader.ReadToEnd());
                 }
             }
-            catch (Exception e)
+            response.Close();
+        }
+
+        /// <summary>
+        /// Отправляет данные пост запросом
+        /// </summary>
+        /// <param name="data">Массив байтов с данными</param>
+        /// <returns></returns>
+        private async Task PostRequestAsync(byte[] data)
+        {
+            WebRequest request = WebRequest.Create(ServerAddress);
+            request.Credentials = logoPass;
+            request.Method = "POST"; // для отправки используется метод Post
+            // данные для отправки
+            //data = "sName=Hello world!";
+            //название_параметра=данные
+
+            // устанавливаем тип содержимого - параметр ContentType
+            request.ContentType = "application/x-www-form-urlencoded";
+            // Устанавливаем заголовок Content-Length запроса - свойство ContentLength
+            request.ContentLength = data.Length;
+
+            //записываем данные в поток запроса
+            using (Stream dataStream = request.GetRequestStream())
             {
-                System.Windows.Forms.MessageBox.Show(e.Message);
+                dataStream.Write(data, 0, data.Length);
             }
-        }
 
-        /// <summary>
-        /// Отправляет текстовое сообщение на сервер
-        /// </summary>
-        /// <param name="txt"></param>
-        public void SendText(string txt)
-        {
-            using (NetworkStream stream = client.GetStream())
+            WebResponse response = await request.GetResponseAsync();
+
+            using (Stream stream = response.GetResponseStream())
             {
-                byte[] data = Encoding.Unicode.GetBytes(txt);
-                stream.Write(data, 0, data.Length);
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    Console.WriteLine(reader.ReadToEnd());
+                }
             }
+            response.Close();
         }
 
         /// <summary>
-        /// Посылает на сервер сообщение об ошибке какого-либо порта
+        /// Отправляет объект на сервер
         /// </summary>
-        /// <param name="comm">Объект вызвавший ошибку</param>
-        public void SendObjectError(SmsModemBlock comm)
+        /// <param name="obj"></param>
+        private async void SendObject(object obj)
         {
-            SendText(string.Format("MALFUNCTION: {0} {1}", comm.Id, comm.MacAddress));
+            WebRequest request = WebRequest.Create(ServerAddress);
+            request.Credentials = logoPass;
+            request.Method = "POST"; // для отправки используется метод Post
+            bool responseReceived = false;
+
+            do
+            {
+                using (Stream dataStream = request.GetRequestStream())
+                {
+                    (new DataContractJsonSerializer(obj.GetType())).WriteObject(dataStream, obj);
+                }
+
+                // ждем ответ
+                WebResponse response = await request.GetResponseAsync();
+                string respText;
+
+                using (Stream stream = response.GetResponseStream())
+                {
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        respText = reader.ReadToEnd();
+                    }
+                }
+                response.Close();
+
+                //обработываем результат
+                if (respText.ToLower().Contains("success"))
+                {
+                    responseReceived = true;
+                }
+            }
+            while (!responseReceived);
+
         }
 
-        /// <summary>
-        /// Послать SQL запрос на сервер
-        /// </summary>
-        /// <param name="query"></param>
-        public void SendSqlQuery(string query)
+        public async void GetServerResponse()
         {
-            SendText(string.Format("SQL: {0}", query));
-        }
-
-        public void Dispose()
-        {
-            client.Close();
+            WebRequest request = WebRequest.Create(ServerAddress);
+            request.Credentials = logoPass;
+            request.Method = "POST"; // для отправки используется метод Post
+            WebResponse response = await request.GetResponseAsync();
         }
     }
 }
