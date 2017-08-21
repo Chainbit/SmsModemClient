@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
+using System.ServiceModel;
+using SmsModemClient.MyWcfService;
 
 namespace SmsModemClient
 {
@@ -18,6 +20,8 @@ namespace SmsModemClient
         HttpListener listener = new HttpListener();
         ComPortManager manager;
         ClientSender sender = new ClientSender();
+
+        ManagerClient client = new ManagerClient("BasicHttpBinding_IManager");
 
         public ClientReceiver(ComPortManager cpm)
         {

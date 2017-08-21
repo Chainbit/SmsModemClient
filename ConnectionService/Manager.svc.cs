@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ConnectionService
 {
@@ -35,9 +36,24 @@ namespace ConnectionService
             return composite;
         }
 
-        public string TestConnection()
+        public void SendDataToServer(string data)
         {
             throw new NotImplementedException();
+        }
+
+        public string TestConnection()
+        {
+            return "OK";
+        }
+
+        /// <summary>
+        /// Получает задание для клиента
+        /// </summary>
+        /// <param name="ClientId">Идентификатор клиента</param>
+        /// <returns></returns>
+        public Task<string> GetTaskForClient(string ClientId)
+        {
+            return null;
         }
     }
 }

@@ -60,6 +60,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -92,6 +93,11 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Basic Classes\RecievedSMS.cs" />
+    <Compile Include="Service References\MyWcfService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="CommForm.resx">
       <DependentUpon>CommForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -119,11 +125,34 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Service References\MyWcfService\Manager.wsdl" />
+    <None Include="Service References\MyWcfService\Manager.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MyWcfService\Manager1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MyWcfService\SmsModemClient.MyWcfService.GetCommandResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\MyWcfService\SmsModemClient.MyWcfService.SendDataToServerResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\MyWcfService\SmsModemClient.MyWcfService.TestConnectionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Service References\MyWcfService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\MyWcfService\configuration.svcinfo" />
+    <None Include="Service References\MyWcfService\configuration91.svcinfo" />
+    <None Include="Service References\MyWcfService\Manager.disco" />
     <None Include="Resources\ok.ico" />
     <None Include="Resources\excellent.ico" />
     <None Include="Resources\good.ico" />
@@ -136,6 +165,12 @@
       <Project>{261eb03f-89e2-42b0-97b1-622940aa4cf8}</Project>
       <Name>SmsModemBlock</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\MyWcfService\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

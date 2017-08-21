@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SmsModemClient;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -26,6 +27,13 @@ namespace ConnectionService
         /// <returns></returns>
         [OperationContract]
         string GetCommand(string clientID);
+
+        /// <summary>
+        /// Отправка данных на сервер
+        /// </summary>
+        /// <param name="data">Строка с данными</param>
+        [OperationContract]
+        void SendDataToServer(string data);
     }
 
 
@@ -50,4 +58,7 @@ namespace ConnectionService
             set { stringValue = value; }
         }
     }
+
+    [DataContract]
+    public class CT: SmsModemBlock { }
 }
