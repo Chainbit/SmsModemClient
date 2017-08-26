@@ -19,7 +19,7 @@ namespace SmsModemClient
         public List<SmsModemBlock> activeComs = new List<SmsModemBlock>();
         public ConcurrentQueue<SmsModemBlock> activeComsQueue = new ConcurrentQueue<SmsModemBlock>();
 
-        //private ComContext DB = new ComContext();
+        
         public string MacAddress { get; private set; }
 
         public ComPortManager(MainForm mainForm)

@@ -8,75 +8,32 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
 using System.ServiceModel;
-using SmsModemClient.MyWcfService;
+using SmsModemClient.CallbackService;
+using System.Windows.Forms;
 
 namespace SmsModemClient
 {
-    class ClientReceiver 
+    class ClientReceiver : ICommunicationServiceCallback
     {
-        //адрес на сервере, который будет слушать программа
-        private string ServerAddress = "http://localhost:8888/connection/";
+        bool waiting = false;
 
-        HttpListener listener = new HttpListener();
-        ComPortManager manager;
-        ClientSender sender = new ClientSender();
+        public CommunicationServiceClient subscriber;
 
-        ManagerClient client = new ManagerClient("BasicHttpBinding_IManager");
-
-        public ClientReceiver(ComPortManager cpm)
+        public ClientReceiver()
         {
-            manager = cpm;
-        }
+            subscriber = new CommunicationServiceClient(new InstanceContext(null, this));
 
-        public Task ListenForCommands()
-        {
-            return Task.Run(() =>
-            {
-                while (true)
-                {
-                    sender.SendRequest(manager.MacAddress+"_listening");
-                    Thread.Sleep(3000);
-                }
-            });
-        }
+            //create a unique callback address so multiple clients can run on one machine
+            WSDualHttpBinding binding = (WSDualHttpBinding)subscriber.Endpoint.Binding;
+            binding.Security.Mode = WSDualHttpSecurityMode.None;
+            //binding.Security.Message = 
 
-        private void ReturnCommand()
-        {
-
-        }
-
-        private void StartListen()
-        {
-            listener.AuthenticationSchemes = AuthenticationSchemes.Basic;
-            listener.Prefixes.Add(ServerAddress);
-            listener.Start();
+            //Subscribe.
         }
 
         private async void GetResponse()
         {
-            // метод GetContext блокирует текущий поток, ожидая получение запроса 
-            HttpListenerContext context = await listener.GetContextAsync();
-            HttpListenerRequest request = context.Request;
-            var command = request.QueryString.Get("commandName");
-            var parameters = request.QueryString.Get("parameters");
-
-            if (command != null)
-            {
-                await ParseCommand(command);
-            }
-
-            // получаем объект ответа
-            HttpListenerResponse response = context.Response;           
-
-            // создаем ответ в виде кода html
-            string responseStr = "<html><head><meta charset='utf8'></head><body>Привет мир!</body></html>";
-            byte[] buffer = Encoding.Unicode.GetBytes(responseStr);
-            // получаем поток ответа и пишем в него ответ
-            response.ContentLength64 = buffer.Length;
-            using (Stream output = response.OutputStream)
-            {
-                output.Write(buffer, 0, buffer.Length);
-            }
+           
         }
 
         private Task ParseCommand(string commandName)
@@ -97,15 +54,24 @@ namespace SmsModemClient
             });
         }
 
-        private void StopListen()
+        public void CreateCommand(string dest, string cmd, string pars)
         {
-            listener.Stop();
+            MessageBox.Show(string.Format("New Message from server to {0}, command: {1}, {2}", dest, cmd, pars));
+        }
+
+        public void NewCommandArrived(Command cmd)
+        {
+            throw new NotImplementedException();
         }
 
         public enum CommCommand
         {
             SendActiveComs,
             ReturnSMS
+        }
+
+        ~ClientReceiver()
+        {
         }
     }
 }

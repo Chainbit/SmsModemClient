@@ -28,25 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.loadComsButton = new System.Windows.Forms.Button();
             this.ComPortsDataGrid = new System.Windows.Forms.DataGridView();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.portNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.iCCIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.telNumberDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.operatorDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.logLevelDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.baudRateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.timeoutDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.connectionCheckDelayDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewButtonColumn1 = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.smsModemBlock2BindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.toggleAutoUpdateBtn = new System.Windows.Forms.Button();
-            this.refreshButton = new System.Windows.Forms.Button();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.number = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ComPortName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SimID = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -55,10 +40,20 @@
             this.Signal = new System.Windows.Forms.DataGridViewImageColumn();
             this.SignalTxt = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Select = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.toggleAutoUpdateBtn = new System.Windows.Forms.Button();
+            this.refreshButton = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.IPtextBox = new System.Windows.Forms.TextBox();
+            this.connectButon = new System.Windows.Forms.Button();
+            this.disconnectButton = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.autoconnectCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.ComPortsDataGrid)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.smsModemBlock2BindingSource)).BeginInit();
             this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // loadComsButton
@@ -94,157 +89,15 @@
             this.Select});
             this.ComPortsDataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.ComPortsDataGrid.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.ComPortsDataGrid.Location = new System.Drawing.Point(0, -1);
+            this.ComPortsDataGrid.Location = new System.Drawing.Point(0, 47);
             this.ComPortsDataGrid.MultiSelect = false;
             this.ComPortsDataGrid.Name = "ComPortsDataGrid";
             this.ComPortsDataGrid.ReadOnly = true;
             this.ComPortsDataGrid.RowHeadersVisible = false;
             this.ComPortsDataGrid.ShowEditingIcon = false;
-            this.ComPortsDataGrid.Size = new System.Drawing.Size(649, 366);
+            this.ComPortsDataGrid.Size = new System.Drawing.Size(666, 378);
             this.ComPortsDataGrid.TabIndex = 3;
             this.ComPortsDataGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ComPortsDataGrid_CellContentClick);
-            // 
-            // dataGridView1
-            // 
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.AllowUserToDeleteRows = false;
-            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dataGridView1.AutoGenerateColumns = false;
-            this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCellsExceptHeaders;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.portNameDataGridViewTextBoxColumn,
-            this.iCCIDDataGridViewTextBoxColumn,
-            this.telNumberDataGridViewTextBoxColumn,
-            this.operatorDataGridViewTextBoxColumn,
-            this.logLevelDataGridViewTextBoxColumn,
-            this.baudRateDataGridViewTextBoxColumn,
-            this.timeoutDataGridViewTextBoxColumn,
-            this.connectionCheckDelayDataGridViewTextBoxColumn,
-            this.dataGridViewButtonColumn1});
-            this.dataGridView1.DataSource = this.smsModemBlock2BindingSource;
-            this.dataGridView1.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.dataGridView1.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 161);
-            this.dataGridView1.MultiSelect = false;
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.RowHeadersVisible = false;
-            this.dataGridView1.ShowEditingIcon = false;
-            this.dataGridView1.Size = new System.Drawing.Size(649, 204);
-            this.dataGridView1.TabIndex = 5;
-            this.dataGridView1.Visible = false;
-            // 
-            // portNameDataGridViewTextBoxColumn
-            // 
-            this.portNameDataGridViewTextBoxColumn.DataPropertyName = "PortName";
-            this.portNameDataGridViewTextBoxColumn.HeaderText = "PortName";
-            this.portNameDataGridViewTextBoxColumn.Name = "portNameDataGridViewTextBoxColumn";
-            this.portNameDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // iCCIDDataGridViewTextBoxColumn
-            // 
-            this.iCCIDDataGridViewTextBoxColumn.DataPropertyName = "Id";
-            this.iCCIDDataGridViewTextBoxColumn.HeaderText = "Id";
-            this.iCCIDDataGridViewTextBoxColumn.Name = "iCCIDDataGridViewTextBoxColumn";
-            this.iCCIDDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // telNumberDataGridViewTextBoxColumn
-            // 
-            this.telNumberDataGridViewTextBoxColumn.DataPropertyName = "TelNumber";
-            this.telNumberDataGridViewTextBoxColumn.HeaderText = "TelNumber";
-            this.telNumberDataGridViewTextBoxColumn.Name = "telNumberDataGridViewTextBoxColumn";
-            this.telNumberDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // operatorDataGridViewTextBoxColumn
-            // 
-            this.operatorDataGridViewTextBoxColumn.DataPropertyName = "Operator";
-            this.operatorDataGridViewTextBoxColumn.HeaderText = "Operator";
-            this.operatorDataGridViewTextBoxColumn.Name = "operatorDataGridViewTextBoxColumn";
-            this.operatorDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // logLevelDataGridViewTextBoxColumn
-            // 
-            this.logLevelDataGridViewTextBoxColumn.DataPropertyName = "LogLevel";
-            this.logLevelDataGridViewTextBoxColumn.HeaderText = "LogLevel";
-            this.logLevelDataGridViewTextBoxColumn.Name = "logLevelDataGridViewTextBoxColumn";
-            this.logLevelDataGridViewTextBoxColumn.ReadOnly = true;
-            this.logLevelDataGridViewTextBoxColumn.Visible = false;
-            // 
-            // baudRateDataGridViewTextBoxColumn
-            // 
-            this.baudRateDataGridViewTextBoxColumn.DataPropertyName = "BaudRate";
-            this.baudRateDataGridViewTextBoxColumn.HeaderText = "BaudRate";
-            this.baudRateDataGridViewTextBoxColumn.Name = "baudRateDataGridViewTextBoxColumn";
-            this.baudRateDataGridViewTextBoxColumn.ReadOnly = true;
-            this.baudRateDataGridViewTextBoxColumn.Visible = false;
-            // 
-            // timeoutDataGridViewTextBoxColumn
-            // 
-            this.timeoutDataGridViewTextBoxColumn.DataPropertyName = "Timeout";
-            this.timeoutDataGridViewTextBoxColumn.HeaderText = "Timeout";
-            this.timeoutDataGridViewTextBoxColumn.Name = "timeoutDataGridViewTextBoxColumn";
-            this.timeoutDataGridViewTextBoxColumn.ReadOnly = true;
-            this.timeoutDataGridViewTextBoxColumn.Visible = false;
-            // 
-            // connectionCheckDelayDataGridViewTextBoxColumn
-            // 
-            this.connectionCheckDelayDataGridViewTextBoxColumn.DataPropertyName = "ConnectionCheckDelay";
-            this.connectionCheckDelayDataGridViewTextBoxColumn.HeaderText = "ConnectionCheckDelay";
-            this.connectionCheckDelayDataGridViewTextBoxColumn.Name = "connectionCheckDelayDataGridViewTextBoxColumn";
-            this.connectionCheckDelayDataGridViewTextBoxColumn.ReadOnly = true;
-            this.connectionCheckDelayDataGridViewTextBoxColumn.Visible = false;
-            // 
-            // dataGridViewButtonColumn1
-            // 
-            this.dataGridViewButtonColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.dataGridViewButtonColumn1.FillWeight = 20F;
-            this.dataGridViewButtonColumn1.HeaderText = "Select";
-            this.dataGridViewButtonColumn1.Name = "dataGridViewButtonColumn1";
-            this.dataGridViewButtonColumn1.ReadOnly = true;
-            this.dataGridViewButtonColumn1.Text = "Select";
-            this.dataGridViewButtonColumn1.UseColumnTextForButtonValue = true;
-            this.dataGridViewButtonColumn1.Width = 43;
-            // 
-            // smsModemBlock2BindingSource
-            // 
-            this.smsModemBlock2BindingSource.DataSource = typeof(SmsModemClient.SmsModemBlock2);
-            // 
-            // toggleAutoUpdateBtn
-            // 
-            this.toggleAutoUpdateBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.toggleAutoUpdateBtn.Location = new System.Drawing.Point(323, 0);
-            this.toggleAutoUpdateBtn.Name = "toggleAutoUpdateBtn";
-            this.toggleAutoUpdateBtn.Size = new System.Drawing.Size(178, 36);
-            this.toggleAutoUpdateBtn.TabIndex = 6;
-            this.toggleAutoUpdateBtn.Text = "Автообновление: ";
-            this.toggleAutoUpdateBtn.UseVisualStyleBackColor = true;
-            this.toggleAutoUpdateBtn.Click += new System.EventHandler(this.toggleAutoUpdateBtn_Click);
-            // 
-            // refreshButton
-            // 
-            this.refreshButton.Dock = System.Windows.Forms.DockStyle.Right;
-            this.refreshButton.Location = new System.Drawing.Point(501, 0);
-            this.refreshButton.Name = "refreshButton";
-            this.refreshButton.Size = new System.Drawing.Size(148, 36);
-            this.refreshButton.TabIndex = 7;
-            this.refreshButton.Text = "Обновить";
-            this.refreshButton.UseVisualStyleBackColor = true;
-            this.refreshButton.Click += new System.EventHandler(this.refreshButton_Click);
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.toggleAutoUpdateBtn);
-            this.panel1.Controls.Add(this.refreshButton);
-            this.panel1.Controls.Add(this.loadComsButton);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 366);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(649, 36);
-            this.panel1.TabIndex = 8;
             // 
             // number
             // 
@@ -315,12 +168,124 @@
             this.Select.Text = "Select";
             this.Select.UseColumnTextForButtonValue = true;
             // 
+            // toggleAutoUpdateBtn
+            // 
+            this.toggleAutoUpdateBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.toggleAutoUpdateBtn.Location = new System.Drawing.Point(323, 0);
+            this.toggleAutoUpdateBtn.Name = "toggleAutoUpdateBtn";
+            this.toggleAutoUpdateBtn.Size = new System.Drawing.Size(195, 36);
+            this.toggleAutoUpdateBtn.TabIndex = 6;
+            this.toggleAutoUpdateBtn.Text = "Автообновление: ";
+            this.toggleAutoUpdateBtn.UseVisualStyleBackColor = true;
+            this.toggleAutoUpdateBtn.Click += new System.EventHandler(this.toggleAutoUpdateBtn_Click);
+            // 
+            // refreshButton
+            // 
+            this.refreshButton.Dock = System.Windows.Forms.DockStyle.Right;
+            this.refreshButton.Location = new System.Drawing.Point(518, 0);
+            this.refreshButton.Name = "refreshButton";
+            this.refreshButton.Size = new System.Drawing.Size(148, 36);
+            this.refreshButton.TabIndex = 7;
+            this.refreshButton.Text = "Обновить";
+            this.refreshButton.UseVisualStyleBackColor = true;
+            this.refreshButton.Click += new System.EventHandler(this.refreshButton_Click);
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.toggleAutoUpdateBtn);
+            this.panel1.Controls.Add(this.refreshButton);
+            this.panel1.Controls.Add(this.loadComsButton);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel1.Location = new System.Drawing.Point(0, 425);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(666, 36);
+            this.panel1.TabIndex = 8;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.autoconnectCheckBox);
+            this.panel2.Controls.Add(this.pictureBox1);
+            this.panel2.Controls.Add(this.label1);
+            this.panel2.Controls.Add(this.disconnectButton);
+            this.panel2.Controls.Add(this.connectButon);
+            this.panel2.Controls.Add(this.IPtextBox);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel2.Location = new System.Drawing.Point(0, 0);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(666, 44);
+            this.panel2.TabIndex = 9;
+            // 
+            // IPtextBox
+            // 
+            this.IPtextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.IPtextBox.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.IPtextBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::SmsModemClient.Properties.Settings.Default, "hubIP", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.IPtextBox.Location = new System.Drawing.Point(101, 11);
+            this.IPtextBox.Name = "IPtextBox";
+            this.IPtextBox.Size = new System.Drawing.Size(167, 20);
+            this.IPtextBox.TabIndex = 1;
+            this.IPtextBox.Text = global::SmsModemClient.Properties.Settings.Default.hubIP;
+            // 
+            // connectButon
+            // 
+            this.connectButon.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.connectButon.Location = new System.Drawing.Point(273, 10);
+            this.connectButon.Name = "connectButon";
+            this.connectButon.Size = new System.Drawing.Size(101, 23);
+            this.connectButon.TabIndex = 2;
+            this.connectButon.Text = "Подключиться";
+            this.connectButon.UseVisualStyleBackColor = true;
+            // 
+            // disconnectButton
+            // 
+            this.disconnectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.disconnectButton.Location = new System.Drawing.Point(379, 10);
+            this.disconnectButton.Name = "disconnectButton";
+            this.disconnectButton.Size = new System.Drawing.Size(96, 23);
+            this.disconnectButton.TabIndex = 3;
+            this.disconnectButton.Text = "Отключиться";
+            this.disconnectButton.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 15);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(47, 13);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "Сервер:";
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::SmsModemClient.Properties.Resources.disconnected;
+            this.pictureBox1.ImageLocation = "";
+            this.pictureBox1.InitialImage = global::SmsModemClient.Properties.Resources.disconnected;
+            this.pictureBox1.Location = new System.Drawing.Point(60, 6);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(31, 30);
+            this.pictureBox1.TabIndex = 10;
+            this.pictureBox1.TabStop = false;
+            // 
+            // autoconnectCheckBox
+            // 
+            this.autoconnectCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.autoconnectCheckBox.AutoSize = true;
+            this.autoconnectCheckBox.Checked = global::SmsModemClient.Properties.Settings.Default.autoconnect;
+            this.autoconnectCheckBox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::SmsModemClient.Properties.Settings.Default, "autoconnect", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.autoconnectCheckBox.Location = new System.Drawing.Point(480, 12);
+            this.autoconnectCheckBox.Name = "autoconnectCheckBox";
+            this.autoconnectCheckBox.Size = new System.Drawing.Size(180, 17);
+            this.autoconnectCheckBox.TabIndex = 11;
+            this.autoconnectCheckBox.Text = "Подключаться автоматически";
+            this.autoconnectCheckBox.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(649, 402);
-            this.Controls.Add(this.dataGridView1);
+            this.ClientSize = new System.Drawing.Size(666, 461);
+            this.Controls.Add(this.panel2);
             this.Controls.Add(this.ComPortsDataGrid);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -329,9 +294,10 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.Load += new System.EventHandler(this.MainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.ComPortsDataGrid)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.smsModemBlock2BindingSource)).EndInit();
             this.panel1.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -340,18 +306,8 @@
 
         public System.Windows.Forms.Button loadComsButton;
         private System.Windows.Forms.DataGridView ComPortsDataGrid;
-        private System.Windows.Forms.BindingSource smsModemBlock2BindingSource;
-        private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn portNameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn iCCIDDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn telNumberDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn operatorDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn portOpenDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn logLevelDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn baudRateDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn timeoutDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn connectionCheckDelayDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewButtonColumn dataGridViewButtonColumn1;
         private System.Windows.Forms.Button toggleAutoUpdateBtn;
         private System.Windows.Forms.Button refreshButton;
         private System.Windows.Forms.Panel panel1;
@@ -363,6 +319,13 @@
         private System.Windows.Forms.DataGridViewImageColumn Signal;
         private System.Windows.Forms.DataGridViewTextBoxColumn SignalTxt;
         private System.Windows.Forms.DataGridViewButtonColumn Select;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Button disconnectButton;
+        private System.Windows.Forms.Button connectButon;
+        private System.Windows.Forms.TextBox IPtextBox;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.CheckBox autoconnectCheckBox;
     }
 }
 

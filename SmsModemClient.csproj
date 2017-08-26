@@ -53,6 +53,14 @@
     <Reference Include="GSMCommunication">
       <HintPath>..\..\..\..\..\..\Program Files\GSMComm\DotNet40\GSMCommunication.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Client, Version=2.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.SignalR.Client.2.2.2\lib\net45\Microsoft.AspNet.SignalR.Client.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="PDUConverter">
       <HintPath>..\..\..\..\..\..\Program Files\GSMComm\DotNet40\PDUConverter.dll</HintPath>
     </Reference>
@@ -73,7 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Basic Classes\ClientReceiver.cs" />
-    <Compile Include="Basic Classes\ClientSender.cs" />
+    <Compile Include="Basic Classes\CallbackHandler.cs" />
     <Compile Include="Basic Classes\CommStream.cs" />
     <Compile Include="Basic Classes\ComPortManager.cs" />
     <Compile Include="Basic Classes\ComContext.cs" />
@@ -82,6 +90,12 @@
     </Compile>
     <Compile Include="CommForm.Designer.cs">
       <DependentUpon>CommForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ConnectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConnectionForm.Designer.cs">
+      <DependentUpon>ConnectionForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -93,7 +107,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Basic Classes\RecievedSMS.cs" />
-    <Compile Include="Service References\MyWcfService\Reference.cs">
+    <Compile Include="Service References\CallbackService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -101,16 +115,20 @@
     <EmbeddedResource Include="CommForm.resx">
       <DependentUpon>CommForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ConnectionForm.resx">
+      <DependentUpon>ConnectionForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\SmsModemClient.Properties.Settings.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -125,39 +143,34 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Service References\MyWcfService\Manager.wsdl" />
-    <None Include="Service References\MyWcfService\Manager.xsd">
+    <None Include="Service References\CallbackService\CallbackService1.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\MyWcfService\Manager1.xsd">
+    <None Include="Service References\CallbackService\service1.wsdl" />
+    <None Include="Service References\CallbackService\service2.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\MyWcfService\SmsModemClient.MyWcfService.GetCommandResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\MyWcfService\SmsModemClient.MyWcfService.SendDataToServerResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\MyWcfService\SmsModemClient.MyWcfService.TestConnectionResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
+    <None Include="Service References\CallbackService\service21.xsd">
+      <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\MyWcfService\Reference.svcmap">
+    <None Include="Service References\CallbackService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
-    <None Include="Service References\MyWcfService\configuration.svcinfo" />
-    <None Include="Service References\MyWcfService\configuration91.svcinfo" />
-    <None Include="Service References\MyWcfService\Manager.disco" />
+    <None Include="Service References\CallbackService\configuration.svcinfo" />
+    <None Include="Service References\CallbackService\configuration91.svcinfo" />
     <None Include="Resources\ok.ico" />
     <None Include="Resources\excellent.ico" />
     <None Include="Resources\good.ico" />
     <None Include="Resources\poor.ico" />
     <None Include="Resources\none.ico" />
+    <None Include="Resources\disconnected.png" />
+    <None Include="Resources\connected.png" />
     <Content Include="Resources\Sim.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -170,7 +183,7 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadataStorage Include="Service References\MyWcfService\" />
+    <WCFMetadataStorage Include="Service References\CallbackService\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

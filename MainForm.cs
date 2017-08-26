@@ -14,8 +14,10 @@ namespace SmsModemClient
     public partial class MainForm : Form
     {
         private ComPortManager manager;
-
         private System.Windows.Forms.Timer timer;
+
+        public CallbackHandler callback;
+        public bool ServerConnected = false;
 
         public MainForm()
         {
@@ -42,7 +44,7 @@ namespace SmsModemClient
             // создаем таймер 
             timer = new System.Windows.Forms.Timer();
             timer.Interval = (1 * 1000);
-            timer.Tick += Timer_Tick;
+            timer.Tick += Timer_Tick;   
         }
 
         // кнопка "загрузить ком-порты"
