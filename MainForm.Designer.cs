@@ -44,16 +44,16 @@
             this.refreshButton = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.IPtextBox = new System.Windows.Forms.TextBox();
-            this.connectButon = new System.Windows.Forms.Button();
-            this.disconnectButton = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.autoconnectCheckBox = new System.Windows.Forms.CheckBox();
+            this.connectPicture = new System.Windows.Forms.PictureBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.disconnectButton = new System.Windows.Forms.Button();
+            this.connectButon = new System.Windows.Forms.Button();
+            this.IPtextBox = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.ComPortsDataGrid)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.connectPicture)).BeginInit();
             this.SuspendLayout();
             // 
             // loadComsButton
@@ -204,7 +204,7 @@
             // panel2
             // 
             this.panel2.Controls.Add(this.autoconnectCheckBox);
-            this.panel2.Controls.Add(this.pictureBox1);
+            this.panel2.Controls.Add(this.connectPicture);
             this.panel2.Controls.Add(this.label1);
             this.panel2.Controls.Add(this.disconnectButton);
             this.panel2.Controls.Add(this.connectButon);
@@ -214,58 +214,6 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(666, 44);
             this.panel2.TabIndex = 9;
-            // 
-            // IPtextBox
-            // 
-            this.IPtextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.IPtextBox.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.IPtextBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::SmsModemClient.Properties.Settings.Default, "hubIP", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.IPtextBox.Location = new System.Drawing.Point(101, 11);
-            this.IPtextBox.Name = "IPtextBox";
-            this.IPtextBox.Size = new System.Drawing.Size(167, 20);
-            this.IPtextBox.TabIndex = 1;
-            this.IPtextBox.Text = global::SmsModemClient.Properties.Settings.Default.hubIP;
-            // 
-            // connectButon
-            // 
-            this.connectButon.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.connectButon.Location = new System.Drawing.Point(273, 10);
-            this.connectButon.Name = "connectButon";
-            this.connectButon.Size = new System.Drawing.Size(101, 23);
-            this.connectButon.TabIndex = 2;
-            this.connectButon.Text = "Подключиться";
-            this.connectButon.UseVisualStyleBackColor = true;
-            // 
-            // disconnectButton
-            // 
-            this.disconnectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.disconnectButton.Location = new System.Drawing.Point(379, 10);
-            this.disconnectButton.Name = "disconnectButton";
-            this.disconnectButton.Size = new System.Drawing.Size(96, 23);
-            this.disconnectButton.TabIndex = 3;
-            this.disconnectButton.Text = "Отключиться";
-            this.disconnectButton.UseVisualStyleBackColor = true;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 15);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(47, 13);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "Сервер:";
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::SmsModemClient.Properties.Resources.disconnected;
-            this.pictureBox1.ImageLocation = "";
-            this.pictureBox1.InitialImage = global::SmsModemClient.Properties.Resources.disconnected;
-            this.pictureBox1.Location = new System.Drawing.Point(60, 6);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(31, 30);
-            this.pictureBox1.TabIndex = 10;
-            this.pictureBox1.TabStop = false;
             // 
             // autoconnectCheckBox
             // 
@@ -279,6 +227,61 @@
             this.autoconnectCheckBox.TabIndex = 11;
             this.autoconnectCheckBox.Text = "Подключаться автоматически";
             this.autoconnectCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // connectPicture
+            // 
+            this.connectPicture.Image = global::SmsModemClient.Properties.Resources.disconnected;
+            this.connectPicture.ImageLocation = "";
+            this.connectPicture.InitialImage = global::SmsModemClient.Properties.Resources.disconnected;
+            this.connectPicture.Location = new System.Drawing.Point(60, 6);
+            this.connectPicture.Name = "connectPicture";
+            this.connectPicture.Size = new System.Drawing.Size(31, 30);
+            this.connectPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.connectPicture.TabIndex = 10;
+            this.connectPicture.TabStop = false;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 15);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(47, 13);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "Сервер:";
+            // 
+            // disconnectButton
+            // 
+            this.disconnectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.disconnectButton.Location = new System.Drawing.Point(379, 10);
+            this.disconnectButton.Name = "disconnectButton";
+            this.disconnectButton.Size = new System.Drawing.Size(96, 23);
+            this.disconnectButton.TabIndex = 3;
+            this.disconnectButton.Text = "Отключиться";
+            this.disconnectButton.UseVisualStyleBackColor = true;
+            this.disconnectButton.Click += new System.EventHandler(this.disconnectButton_Click);
+            // 
+            // connectButon
+            // 
+            this.connectButon.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.connectButon.Location = new System.Drawing.Point(273, 10);
+            this.connectButon.Name = "connectButon";
+            this.connectButon.Size = new System.Drawing.Size(101, 23);
+            this.connectButon.TabIndex = 2;
+            this.connectButon.Text = "Подключиться";
+            this.connectButon.UseVisualStyleBackColor = true;
+            this.connectButon.Click += new System.EventHandler(this.connectButon_Click);
+            // 
+            // IPtextBox
+            // 
+            this.IPtextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.IPtextBox.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.IPtextBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::SmsModemClient.Properties.Settings.Default, "hubIP", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.IPtextBox.Location = new System.Drawing.Point(101, 11);
+            this.IPtextBox.Name = "IPtextBox";
+            this.IPtextBox.Size = new System.Drawing.Size(167, 20);
+            this.IPtextBox.TabIndex = 1;
+            this.IPtextBox.Text = global::SmsModemClient.Properties.Settings.Default.hubIP;
             // 
             // MainForm
             // 
@@ -297,7 +300,7 @@
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.connectPicture)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -324,7 +327,7 @@
         private System.Windows.Forms.Button connectButon;
         private System.Windows.Forms.TextBox IPtextBox;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox connectPicture;
         private System.Windows.Forms.CheckBox autoconnectCheckBox;
     }
 }

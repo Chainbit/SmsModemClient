@@ -19,12 +19,12 @@ namespace SmsModemClient
 {
     public class CallbackHandler
     {
-        private string ServerAddress = "http://25.41.201.124";
+        IHubProxy _hub;
+        HubConnection connection;
 
         public CallbackHandler(string ServerAddress)
         {
-            IHubProxy _hub;
-            var connection = new HubConnection(ServerAddress);
+            connection = new HubConnection(ServerAddress);
             _hub = connection.CreateHubProxy("TestHub");
             connection.Start().Wait();
 
@@ -33,6 +33,11 @@ namespace SmsModemClient
             _hub.On("onConnected", x => MessageBox.Show(x));
             _hub.On("broadcast", x => MessageBox.Show(x));
             _hub.Invoke("DetermineLength", line).Wait();
+        }
+
+        ~CallbackHandler()
+        {
+            connection.Stop();
         }
     }
 }

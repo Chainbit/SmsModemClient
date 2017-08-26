@@ -16,7 +16,7 @@ namespace SmsModemClient
         private ComPortManager manager;
         private System.Windows.Forms.Timer timer;
 
-        public CallbackHandler callback;
+        public CallbackHandler callback = null;
         public bool ServerConnected = false;
 
         public MainForm()
@@ -44,7 +44,13 @@ namespace SmsModemClient
             // создаем таймер 
             timer = new System.Windows.Forms.Timer();
             timer.Interval = (1 * 1000);
-            timer.Tick += Timer_Tick;   
+            timer.Tick += Timer_Tick;
+
+            if (autoconnectCheckBox.Checked)
+            {
+                Connect();
+                ToggleButtons();
+            }
         }
 
         // кнопка "загрузить ком-порты"
@@ -268,5 +274,82 @@ namespace SmsModemClient
                 }
             });
         }
+
+        private async void connectButon_Click(object sender, EventArgs e)
+        {
+            connectButon.Enabled = false;
+            IPtextBox.Enabled = false;
+            await Connect();
+            ToggleButtons();
+        }
+
+        private async void disconnectButton_Click(object sender, EventArgs e)
+        {
+            await Disconnect();
+            ToggleButtons();
+        }
+
+        /// <summary>
+        /// Пытается подключиться к серверу
+        /// </summary>
+        /// <returns></returns>
+        private Task Connect()
+        {
+            return Task.Run(() =>
+            {
+                string address = Properties.Settings.Default.hubIP;
+                if (!string.IsNullOrEmpty(address))
+                {
+                    try
+                    {
+                        callback = new CallbackHandler(address);
+                        ServerConnected = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                        ServerConnected = false;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Введите адрес сервера!");
+                    ServerConnected = false;
+                }
+            });
+        }
+
+        /// <summary>
+        /// Разрывает соединение с сервером
+        /// </summary>
+        /// <returns></returns>
+        private Task Disconnect()
+        {
+            return Task.Run(()=>
+            {
+                callback = null;
+            });
+        }
+
+        /// <summary>
+        /// Проверяет, значение <see cref="ServerConnected"/> и вносит соответствующие изменения в форму
+        /// </summary>
+        private void ToggleButtons()
+        {
+            if (ServerConnected)
+            {
+                connectButon.Enabled = false;
+                IPtextBox.Enabled = false;
+                connectPicture.Image = Properties.Resources.connected;
+            }
+            else
+            {
+                connectButon.Enabled = true;
+                IPtextBox.Enabled = true;
+                connectPicture.Image = Properties.Resources.disconnected;
+            }
+        }
+
+        
     }
 }
