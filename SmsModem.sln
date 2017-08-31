@@ -5,11 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmsModemClient", "SmsModemClient.csproj", "{DFF4DE68-75DA-4F3B-B4FA-295FB8179B8B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmsModemBlock", "..\SmsModemBlock\SmsModemBlock.csproj", "{261EB03F-89E2-42B0-97B1-622940AA4CF8}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceTest", "..\ServiceTest\ServiceTest.csproj", "{EDEC5622-DA36-4C8A-8DCB-E043787EDAD2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CallbackService", "..\CallbackService\CallbackService\CallbackService.csproj", "{F9A2AA16-5CD1-482C-ACEA-46FA25A80363}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,18 +17,10 @@ Global
 		{DFF4DE68-75DA-4F3B-B4FA-295FB8179B8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFF4DE68-75DA-4F3B-B4FA-295FB8179B8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DFF4DE68-75DA-4F3B-B4FA-295FB8179B8B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{261EB03F-89E2-42B0-97B1-622940AA4CF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{261EB03F-89E2-42B0-97B1-622940AA4CF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{261EB03F-89E2-42B0-97B1-622940AA4CF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{261EB03F-89E2-42B0-97B1-622940AA4CF8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EDEC5622-DA36-4C8A-8DCB-E043787EDAD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EDEC5622-DA36-4C8A-8DCB-E043787EDAD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EDEC5622-DA36-4C8A-8DCB-E043787EDAD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EDEC5622-DA36-4C8A-8DCB-E043787EDAD2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F9A2AA16-5CD1-482C-ACEA-46FA25A80363}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F9A2AA16-5CD1-482C-ACEA-46FA25A80363}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F9A2AA16-5CD1-482C-ACEA-46FA25A80363}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F9A2AA16-5CD1-482C-ACEA-46FA25A80363}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

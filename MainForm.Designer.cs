@@ -227,6 +227,7 @@
             this.autoconnectCheckBox.TabIndex = 11;
             this.autoconnectCheckBox.Text = "Подключаться автоматически";
             this.autoconnectCheckBox.UseVisualStyleBackColor = true;
+            this.autoconnectCheckBox.CheckedChanged += new System.EventHandler(this.autoconnectCheckBox_CheckedChanged);
             // 
             // connectPicture
             // 
@@ -252,6 +253,7 @@
             // disconnectButton
             // 
             this.disconnectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.disconnectButton.Enabled = false;
             this.disconnectButton.Location = new System.Drawing.Point(379, 10);
             this.disconnectButton.Name = "disconnectButton";
             this.disconnectButton.Size = new System.Drawing.Size(96, 23);
@@ -282,6 +284,7 @@
             this.IPtextBox.Size = new System.Drawing.Size(167, 20);
             this.IPtextBox.TabIndex = 1;
             this.IPtextBox.Text = global::SmsModemClient.Properties.Settings.Default.hubIP;
+            this.IPtextBox.TextChanged += new System.EventHandler(this.IPtextBox_TextChanged);
             // 
             // MainForm
             // 

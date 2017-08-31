@@ -19,14 +19,15 @@ namespace SmsModemClient
         /// <summary>
         /// Наш модем
         /// </summary>
-        SmsModemBlock comm;
+        public SmsModemBlock comm;
         /// <summary>
         /// Режим отображения сообщений
         /// </summary>
         enum MessageDisplayMode
         {
             Popup,
-            Datagrid
+            Datagrid,
+            Array
         }
 
         private int i = 1;        
@@ -186,7 +187,7 @@ namespace SmsModemClient
         /// <param name="SMSPDU">Само сообщение</param>
         /// <param name="longMsg">Коллекция объектов <see cref="SmsPdu"/>, являющихся частями длинного сообщения</param>
         /// <param name="prevMsg">Предыдущее сообщение</param>
-        private RecievedSMS DecodeLongMessage(SmsDeliverPdu SMSPDU)
+        public RecievedSMS DecodeLongMessage(SmsDeliverPdu SMSPDU)
         {
             if (longMsg.Count == 0 || SmartMessageDecoder.ArePartOfSameMessage(longMsg.Last(), SMSPDU))
                 longMsg.Add(SMSPDU);
@@ -258,6 +259,8 @@ namespace SmsModemClient
                 case MessageDisplayMode.Datagrid:
                     //read message in datagrid
                     SMSList.Rows.Add(index, phoneNumber, timestamp, msg);
+                    break;
+                case MessageDisplayMode.Array:
                     break;
                 default:
                     break;

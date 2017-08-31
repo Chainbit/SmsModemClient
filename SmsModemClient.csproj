@@ -82,9 +82,11 @@
   <ItemGroup>
     <Compile Include="Basic Classes\ClientReceiver.cs" />
     <Compile Include="Basic Classes\CallbackHandler.cs" />
+    <Compile Include="Basic Classes\CommandClass.cs" />
     <Compile Include="Basic Classes\CommStream.cs" />
     <Compile Include="Basic Classes\ComPortManager.cs" />
     <Compile Include="Basic Classes\ComContext.cs" />
+    <Compile Include="Basic Classes\SmsModemBlock.cs" />
     <Compile Include="CommForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -103,7 +105,15 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Basic Classes\SmsModemBlock2.cs" />
+    <Compile Include="Migrations\201708151552560_InitialCreate.cs" />
+    <Compile Include="Migrations\201708151552560_InitialCreate.Designer.cs">
+      <DependentUpon>201708151552560_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201708311406505_test.cs" />
+    <Compile Include="Migrations\201708311406505_test.Designer.cs">
+      <DependentUpon>201708311406505_test.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Basic Classes\RecievedSMS.cs" />
@@ -121,6 +131,12 @@
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708151552560_InitialCreate.resx">
+      <DependentUpon>201708151552560_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708311406505_test.resx">
+      <DependentUpon>201708311406505_test.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -172,12 +188,6 @@
     <None Include="Resources\disconnected.png" />
     <None Include="Resources\connected.png" />
     <Content Include="Resources\Sim.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SmsModemBlock\SmsModemBlock.csproj">
-      <Project>{261eb03f-89e2-42b0-97b1-622940aa4cf8}</Project>
-      <Name>SmsModemBlock</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

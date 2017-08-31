@@ -13,9 +13,12 @@ namespace SmsModemClient
 {
     public partial class MainForm : Form
     {
-        private ComPortManager manager;
+        public ComPortManager manager;
         private System.Windows.Forms.Timer timer;
 
+        /// <summary>
+        /// Обработчик команд сервера. Конструктор сейчас находится в методе <see cref="Connect"/>
+        /// </summary>
         public CallbackHandler callback = null;
         public bool ServerConnected = false;
 
@@ -48,7 +51,7 @@ namespace SmsModemClient
 
             if (autoconnectCheckBox.Checked)
             {
-                Connect();
+                Connect().Wait();
                 ToggleButtons();
             }
         }
@@ -82,7 +85,7 @@ namespace SmsModemClient
             {
                 //заполняем датагрид
                 ComPortsDataGrid.Rows.Add();
-                ComPortsDataGrid.Rows[i].Cells["number"].Value = i;
+                ComPortsDataGrid.Rows[i].Cells["number"].Value = i+1;
                 ComPortsDataGrid.Rows[i].Cells["ComPortName"].Value = list[i].PortName;
                 ComPortsDataGrid.Rows[i].Cells["SimId"].Value = list[i].Id;
                 ComPortsDataGrid.Rows[i].Cells["TelNumber"].Value = list[i].TelNumber;
@@ -256,7 +259,7 @@ namespace SmsModemClient
                 return;
             }
             refreshButton.Enabled = false;
-            //await GetAllSignalStrength();
+            await GetAllSignalStrength();
             await FillDataGridAsync();
             refreshButton.Enabled = true;
         }
@@ -270,7 +273,7 @@ namespace SmsModemClient
                     //создаем поток со всеми нужными методами
                     Thread thread = new Thread(comm.GetSignalStrength);
                     thread.Name = comm.PortName + " GetSignalStrength";
-                    thread.Start(comm);
+                    thread.Start();
                 }
             });
         }
@@ -302,7 +305,7 @@ namespace SmsModemClient
                 {
                     try
                     {
-                        callback = new CallbackHandler(address);
+                        callback = new CallbackHandler(address, manager);
                         ServerConnected = true;
                     }
                     catch (Exception ex)
@@ -328,6 +331,7 @@ namespace SmsModemClient
             return Task.Run(()=>
             {
                 callback = null;
+                ServerConnected = false;
             });
         }
 
@@ -341,15 +345,27 @@ namespace SmsModemClient
                 connectButon.Enabled = false;
                 IPtextBox.Enabled = false;
                 connectPicture.Image = Properties.Resources.connected;
+                disconnectButton.Enabled = true;
             }
             else
             {
                 connectButon.Enabled = true;
                 IPtextBox.Enabled = true;
                 connectPicture.Image = Properties.Resources.disconnected;
+                disconnectButton.Enabled = false;
             }
         }
 
-        
+        private void autoconnectCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.autoconnect = autoconnectCheckBox.Checked;
+            Properties.Settings.Default.Save();
+        }
+
+        private void IPtextBox_TextChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.hubIP = IPtextBox.Text;
+            Properties.Settings.Default.Save();
+        }
     }
 }

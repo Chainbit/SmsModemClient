@@ -13,7 +13,6 @@ namespace SmsModemClient
     public class CommStream : IDisposable
     {
         SmsModemBlock comm;
-        SmsModemBlock2 phone;
 
         /// <summary>
         /// Инициализатор класса <see cref="CommStream"/>
@@ -24,16 +23,7 @@ namespace SmsModemClient
             comm = c;
             if (!comm.IsOpen()) comm.Open();            
         }
-        /// <summary>
-        /// Инициализатор класса <see cref="CommStream"/>
-        /// </summary>
-        /// <param name="c">Блок с которым идет обмен данными</param>
-        public CommStream(SmsModemBlock2 c)
-        {
-            phone = c;
-            if (!phone.IsOpen()) phone.Open();
-            
-        }
+
 
         public void Dispose()
         {
@@ -44,14 +34,6 @@ namespace SmsModemClient
             catch (Exception e)
             {
             }
-            try
-            {
-                phone.Close();
-            }
-            catch (Exception e)
-            {
-            }
-
         }
     }
 }

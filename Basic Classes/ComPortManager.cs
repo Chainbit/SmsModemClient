@@ -13,12 +13,12 @@ using System.Net.NetworkInformation;
 
 namespace SmsModemClient
 {
-    class ComPortManager
+    public class ComPortManager
     {
 
         public List<SmsModemBlock> activeComs = new List<SmsModemBlock>();
         public ConcurrentQueue<SmsModemBlock> activeComsQueue = new ConcurrentQueue<SmsModemBlock>();
-
+        private MainForm MF;
         
         public string MacAddress { get; private set; }
 
@@ -26,6 +26,7 @@ namespace SmsModemClient
         {
             MacAddress = GetMacAddress().ToString();
             InitializeManager();
+            MF = mainForm;
             mainForm.loadComsButton.Enabled = true;
         }
 
@@ -343,6 +344,25 @@ namespace SmsModemClient
             {
                 comm.ClearInbox();
             }
+        }
+
+        /// <summary>
+        /// Удаляет элемент из списка активных
+        /// </summary>
+        /// <param name="comm"></param>
+        public void DeleteFromActiveComs(SmsModemBlock comm)
+        {
+            lock (this)
+            {
+                var comForm = MF.OwnedForms.First(f => ((CommForm)f).comm == comm);
+                comForm.Close();
+                activeComs.Remove(comm);
+            }
+        }
+
+        public string SendManagerInfo()
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(activeComs);
         }
     }
 }
