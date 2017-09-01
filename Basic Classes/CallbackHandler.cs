@@ -76,6 +76,7 @@ namespace SmsModemClient
             string line = "Hello, Motherfucker!";
             _hub.Invoke("DetermineLength", line).Wait();
             _hub.Invoke("Connect", Manager.MacAddress).Wait();
+            _hub.Invoke("PrintClientsId").Wait();
         }
 
         /// <summary>
@@ -152,7 +153,7 @@ namespace SmsModemClient
         {
             var receiver = Manager.activeComs.First(x => x.Id == id);
             var type = pars[0];
-            var search = pars[1];
+            var search = pars[1] ?? "";
 
             string sms = null;
 
@@ -164,12 +165,16 @@ namespace SmsModemClient
                 case "SearchByContent":
                     sms = await receiver.WaitSMSWithContent(search);
                     break;
+                case "ReceiveLast":
+
+                    break;
                 default:
                     break;
             }
             if (sms!=null)
             {
                 _hub.Invoke("SmsReceived", sms).Wait();
+                _hub.Invoke("DetermineLength", sms).Wait();
             }
         }
 

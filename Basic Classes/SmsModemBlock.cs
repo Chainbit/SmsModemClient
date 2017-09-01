@@ -47,6 +47,9 @@ namespace SmsModemClient
 
         private CancellationToken ct = cts.Token;
 
+        [NotMapped]
+        private bool isWaiting = false;
+
         public SmsModemBlock() : base()
         {
 
@@ -296,9 +299,7 @@ namespace SmsModemClient
         /// <returns></returns>
         private string CheckSMSWithContent(string text)
         {
-            var readStorage = new MessageMemoryStatus().ReadStorage;
-            var maxMessages = readStorage.Total;
-            var usedMessages = readStorage.Used;
+            CheckMemoryStatus();
 
             for (int i = 0; i < 5; i++)
             {
@@ -319,7 +320,7 @@ namespace SmsModemClient
                         return txt;
                     }
                 }
-                if (maxMessages == usedMessages)
+                if (MaxMessages == UsedMessages)
                 {
                     ClearInbox();
                 }
@@ -472,7 +473,53 @@ namespace SmsModemClient
             });
         }
 
+        /// <summary>
+        /// Ждет любую входящую смс
+        /// </summary>
+        /// <returns></returns>
+        public Task<string> WaitAnySMS()
+        {
+            return Task.Factory.StartNew<string>(() =>
+            {
+                //даем время
+                for (int i = 0; i < 100; i++)
+                {
+                    //список собщений
+                    var messagelist = ReadRawMessages(PhoneMessageStatus.All, PhoneStorageType.Sim);
+
+                    var messageString = string.Empty;
+                    StringBuilder sb = new StringBuilder();
+                    if (messagelist.Length>0)
+                    {
+                        foreach (ShortMessageFromPhone message in messagelist)
+                        {
+                            //сырая хуета
+                            var pdu = new SmsDeliverPdu(message.Data, true, -1);
+
+                            var origin = pdu.OriginatingAddress;
+                            var txt = pdu.UserDataText;
+                            sb.AppendLine(string.Format("{0}: {1}", origin, txt));
+                        }
+                    }
+                    
+                    Thread.Sleep(3000);
+                }
+                return "Время вышло!";
+            });
+        }
         #endregion
+
+
+        public void GetLastSMS()
+        {
+            do
+            {
+                CheckMemoryStatus();
+                ClearInbox();
+            }
+            while (UsedMessages>0);
+            
+        }
 
         /// <summary>
         /// Очищает входящие сообщения

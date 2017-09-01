@@ -93,12 +93,6 @@
     <Compile Include="CommForm.Designer.cs">
       <DependentUpon>CommForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ConnectionForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ConnectionForm.Designer.cs">
-      <DependentUpon>ConnectionForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -124,9 +118,6 @@
     </Compile>
     <EmbeddedResource Include="CommForm.resx">
       <DependentUpon>CommForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ConnectionForm.resx">
-      <DependentUpon>ConnectionForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
