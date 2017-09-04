@@ -310,7 +310,7 @@ namespace SmsModemClient
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message);
+                        MessageBox.Show(ex.Message + "\r\n" + ex.InnerException ?? "none" + "\r\n" + ex.TargetSite);
                         ServerConnected = false;
                     }
                 }

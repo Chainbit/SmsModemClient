@@ -52,7 +52,8 @@ namespace SmsModemClient
         private void InitializeConnection(string ServerAddress)
         {
             connection = new HubConnection(ServerAddress);
-            _hub = connection.CreateHubProxy("TestHub");
+            //ВОТ ЗДЕСЬ БЛЯТЬ ОЧЕНЬ ВНИМАТЕЛЬНО НУЖНО НАЗВАНИЕ ХАБА НАПИСАТЬ КАК НАДО
+            _hub = connection.CreateHubProxy("CommandHub");
 
             connection.Start().Wait();
         }
@@ -157,6 +158,8 @@ namespace SmsModemClient
 
             string sms = null;
 
+            receiver.SetWaiting(true);
+
             switch (type)
             {
                 case "SearchByNumber":
@@ -166,15 +169,17 @@ namespace SmsModemClient
                     sms = await receiver.WaitSMSWithContent(search);
                     break;
                 case "ReceiveLast":
-
+                    sms = await receiver.GetLastSMS();
                     break;
                 default:
+                    receiver.SetWaiting(false);
                     break;
             }
             if (sms!=null)
             {
                 _hub.Invoke("SmsReceived", sms).Wait();
                 _hub.Invoke("DetermineLength", sms).Wait();
+                receiver.SetWaiting(false);
             }
         }
 

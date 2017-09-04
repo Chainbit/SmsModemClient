@@ -10,6 +10,7 @@ using System.Threading;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations.Schema;
+using GsmComm.PduConverter.SmartMessaging;
 
 namespace SmsModemClient
 {
@@ -46,7 +47,8 @@ namespace SmsModemClient
         public static CancellationTokenSource cts = new CancellationTokenSource();
 
         private CancellationToken ct = cts.Token;
-
+        [NotMapped]
+        private System.Windows.Forms.Timer timer;
         [NotMapped]
         private bool isWaiting = false;
 
@@ -58,6 +60,22 @@ namespace SmsModemClient
         public SmsModemBlock(string portName, int baudRate) : base(portName, baudRate)
         {
             Operator = Id = TelNumber = "Загрузка...";
+
+            // создаем таймер 
+            timer = new System.Windows.Forms.Timer();
+            timer.Interval = (1 * 50000);
+            timer.Tick += Timer_Tick;
+        }
+
+        /// <summary>
+        /// Регулярная очистка инбокса
+        /// </summary>
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            if (!isWaiting)
+            {
+                ClearInbox();
+            }
         }
 
         /// <summary>
@@ -489,8 +507,11 @@ namespace SmsModemClient
 
                     var messageString = string.Empty;
                     StringBuilder sb = new StringBuilder();
-                    if (messagelist.Length>0)
+                    if (messagelist.Length > 0)
                     {
+                        // на случай, если длинное сообщение
+                        IList<SmsPdu> longMsg = new List<SmsPdu>();
+
                         foreach (ShortMessageFromPhone message in messagelist)
                         {
                             //сырая хуета
@@ -498,19 +519,41 @@ namespace SmsModemClient
 
                             var origin = pdu.OriginatingAddress;
                             var txt = pdu.UserDataText;
-                            sb.AppendLine(string.Format("{0}: {1}", origin, txt));
+
+                            bool isMultiPart = SmartMessageDecoder.IsPartOfConcatMessage(pdu);
+
+                            // если у сообщения есть датахедер, то скорее всего оно длинное
+                            if (pdu.UserDataHeaderPresent && isMultiPart)
+                            {
+                                if (longMsg.Count == 0 || SmartMessageDecoder.ArePartOfSameMessage(longMsg.Last(), pdu))
+                                {
+                                    longMsg.Add(pdu);
+                                }
+                                if (SmartMessageDecoder.AreAllConcatPartsPresent(longMsg)) // is Complete
+                                {
+                                    txt = SmartMessageDecoder.CombineConcatMessageText(longMsg);
+                                }
+                                else
+                                {
+                                    continue;
+                                }
+                            }
+                            sb.AppendFormat("{0}: {1}", origin, txt);
                         }
+                        return sb.ToString();
                     }
-                    
                     Thread.Sleep(3000);
                 }
                 return "Время вышло!";
             });
         }
+
         #endregion
-
-
-        public void GetLastSMS()
+        
+        /// <summary>
+        /// Получить последнюю смс
+        /// </summary>
+        public async Task<string> GetLastSMS()
         {
             do
             {
@@ -518,7 +561,7 @@ namespace SmsModemClient
                 ClearInbox();
             }
             while (UsedMessages>0);
-            
+            return await WaitAnySMS();
         }
 
         /// <summary>
@@ -530,38 +573,12 @@ namespace SmsModemClient
         }
 
         /// <summary>
-        /// Возвращает смс от конкретного отправителя
+        /// Задать режим ожидания
         /// </summary>
-        /// <param name="senderName">Имя или номер отправителя</param>
-        /// <returns></returns>
-        public string ReturnSMS(string senderName)
+        /// <param name="state"><see langword="true"/> если ожидает смс, <see langword="false"/> если нет</param>
+        public void SetWaiting(bool state)
         {
-            var readStorage = new MessageMemoryStatus().ReadStorage;
-            var maxMessages = readStorage.Total;
-            var usedMessages = readStorage.Used;
-
-            for (int i = 0; i < 5; i++)
-            {
-                var messagelist = ReadRawMessages(PhoneMessageStatus.All, PhoneStorageType.Sim);
-
-                foreach (ShortMessageFromPhone message in messagelist)
-                {
-                    var pdu = new SmsDeliverPdu(message.Data, true, -1);
-                    var origin = pdu.OriginatingAddress;
-                    var txt = pdu.UserDataText;
-
-                    bool isNeeded = origin.ToLower().Contains(senderName.ToLower());
-                    if (isNeeded)
-                    {
-                        return txt;
-                    }
-                }
-                if (maxMessages == usedMessages)
-                {
-                    ClearInbox();
-                }
-            }
-            return null;
+            isWaiting = state;
         }
 
         /// <summary>
@@ -580,6 +597,10 @@ namespace SmsModemClient
             UsedMessages = readStorage.Used;
         }
 
+        /// <summary>
+        /// Обрезает переносы строк в сообщениях из порта
+        /// </summary>
+        /// <param name="input">Входящая строка</param>
         private string TrimLineBreaks(string input)
         {
             return input.Trim(new char[]
