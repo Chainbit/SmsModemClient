@@ -8,6 +8,7 @@ namespace SmsModemClient
 {
     public class CommandClass
     {
+		public int Id { get; set; }
         public string Destination { get; set; }
         public string Command { get; set; }
         public string[] Pars { get; set; }

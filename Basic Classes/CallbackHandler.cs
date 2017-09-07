@@ -77,7 +77,6 @@ namespace SmsModemClient
             string line = "Hello, Motherfucker!";
             _hub.Invoke("DetermineLength", line).Wait();
             _hub.Invoke("Connect", Manager.MacAddress).Wait();
-            _hub.Invoke("PrintClientsId").Wait();
         }
 
         /// <summary>
@@ -118,7 +117,7 @@ namespace SmsModemClient
                     GetInfo();
                     break;
                 case ServerCommand.WaitSms:
-                    WaitSMS(cmd.Destination, cmd.Pars);
+                    WaitSMS(cmd.Destination, cmd.Pars, cmd.Id);
                     break;
                 case ServerCommand.SimCardMalfunction:
                     break;
@@ -150,7 +149,7 @@ namespace SmsModemClient
         /// </summary>
         /// <param name="id">Номер сим-карты</param>
         /// <param name="pars">Строка, содержащая параметры</param>
-        private async void WaitSMS(string id, string[] pars)
+        private async void WaitSMS(string id, string[] pars, int cmdId)
         {
             var receiver = Manager.activeComs.First(x => x.Id == id);
             var type = pars[0];
@@ -177,7 +176,7 @@ namespace SmsModemClient
             }
             if (sms!=null)
             {
-                _hub.Invoke("SmsReceived", sms).Wait();
+                _hub.Invoke("SmsReceived", sms, cmdId).Wait();
                 _hub.Invoke("DetermineLength", sms).Wait();
                 receiver.SetWaiting(false);
             }
@@ -185,6 +184,7 @@ namespace SmsModemClient
 
         ~CallbackHandler()
         {
+            _hub.Invoke("OnDisconnected",true);
             connection.Stop();
         }
 
