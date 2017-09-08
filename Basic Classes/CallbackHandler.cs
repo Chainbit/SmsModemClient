@@ -30,6 +30,7 @@ namespace SmsModemClient
             InitializeConnection(ServerAddress);
             Subscribe();
             Invoke();
+            GetInfo();
         }
 
         public CallbackHandler(string ServerAddress, ComPortManager mgr)
@@ -38,6 +39,7 @@ namespace SmsModemClient
             InitializeConnection(ServerAddress);
             Subscribe();
             Invoke();
+            GetInfo();
         }
 
         private void DisplayInfo(string id, string name)
