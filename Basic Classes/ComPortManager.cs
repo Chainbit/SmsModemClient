@@ -18,7 +18,7 @@ namespace SmsModemClient
 
         public List<SmsModemBlock> activeComs = new List<SmsModemBlock>();
         public ConcurrentQueue<SmsModemBlock> activeComsQueue = new ConcurrentQueue<SmsModemBlock>();
-        private MainForm MF;
+        public MainForm MF;
         
         public string MacAddress { get; private set; }
 
@@ -115,7 +115,7 @@ namespace SmsModemClient
             {
                 if (comm.IsConnected())
                 {
-                    comm.MacAddress = this.MacAddress;
+                    comm.SimBankId = this.MacAddress;
                     activeComsQueue.Enqueue(comm);
                 }
             }
@@ -362,6 +362,11 @@ namespace SmsModemClient
 
         public string SendManagerInfo()
         {
+            //ДЛЯ ТЕСТА!
+            using (ComContext db = new ComContext())
+            {
+                activeComs = db.activeComs.ToList();
+            }
             return Newtonsoft.Json.JsonConvert.SerializeObject(activeComs);
         }
     }

@@ -326,11 +326,13 @@ namespace SmsModemClient
         /// Разрывает соединение с сервером
         /// </summary>
         /// <returns></returns>
-        private Task Disconnect()
+        public Task Disconnect()
         {
             return Task.Run(()=>
             {
-                callback = null;
+                callback.Disconnect(true);
+                //callback = null;
+                GC.Collect();
                 ServerConnected = false;
             });
         }
@@ -338,7 +340,7 @@ namespace SmsModemClient
         /// <summary>
         /// Проверяет, значение <see cref="ServerConnected"/> и вносит соответствующие изменения в форму
         /// </summary>
-        private void ToggleButtons()
+        public void ToggleButtons()
         {
             if (ServerConnected)
             {
@@ -366,6 +368,27 @@ namespace SmsModemClient
         {
             Properties.Settings.Default.hubIP = IPtextBox.Text;
             Properties.Settings.Default.Save();
+        }
+
+        public void Connection_Reconnected()
+        {
+
+            if (this.InvokeRequired)
+            {
+                Invoke(new Action(Connection_Reconnected));
+            }
+            ServerConnected = true;
+            ToggleButtons();
+        }
+
+        public void Connection_Closed()
+        {
+            if (this.InvokeRequired)
+            {
+                Invoke(new Action(Connection_Closed));
+            }
+            ServerConnected = false;
+            ToggleButtons();
         }
     }
 }

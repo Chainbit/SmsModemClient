@@ -28,8 +28,8 @@ namespace SmsModemClient
         public string TelNumber { get; set; }
         [NotMapped]
         public Signal SignalLevel { get; set; }
-        [NotMapped]
-        public string MacAddress { get; set; }
+        [JsonProperty]
+        public string SimBankId { get; set; }
 
         /// <summary>
         /// Максимально входящих сообщений

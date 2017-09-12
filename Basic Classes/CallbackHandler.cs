@@ -24,6 +24,7 @@ namespace SmsModemClient
         HubConnection connection;
         private ComPortManager Manager = null;
         private string previousCommand = string.Empty;
+        
 
         public CallbackHandler(string ServerAddress)
         {
@@ -58,6 +59,8 @@ namespace SmsModemClient
             _hub = connection.CreateHubProxy("CommandHub");
 
             connection.Start().Wait();
+            connection.Closed += Manager.MF.Connection_Closed;
+            connection.Reconnected += Manager.MF.Connection_Reconnected;
         }
 
         /// <summary>
@@ -65,7 +68,6 @@ namespace SmsModemClient
         /// </summary>
         private void Subscribe()
         {
-            _hub.On("ReceiveLength", x => MessageBox.Show(x));
             _hub.On<string, string>("onConnected", (id, commName) => DisplayInfo(id, commName));
             _hub.On("broadcast", x => MessageBox.Show(x));
             _hub.On("CommandArrived", x => ParseCommand(x));
@@ -155,7 +157,7 @@ namespace SmsModemClient
         {
             var receiver = Manager.activeComs.First(x => x.Id == id);
             var type = pars[0];
-            var search = pars[1] ?? "";
+            var search = pars[1] ?? "";//поменять
 
             string sms = null;
 
@@ -184,10 +186,23 @@ namespace SmsModemClient
             }
         }
 
+        public void Disconnect(bool stopcalled = false)
+        {
+            //_hub.Invoke("OnDisconnected", stopcalled);
+            connection.Stop();
+        }
+
         ~CallbackHandler()
         {
-            _hub.Invoke("OnDisconnected",true);
-            connection.Stop();
+            try
+            {
+                //_hub.Invoke("OnDisconnected", true);
+                connection.Stop();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
         }
 
         /// <summary>
