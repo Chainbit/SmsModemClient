@@ -362,11 +362,11 @@ namespace SmsModemClient
 
         public string SendManagerInfo()
         {
-            //ДЛЯ ТЕСТА!
-            using (ComContext db = new ComContext())
-            {
-                activeComs = db.activeComs.ToList();
-            }
+            ////ДЛЯ ТЕСТА!
+            //using (ComContext db = new ComContext())
+            //{
+            //    activeComs = db.activeComs.ToList();
+            //}
             return Newtonsoft.Json.JsonConvert.SerializeObject(activeComs);
         }
     }

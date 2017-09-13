@@ -41,9 +41,12 @@ namespace SmsModemClient
         /// </summary>
         [NotMapped]
         private int UsedMessages { get; set; }
+        [NotMapped]
+        public int CurrentCommandID { get; set; }
 
 
         public event EventHandler NumberReceived;
+
         public static CancellationTokenSource cts = new CancellationTokenSource();
 
         private CancellationToken ct = cts.Token;
@@ -497,51 +500,51 @@ namespace SmsModemClient
         /// <returns></returns>
         public Task<string> WaitAnySMS()
         {
-            return Task.Factory.StartNew<string>(() =>
+            return Task.Run(() =>
             {
                 //даем время
-                for (int i = 0; i < 100; i++)
+                for (int i = 0; i < 100 && isWaiting==true; i++)
                 {
                     //список собщений
                     var messagelist = ReadRawMessages(PhoneMessageStatus.All, PhoneStorageType.Sim);
 
-                    var messageString = string.Empty;
-                    StringBuilder sb = new StringBuilder();
-                    if (messagelist.Length > 0)
-                    {
-                        // на случай, если длинное сообщение
-                        IList<SmsPdu> longMsg = new List<SmsPdu>();
+                    //var messageString = string.Empty;
+                    //StringBuilder sb = new StringBuilder();
+                    //if (messagelist.Length > 0)
+                    //{
+                    //    // на случай, если длинное сообщение
+                    //    IList<SmsPdu> longMsg = new List<SmsPdu>();
 
-                        foreach (ShortMessageFromPhone message in messagelist)
-                        {
-                            //сырая хуета
-                            var pdu = new SmsDeliverPdu(message.Data, true, -1);
+                    //    foreach (ShortMessageFromPhone message in messagelist)
+                    //    {
+                    //        //сырая хуета
+                    //        var pdu = new SmsDeliverPdu(message.Data, true, -1);
 
-                            var origin = pdu.OriginatingAddress;
-                            var txt = pdu.UserDataText;
+                    //        var origin = pdu.OriginatingAddress;
+                    //        var txt = pdu.UserDataText;
 
-                            bool isMultiPart = SmartMessageDecoder.IsPartOfConcatMessage(pdu);
+                    //        bool isMultiPart = SmartMessageDecoder.IsPartOfConcatMessage(pdu);
 
-                            // если у сообщения есть датахедер, то скорее всего оно длинное
-                            if (pdu.UserDataHeaderPresent && isMultiPart)
-                            {
-                                if (longMsg.Count == 0 || SmartMessageDecoder.ArePartOfSameMessage(longMsg.Last(), pdu))
-                                {
-                                    longMsg.Add(pdu);
-                                }
-                                if (SmartMessageDecoder.AreAllConcatPartsPresent(longMsg)) // is Complete
-                                {
-                                    txt = SmartMessageDecoder.CombineConcatMessageText(longMsg);
-                                }
-                                else
-                                {
-                                    continue;
-                                }
-                            }
-                            sb.AppendFormat("{0}: {1}", origin, txt);
-                        }
-                        return sb.ToString();
-                    }
+                    //        // если у сообщения есть датахедер, то скорее всего оно длинное
+                    //        if (pdu.UserDataHeaderPresent && isMultiPart)
+                    //        {
+                    //            if (longMsg.Count == 0 || SmartMessageDecoder.ArePartOfSameMessage(longMsg.Last(), pdu))
+                    //            {
+                    //                longMsg.Add(pdu);
+                    //            }
+                    //            if (SmartMessageDecoder.AreAllConcatPartsPresent(longMsg)) // is Complete
+                    //            {
+                    //                txt = SmartMessageDecoder.CombineConcatMessageText(longMsg);
+                    //            }
+                    //            else
+                    //            {
+                    //                continue;
+                    //            }
+                    //        }
+                    //        sb.AppendFormat("{0}: {1}", origin, txt);
+                    //    }
+                    //    return sb.ToString();
+                    //}
                     Thread.Sleep(3000);
                 }
                 return "Время вышло!";
@@ -551,17 +554,18 @@ namespace SmsModemClient
         #endregion
         
         /// <summary>
-        /// Получить последнюю смс
+        /// Очищает входящие и ждет СМС
         /// </summary>
-        public async Task<string> GetLastSMS()
+        public async Task GetLastSMS(int cmdId)
         {
+            CurrentCommandID = cmdId;
             do
             {
                 CheckMemoryStatus();
                 ClearInbox();
             }
             while (UsedMessages>0);
-            return await WaitAnySMS();
+            await WaitAnySMS();
         }
 
         /// <summary>

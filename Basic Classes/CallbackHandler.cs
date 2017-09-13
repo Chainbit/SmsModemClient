@@ -15,6 +15,9 @@ using System.Collections.Specialized;
 using Microsoft.AspNet.SignalR.Client;
 using System.Windows.Forms;
 using Newtonsoft.Json;
+using GsmComm.PduConverter;
+using GsmComm.GsmCommunication;
+using GsmComm.PduConverter.SmartMessaging;
 
 namespace SmsModemClient
 {
@@ -24,7 +27,7 @@ namespace SmsModemClient
         HubConnection connection;
         private ComPortManager Manager = null;
         private string previousCommand = string.Empty;
-        
+        //private List<SmsModemBlock> Subscriptions = new List<SmsModemBlock>();
 
         public CallbackHandler(string ServerAddress)
         {
@@ -114,16 +117,17 @@ namespace SmsModemClient
         /// <param name="cmd">Команда</param>
         private void ExecuteCommand(CommandClass cmd)
         {
-            ServerCommand command = (ServerCommand)Enum.Parse(typeof(ServerCommand), cmd.Command);
-            switch (command)
+            //ServerCommand command = (ServerCommand)Enum.Parse(typeof(ServerCommand), cmd.Command);
+
+            switch (cmd.Command)
             {
-                case ServerCommand.GetInfo:
+                case "GetInfo":
                     GetInfo();
                     break;
-                case ServerCommand.WaitSms:
+                case "WaitSms":
                     WaitSMS(cmd.Destination, cmd.Pars, cmd.Id);
                     break;
-                case ServerCommand.SimCardMalfunction:
+                case "SimCardMalfunction":
                     break;
                 default:
                     break;
@@ -157,9 +161,17 @@ namespace SmsModemClient
         {
             var receiver = Manager.activeComs.First(x => x.Id == id);
             var type = pars[0];
-            var search = pars[1] ?? "";//поменять
+            string search;
+            try
+            {
+                search = pars[1];
+            }
+            catch (Exception)
+            {
+                search = "";
+            }            
 
-            string sms = null;
+            string sms = "";
 
             receiver.SetWaiting(true);
 
@@ -172,20 +184,69 @@ namespace SmsModemClient
                     sms = await receiver.WaitSMSWithContent(search);
                     break;
                 case "ReceiveLast":
-                    sms = await receiver.GetLastSMS();
+                    receiver.MessageReceived += new MessageReceivedEventHandler(Receiver_MessageReceived);
+                    await receiver.GetLastSMS(cmdId);
+                    //Subscriptions.Add(receiver);
                     break;
                 default:
                     receiver.SetWaiting(false);
                     break;
             }
-            if (sms!=null)
-            {
-                _hub.Invoke("SmsReceived", sms, cmdId).Wait();
-                _hub.Invoke("DetermineLength", sms).Wait();
-                receiver.SetWaiting(false);
-            }
+            //if (sms!=null)
+            //{
+            //    _hub.Invoke("SmsReceived", sms, cmdId).Wait();
+            //    //_hub.Invoke("DetermineLength", sms).Wait();
+            //    receiver.SetWaiting(false);
+            //}
         }
 
+        private void Receiver_MessageReceived(object sender, MessageReceivedEventArgs e)
+        {
+            var comm = sender as SmsModemBlock;
+            var messagelist = comm.ReadRawMessages(PhoneMessageStatus.All, PhoneStorageType.Sim);
+
+            var messageString = string.Empty;
+            StringBuilder sb = new StringBuilder();
+            if (messagelist.Length > 0)
+            {
+                // на случай, если длинное сообщение
+                IList<SmsPdu> longMsg = new List<SmsPdu>();
+
+                foreach (ShortMessageFromPhone message in messagelist)
+                {
+                    //сырая хуета
+                    var pdu = new SmsDeliverPdu(message.Data, true, -1);
+
+                    var origin = pdu.OriginatingAddress;
+                    var txt = pdu.UserDataText;
+
+                    bool isMultiPart = SmartMessageDecoder.IsPartOfConcatMessage(pdu);
+
+                    // если у сообщения есть датахедер, то скорее всего оно длинное
+                    if (pdu.UserDataHeaderPresent && isMultiPart)
+                    {
+                        if (longMsg.Count == 0 || SmartMessageDecoder.ArePartOfSameMessage(longMsg.Last(), pdu))
+                        {
+                            longMsg.Add(pdu);
+                        }
+                        if (SmartMessageDecoder.AreAllConcatPartsPresent(longMsg)) // is Complete
+                        {
+                            txt = SmartMessageDecoder.CombineConcatMessageText(longMsg);
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
+                    sb.AppendFormat("{0}: {1}", origin, txt);
+                }
+
+                var sms = sb.ToString();
+                _hub.Invoke("SmsReceived", sms, comm.CurrentCommandID).Wait();
+                comm.SetWaiting(false);
+                //Subscriptions.Remove(comm);
+            }
+        }
         public void Disconnect(bool stopcalled = false)
         {
             //_hub.Invoke("OnDisconnected", stopcalled);
