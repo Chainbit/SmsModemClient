@@ -46,6 +46,7 @@ namespace SmsModemClient
 
 
         public event EventHandler NumberReceived;
+        public EventHandler SmsReceived;
 
         public static CancellationTokenSource cts = new CancellationTokenSource();
 
@@ -441,18 +442,18 @@ namespace SmsModemClient
         /// </summary>
         /// <param name="origin">От кого ждать смс</param>
         /// <returns></returns>
-        public Task<string> WaitSMSFromNumber(string origin)
+        public Task WaitSMSFromNumber(string origin)
         {
-            return Task.Factory.StartNew<string>(() =>
+            return Task.Factory.StartNew(() =>
             {
                 if (IsConnected())
                 {
-                    for (int i = 0; i < 12; i++)
+                    for (int i = 0; i < 60; i++)
                     {
                         string sms = CheckSMSFromNumber(origin);
                         if (sms!=null)
                         {
-                            return sms;
+                            SmsReceived(this, new MessageArgs() { messageText = sms });
                         }
                         Thread.Sleep(5000);
                     }
@@ -508,6 +509,7 @@ namespace SmsModemClient
                     //список собщений
                     var messagelist = ReadRawMessages(PhoneMessageStatus.All, PhoneStorageType.Sim);
 
+                    #region oldShit
                     //var messageString = string.Empty;
                     //StringBuilder sb = new StringBuilder();
                     //if (messagelist.Length > 0)
@@ -545,6 +547,8 @@ namespace SmsModemClient
                     //    }
                     //    return sb.ToString();
                     //}
+                    #endregion
+
                     Thread.Sleep(3000);
                 }
                 return "Время вышло!";
@@ -640,5 +644,10 @@ namespace SmsModemClient
             /// </summary>
             Excellent
         }
+    }
+
+    public class MessageArgs : EventArgs
+    {
+        public string messageText;
     }
 }

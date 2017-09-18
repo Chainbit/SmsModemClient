@@ -178,7 +178,8 @@ namespace SmsModemClient
             switch (type)
             {
                 case "SearchByNumber":
-                    sms = await receiver.WaitSMSFromNumber(search);
+                    receiver.SmsReceived += new EventHandler(Receiver_SmsFromNumberReceived);
+                    await receiver.WaitSMSFromNumber(search);
                     break;
                 case "SearchByContent":
                     sms = await receiver.WaitSMSWithContent(search);
@@ -198,6 +199,14 @@ namespace SmsModemClient
             //    //_hub.Invoke("DetermineLength", sms).Wait();
             //    receiver.SetWaiting(false);
             //}
+        }
+
+        private void Receiver_SmsFromNumberReceived(object sender, EventArgs e)
+        {
+            var comm = sender as SmsModemBlock;
+            string sms = (e as MessageArgs).messageText;
+            _hub.Invoke("SmsReceived", sms, comm.CurrentCommandID).Wait();
+            comm.SetWaiting(false);
         }
 
         private void Receiver_MessageReceived(object sender, MessageReceivedEventArgs e)
@@ -247,6 +256,8 @@ namespace SmsModemClient
                 //Subscriptions.Remove(comm);
             }
         }
+
+
         public void Disconnect(bool stopcalled = false)
         {
             //_hub.Invoke("OnDisconnected", stopcalled);
