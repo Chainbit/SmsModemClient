@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations.Schema;
 using GsmComm.PduConverter.SmartMessaging;
+using System.Windows.Forms;
 
 namespace SmsModemClient
 {
@@ -51,10 +52,15 @@ namespace SmsModemClient
         public static CancellationTokenSource cts = new CancellationTokenSource();
 
         private CancellationToken ct = cts.Token;
+
         [NotMapped]
         private System.Windows.Forms.Timer timer;
         [NotMapped]
         private bool isWaiting = false;
+        [NotMapped]
+        private string Search;
+        [NotMapped]
+        public bool isReady = false;
 
         public SmsModemBlock() : base()
         {
@@ -67,8 +73,15 @@ namespace SmsModemClient
 
             // создаем таймер 
             timer = new System.Windows.Forms.Timer();
-            timer.Interval = (1 * 50000);
+            timer.Interval = (10 * 60 * 1000);
             timer.Tick += Timer_Tick;
+        }
+
+        public void OnReady()
+        {
+            isReady = true;
+            EnableMessageNotifications();
+            timer.Start();
         }
 
         /// <summary>
@@ -199,9 +212,66 @@ namespace SmsModemClient
                     TelNumber = nums.First().Number;
                     // вызываем событие, чтобы симка добавилась в БД
                     NumberReceived(this, new EventArgs());
+                    SetWaiting(false); // выключаем ожидаение
                 }
                 catch (Exception ex)
                 {                    
+                }
+            }
+        }
+
+        public void GetBalance()
+        {
+            lock (this)
+            {
+                try
+                {
+                    IProtocol protocol = GetProtocol();
+
+                    string asPDUencoded = string.Empty;
+                    switch (this.Operator.ToLower())
+                    {
+                        case "beeline":
+                            asPDUencoded = Calc.IntToHex(TextDataConverter.SeptetsToOctetsInt("*102#"));
+                            //asPDUencoded = "*102#";
+                            break;
+                        case "megafon":
+                            asPDUencoded = Calc.IntToHex(TextDataConverter.SeptetsToOctetsInt("*100#"));
+                            break;
+                        case "mts rus":
+                            asPDUencoded = Calc.IntToHex(TextDataConverter.SeptetsToOctetsInt("*100#"));
+                            break;
+                        default:
+                            break;
+                    }
+                    asPDUencoded = "\"" + asPDUencoded + "\"";
+                    string gottenString = protocol.ExecAndReceiveMultiple("at+cusd=1,"+asPDUencoded+",15");
+                    var re = new Regex("\".*?\"");
+                    int i = 0;
+                    //if (!re.IsMatch(gottenString))
+                    //{
+                    //    do
+                    //    {
+                    //        protocol.Receive(out gottenString);
+                    //        ++i;
+                    //    } while (!(i >= 5
+                    //                || re.IsMatch(gottenString)
+                    //                || gottenString.Contains("\r\nOK")
+                    //                || gottenString.Contains("\r\nERROR")
+                    //                || gottenString.Contains("\r\nDONE"))); //additional tests "just in case"
+                    //}
+                    string m = re.Match(gottenString).Value.Trim('"');
+                    var pdu = new SmsDeliverPdu(gottenString, true, -1);
+                    MessageBox.Show(gottenString + "\r\n"+pdu.UserDataText);
+                }
+                catch (Exception ex)
+                {
+                    Operator = "Ошибка!";
+                    var x = ex.Message;
+                }
+                finally
+                {
+                    ReleaseProtocol();
                 }
             }
         }
@@ -231,6 +301,7 @@ namespace SmsModemClient
                         tel = tel.Replace(".", "");
                         TelNumber = "+7" + tel;
                         NumberReceived(this, new EventArgs());
+                        SetWaiting(false); // выключаем ожидаение
                         return true;
                     }
                 }
@@ -267,6 +338,7 @@ namespace SmsModemClient
                         tel = tel.Replace(".", "");
                         TelNumber = "+7" + tel;
                         NumberReceived(this, new EventArgs());
+                        SetWaiting(false); // выключаем ожидаение
                         return true;
                     }
                 }
@@ -299,9 +371,11 @@ namespace SmsModemClient
 
                     var origin = pdu.OriginatingAddress;
                     var txt = pdu.UserDataText;
+                    var timestamp = pdu.SCTimestamp.ToDateTime();
 
+                    bool isNew = timestamp + TimeSpan.FromMinutes(5) > DateTime.Now;
                     bool isFound = origin.ToLower().Contains(search.ToLower());
-                    if (isFound)
+                    if (isFound && isNew)
                     {
                         return txt;
                     }
@@ -310,6 +384,7 @@ namespace SmsModemClient
                 {
                     ClearInbox();
                 }
+                Thread.Sleep(5000);
             }
             return null;
         }
@@ -441,31 +516,45 @@ namespace SmsModemClient
         /// Задача ждать смс
         /// </summary>
         /// <param name="origin">От кого ждать смс</param>
-        /// <returns></returns>
+
         public Task WaitSMSFromNumber(string origin)
         {
             return Task.Factory.StartNew(() =>
             {
                 if (IsConnected())
                 {
-                    for (int i = 0; i < 60; i++)
-                    {
+                    //for (int i = 0; i < 60; i++)
+                    //{
                         string sms = CheckSMSFromNumber(origin);
                         if (sms!=null)
                         {
                             SmsReceived(this, new MessageArgs() { messageText = sms });
                         }
-                        Thread.Sleep(5000);
-                    }
+                        else
+                        {
+                            Search = origin;
+                            MessageReceived += new MessageReceivedEventHandler(SmsModemBlock_MessageReceived);
+                        }
+                    //    Thread.Sleep(1000);
+                    //}
                 }
                 else
                 {
-                    return "ERROR";
+                    //return "ERROR";
                 }
-                return null;
             });
         }
-        
+
+
+        private void SmsModemBlock_MessageReceived(object sender, MessageReceivedEventArgs e)
+        {
+            string sms = CheckSMSFromNumber(Search);
+            if (sms != null)
+            {
+                SmsReceived(this, new MessageArgs() { messageText = sms });
+            }
+        }
+
         /// <summary>
         /// Задача ждать смс
         /// </summary>
@@ -577,7 +666,14 @@ namespace SmsModemClient
         /// </summary>
         public void ClearInbox()
         {
-            DeleteMessages(DeleteScope.All, PhoneStorageType.Sim);
+            try
+            {
+                DeleteMessages(DeleteScope.All, PhoneStorageType.Sim);
+            }
+            catch (Exception e)
+            {
+                GC.Collect();
+            }
         }
 
         /// <summary>
@@ -643,6 +739,20 @@ namespace SmsModemClient
             /// Превосходно
             /// </summary>
             Excellent
+        }
+
+        ~SmsModemBlock()
+        {
+            try
+            {
+                this.DisableMessageNotifications();
+            }
+            catch (Exception) {}
+            try
+            {
+                timer.Dispose();
+            }
+            catch (Exception){ }
         }
     }
 

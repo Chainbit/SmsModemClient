@@ -260,6 +260,7 @@
             this.request.Name = "request";
             this.request.Size = new System.Drawing.Size(535, 20);
             this.request.TabIndex = 5;
+            this.request.KeyDown += new System.Windows.Forms.KeyEventHandler(this.request_KeyDown);
             // 
             // CommForm
             // 

@@ -70,10 +70,8 @@ namespace SmsModemClient
 
         private void CommForm_Load(object sender, EventArgs e)
         {
-            comm.EnableMessageNotifications();
             comm.MessageReceived += new MessageReceivedEventHandler(comm_MessageReceived);
             comm.LoglineAdded += new LoglineAddedEventHandler(Main_LoglineAdded);
-            
         }
 
         /// <summary>
@@ -371,9 +369,28 @@ namespace SmsModemClient
             {
                 lock (this)
                 {
-                    comm.GetProtocol().ExecAndReceiveMultiple(request.Text);
-                    comm.ReleaseProtocol();
+                    try
+                    {
+                        comm.GetProtocol().ExecAndReceiveMultiple(request.Text);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                    finally
+                    {
+                        System.Threading.Thread.Sleep(2000);
+                        comm.ReleaseProtocol();
+                    }
                 }                
+            }
+        }
+
+        private void request_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                sendButton_Click(sender, e);
             }
         }
     }

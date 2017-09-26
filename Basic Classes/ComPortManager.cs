@@ -53,7 +53,9 @@ namespace SmsModemClient
             GetModemData();
             // дальше работаем с листом
             activeComs = activeComsQueue.ToList();
+            GC.Collect();
             GetModemTels();
+            SetPortsReady();
         }
 
         /// <summary>
@@ -149,6 +151,7 @@ namespace SmsModemClient
             GetModemOperator(comm);
             GetCurrentIMSI(comm);
             GetSignalLevel(comm);
+            //GetBalance(comm);
         }
 
         /// <summary>
@@ -156,14 +159,12 @@ namespace SmsModemClient
         /// </summary>
         private void GetModemTels()
         {
-            List<SmsModemBlock> newComs = new List<SmsModemBlock>();
-
             using (ComContext db = new ComContext())
             {
                 foreach (SmsModemBlock item in activeComs)
                 {
                     //ищем сходства в БД
-                    var temp = FindItemInDb(item,db);
+                    var temp = db.activeComs.Find(item.Id);
                     if (temp != null) // если находим, присваиваем значение
                     {
                         item.TelNumber = temp.TelNumber;
@@ -179,14 +180,14 @@ namespace SmsModemClient
         }
 
         /// <summary>
-        /// Выполняет поиск соответствующего элемента в БД
+        /// Переводит порты в состояние готовности
         /// </summary>
-        /// <param name="item">Искомый элемент</param>
-        /// <param name="db">БД, по котороый выполняется поиск</param>
-        /// <returns>Соответствующий элемент или <see langword="null"/></returns>
-        private SmsModemBlock FindItemInDb(SmsModemBlock item, ComContext db)
+        private void SetPortsReady()
         {
-            return db.activeComs.Find(item.Id);
+            foreach (var item in activeComs)
+            {
+                item.OnReady();
+            }
         }
 
         /// <summary>
@@ -196,6 +197,7 @@ namespace SmsModemClient
         public void RequestTelNumber(object b)
         {
             SmsModemBlock block = (SmsModemBlock)b;
+            block.SetWaiting(true);
             try
             {
                 switch (block.Operator.ToLower())
@@ -245,6 +247,15 @@ namespace SmsModemClient
         private void GetSignalLevel(SmsModemBlock comm)
         {
             comm.GetSignalStrength();
+        }
+
+        /// <summary>
+        /// Запрашивает баланс
+        /// </summary>
+        /// <param name="comm"></param>
+        private void GetBalance(SmsModemBlock comm)
+        {
+            comm.GetBalance();
         }
 
         /// <summary>
