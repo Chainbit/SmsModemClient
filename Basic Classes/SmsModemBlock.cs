@@ -517,8 +517,9 @@ namespace SmsModemClient
         /// </summary>
         /// <param name="origin">От кого ждать смс</param>
 
-        public Task WaitSMSFromNumber(string origin)
+        public Task WaitSMSFromNumber(string origin, int cmdId)
         {
+            CurrentCommandID = cmdId;
             return Task.Factory.StartNew(() =>
             {
                 if (IsConnected())

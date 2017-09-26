@@ -179,7 +179,7 @@ namespace SmsModemClient
             {
                 case "SearchByNumber":
                     receiver.SmsReceived += new EventHandler(Receiver_SmsFromNumberReceived);
-                    await receiver.WaitSMSFromNumber(search);
+                    await receiver.WaitSMSFromNumber(search, cmdId);
                     break;
                 case "SearchByContent":
                     sms = await receiver.WaitSMSWithContent(search);
