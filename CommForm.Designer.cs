@@ -48,6 +48,7 @@
             this.log = new System.Windows.Forms.TextBox();
             this.sendButton = new System.Windows.Forms.Button();
             this.request = new System.Windows.Forms.TextBox();
+            this.receiveButton = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.SMSListTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SMSList)).BeginInit();
@@ -217,6 +218,7 @@
             // 
             // commandsTab
             // 
+            this.commandsTab.Controls.Add(this.receiveButton);
             this.commandsTab.Controls.Add(this.log);
             this.commandsTab.Controls.Add(this.sendButton);
             this.commandsTab.Controls.Add(this.request);
@@ -244,7 +246,7 @@
             // sendButton
             // 
             this.sendButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.sendButton.Location = new System.Drawing.Point(549, 6);
+            this.sendButton.Location = new System.Drawing.Point(472, 6);
             this.sendButton.Name = "sendButton";
             this.sendButton.Size = new System.Drawing.Size(71, 33);
             this.sendButton.TabIndex = 6;
@@ -258,9 +260,20 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.request.Location = new System.Drawing.Point(8, 13);
             this.request.Name = "request";
-            this.request.Size = new System.Drawing.Size(535, 20);
+            this.request.Size = new System.Drawing.Size(458, 20);
             this.request.TabIndex = 5;
             this.request.KeyDown += new System.Windows.Forms.KeyEventHandler(this.request_KeyDown);
+            // 
+            // receiveButton
+            // 
+            this.receiveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.receiveButton.Location = new System.Drawing.Point(549, 6);
+            this.receiveButton.Name = "receiveButton";
+            this.receiveButton.Size = new System.Drawing.Size(71, 33);
+            this.receiveButton.TabIndex = 8;
+            this.receiveButton.Text = "Получить";
+            this.receiveButton.UseVisualStyleBackColor = true;
+            this.receiveButton.Click += new System.EventHandler(this.button1_Click);
             // 
             // CommForm
             // 
@@ -304,5 +317,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn text;
         private System.Windows.Forms.Button getSMSListButton;
         private System.Windows.Forms.Label signalLevel;
+        private System.Windows.Forms.Button receiveButton;
     }
 }

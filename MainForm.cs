@@ -90,6 +90,7 @@ namespace SmsModemClient
                 ComPortsDataGrid.Rows[i].Cells["SimId"].Value = list[i].Id;
                 ComPortsDataGrid.Rows[i].Cells["TelNumber"].Value = list[i].TelNumber;
                 ComPortsDataGrid.Rows[i].Cells["SIMoperator"].Value = list[i].Operator;
+                ComPortsDataGrid.Rows[i].Cells["Balance"].Value = list[i].Balance;
                 var img = Properties.Resources.none;
                 switch (list[i].SignalLevel)
                 {

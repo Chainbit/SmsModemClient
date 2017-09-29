@@ -111,6 +111,10 @@
     <Compile Include="Migrations\201709121721414_simbankid.Designer.cs">
       <DependentUpon>201709121721414_simbankid.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201709291430111_balance.cs" />
+    <Compile Include="Migrations\201709291430111_balance.Designer.cs">
+      <DependentUpon>201709291430111_balance.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -135,6 +139,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201709121721414_simbankid.resx">
       <DependentUpon>201709121721414_simbankid.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709291430111_balance.resx">
+      <DependentUpon>201709291430111_balance.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

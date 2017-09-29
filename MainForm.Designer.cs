@@ -32,14 +32,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.loadComsButton = new System.Windows.Forms.Button();
             this.ComPortsDataGrid = new System.Windows.Forms.DataGridView();
-            this.number = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ComPortName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SimID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TelNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SIMoperator = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Signal = new System.Windows.Forms.DataGridViewImageColumn();
-            this.SignalTxt = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Select = new System.Windows.Forms.DataGridViewButtonColumn();
             this.toggleAutoUpdateBtn = new System.Windows.Forms.Button();
             this.refreshButton = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -50,6 +42,15 @@
             this.disconnectButton = new System.Windows.Forms.Button();
             this.connectButon = new System.Windows.Forms.Button();
             this.IPtextBox = new System.Windows.Forms.TextBox();
+            this.number = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ComPortName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SimID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TelNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SIMoperator = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Balance = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Signal = new System.Windows.Forms.DataGridViewImageColumn();
+            this.SignalTxt = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Select = new System.Windows.Forms.DataGridViewButtonColumn();
             ((System.ComponentModel.ISupportInitialize)(this.ComPortsDataGrid)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -84,6 +85,7 @@
             this.SimID,
             this.TelNumber,
             this.SIMoperator,
+            this.Balance,
             this.Signal,
             this.SignalTxt,
             this.Select});
@@ -98,75 +100,6 @@
             this.ComPortsDataGrid.Size = new System.Drawing.Size(666, 378);
             this.ComPortsDataGrid.TabIndex = 3;
             this.ComPortsDataGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ComPortsDataGrid_CellContentClick);
-            // 
-            // number
-            // 
-            this.number.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.number.FillWeight = 10F;
-            this.number.HeaderText = "№";
-            this.number.Name = "number";
-            this.number.ReadOnly = true;
-            this.number.Width = 43;
-            // 
-            // ComPortName
-            // 
-            this.ComPortName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.ComPortName.HeaderText = "ComPortName";
-            this.ComPortName.Name = "ComPortName";
-            this.ComPortName.ReadOnly = true;
-            // 
-            // SimID
-            // 
-            this.SimID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.SimID.FillWeight = 70F;
-            this.SimID.HeaderText = "SIM ID";
-            this.SimID.Name = "SimID";
-            this.SimID.ReadOnly = true;
-            // 
-            // TelNumber
-            // 
-            this.TelNumber.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle1.NullValue = "Загрузка...";
-            this.TelNumber.DefaultCellStyle = dataGridViewCellStyle1;
-            this.TelNumber.HeaderText = "TelNumber";
-            this.TelNumber.Name = "TelNumber";
-            this.TelNumber.ReadOnly = true;
-            this.TelNumber.Width = 84;
-            // 
-            // SIMoperator
-            // 
-            this.SIMoperator.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.SIMoperator.HeaderText = "Operator";
-            this.SIMoperator.Name = "SIMoperator";
-            this.SIMoperator.ReadOnly = true;
-            this.SIMoperator.Width = 73;
-            // 
-            // Signal
-            // 
-            this.Signal.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Signal.FillWeight = 10F;
-            this.Signal.HeaderText = "Signal";
-            this.Signal.Name = "Signal";
-            this.Signal.ReadOnly = true;
-            this.Signal.Width = 42;
-            // 
-            // SignalTxt
-            // 
-            this.SignalTxt.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.SignalTxt.HeaderText = "SignalTxt";
-            this.SignalTxt.Name = "SignalTxt";
-            this.SignalTxt.ReadOnly = true;
-            this.SignalTxt.Width = 76;
-            // 
-            // Select
-            // 
-            this.Select.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Select.FillWeight = 20F;
-            this.Select.HeaderText = "Select";
-            this.Select.Name = "Select";
-            this.Select.ReadOnly = true;
-            this.Select.Text = "Select";
-            this.Select.UseColumnTextForButtonValue = true;
             // 
             // toggleAutoUpdateBtn
             // 
@@ -286,6 +219,84 @@
             this.IPtextBox.Text = global::SmsModemClient.Properties.Settings.Default.hubIP;
             this.IPtextBox.TextChanged += new System.EventHandler(this.IPtextBox_TextChanged);
             // 
+            // number
+            // 
+            this.number.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.number.FillWeight = 10F;
+            this.number.HeaderText = "№";
+            this.number.Name = "number";
+            this.number.ReadOnly = true;
+            this.number.Width = 43;
+            // 
+            // ComPortName
+            // 
+            this.ComPortName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.ComPortName.HeaderText = "ComPortName";
+            this.ComPortName.Name = "ComPortName";
+            this.ComPortName.ReadOnly = true;
+            // 
+            // SimID
+            // 
+            this.SimID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.SimID.FillWeight = 70F;
+            this.SimID.HeaderText = "SIM ID";
+            this.SimID.Name = "SimID";
+            this.SimID.ReadOnly = true;
+            // 
+            // TelNumber
+            // 
+            this.TelNumber.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridViewCellStyle1.NullValue = "Загрузка...";
+            this.TelNumber.DefaultCellStyle = dataGridViewCellStyle1;
+            this.TelNumber.HeaderText = "TelNumber";
+            this.TelNumber.Name = "TelNumber";
+            this.TelNumber.ReadOnly = true;
+            this.TelNumber.Width = 84;
+            // 
+            // SIMoperator
+            // 
+            this.SIMoperator.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.SIMoperator.HeaderText = "Operator";
+            this.SIMoperator.Name = "SIMoperator";
+            this.SIMoperator.ReadOnly = true;
+            this.SIMoperator.Width = 73;
+            // 
+            // Balance
+            // 
+            this.Balance.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCellsExceptHeader;
+            this.Balance.FillWeight = 40F;
+            this.Balance.HeaderText = "Balance";
+            this.Balance.Name = "Balance";
+            this.Balance.ReadOnly = true;
+            this.Balance.Width = 5;
+            // 
+            // Signal
+            // 
+            this.Signal.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Signal.FillWeight = 10F;
+            this.Signal.HeaderText = "Signal";
+            this.Signal.Name = "Signal";
+            this.Signal.ReadOnly = true;
+            this.Signal.Width = 42;
+            // 
+            // SignalTxt
+            // 
+            this.SignalTxt.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.SignalTxt.HeaderText = "SignalTxt";
+            this.SignalTxt.Name = "SignalTxt";
+            this.SignalTxt.ReadOnly = true;
+            this.SignalTxt.Width = 76;
+            // 
+            // Select
+            // 
+            this.Select.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Select.FillWeight = 20F;
+            this.Select.HeaderText = "Select";
+            this.Select.Name = "Select";
+            this.Select.ReadOnly = true;
+            this.Select.Text = "Select";
+            this.Select.UseColumnTextForButtonValue = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -317,14 +328,6 @@
         private System.Windows.Forms.Button toggleAutoUpdateBtn;
         private System.Windows.Forms.Button refreshButton;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn number;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ComPortName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn SimID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn TelNumber;
-        private System.Windows.Forms.DataGridViewTextBoxColumn SIMoperator;
-        private System.Windows.Forms.DataGridViewImageColumn Signal;
-        private System.Windows.Forms.DataGridViewTextBoxColumn SignalTxt;
-        private System.Windows.Forms.DataGridViewButtonColumn Select;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Button disconnectButton;
         private System.Windows.Forms.Button connectButon;
@@ -332,6 +335,15 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.PictureBox connectPicture;
         private System.Windows.Forms.CheckBox autoconnectCheckBox;
+        private System.Windows.Forms.DataGridViewTextBoxColumn number;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ComPortName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SimID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TelNumber;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SIMoperator;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Balance;
+        private System.Windows.Forms.DataGridViewImageColumn Signal;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SignalTxt;
+        private System.Windows.Forms.DataGridViewButtonColumn Select;
     }
 }
 

@@ -151,7 +151,7 @@ namespace SmsModemClient
             GetModemOperator(comm);
             GetCurrentIMSI(comm);
             GetSignalLevel(comm);
-            //GetBalance(comm);
+            GetBalance(comm);
         }
 
         /// <summary>

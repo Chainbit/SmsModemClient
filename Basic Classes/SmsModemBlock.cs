@@ -32,6 +32,10 @@ namespace SmsModemClient
         [JsonProperty]
         public string SimBankId { get; set; }
 
+        [JsonProperty]
+        [NotMapped]
+        public decimal Balance { get; set; }
+
         /// <summary>
         /// Максимально входящих сообщений
         /// </summary>
@@ -220,53 +224,66 @@ namespace SmsModemClient
             }
         }
 
+        /// <summary>
+        /// Получить баланс
+        /// </summary>
         public void GetBalance()
+        {
+            switch (this.Operator.ToLower())
+            {
+                case "beeline":
+                    GetBalanceBeeline();
+                    break;
+                case "megafon":
+                    //query = "#100#";
+                    return;
+                    break;
+                case "mts rus":
+                    //query = "#102#";
+                    return;
+                    break;
+                default:
+                    return;
+                    break;
+            }            
+        }
+
+        /// <summary>
+        /// Получить баланс на Билайне
+        /// </summary>
+        public void GetBalanceBeeline()
         {
             lock (this)
             {
                 try
                 {
                     IProtocol protocol = GetProtocol();
-
-                    string asPDUencoded = string.Empty;
-                    switch (this.Operator.ToLower())
-                    {
-                        case "beeline":
-                            asPDUencoded = Calc.IntToHex(TextDataConverter.SeptetsToOctetsInt("*102#"));
-                            //asPDUencoded = "*102#";
-                            break;
-                        case "megafon":
-                            asPDUencoded = Calc.IntToHex(TextDataConverter.SeptetsToOctetsInt("*100#"));
-                            break;
-                        case "mts rus":
-                            asPDUencoded = Calc.IntToHex(TextDataConverter.SeptetsToOctetsInt("*100#"));
-                            break;
-                        default:
-                            break;
-                    }
-                    asPDUencoded = "\"" + asPDUencoded + "\"";
-                    string gottenString = protocol.ExecAndReceiveMultiple("at+cusd=1,"+asPDUencoded+",15");
-                    var re = new Regex("\".*?\"");
+                    string gottenString = protocol.ExecAndReceiveMultiple("at+cusd=1,#102#,15");
+                    string resp = string.Empty;
                     int i = 0;
-                    //if (!re.IsMatch(gottenString))
-                    //{
-                    //    do
-                    //    {
-                    //        protocol.Receive(out gottenString);
-                    //        ++i;
-                    //    } while (!(i >= 5
-                    //                || re.IsMatch(gottenString)
-                    //                || gottenString.Contains("\r\nOK")
-                    //                || gottenString.Contains("\r\nERROR")
-                    //                || gottenString.Contains("\r\nDONE"))); //additional tests "just in case"
-                    //}
-                    string m = re.Match(gottenString).Value.Trim('"');
-                    var pdu = new SmsDeliverPdu(gottenString, true, -1);
-                    MessageBox.Show(gottenString + "\r\n"+pdu.UserDataText);
+                    if (string.IsNullOrEmpty(resp))
+                    {
+                        do
+                        {
+                            protocol.Receive(out gottenString);
+                            ++i;
+                        } while (!(i >= 5 || gottenString.Contains("+CUSD")));
+                    }
+                    if (gottenString.Contains("Vash balans") && !gottenString.Contains("aktiviruyetsya"))
+                    {
+                        int Pos1 = gottenString.IndexOf("Vash balans") + ("Vash balans").Length;
+                        int Pos2 = gottenString.IndexOf(" r");
+                        string temp = gottenString.Substring(Pos1, Pos2 - Pos1).Trim();
+                        temp = temp.Replace('.', ',');
+                        Balance = decimal.Parse(temp);
+                    }
+                    else
+                    {
+                        //ERROR
+                    }
                 }
                 catch (Exception ex)
                 {
-                    Operator = "Ошибка!";
                     var x = ex.Message;
                 }
                 finally
@@ -274,6 +291,7 @@ namespace SmsModemClient
                     ReleaseProtocol();
                 }
             }
+            
         }
 
         /// <summary>
