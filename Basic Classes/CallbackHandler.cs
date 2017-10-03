@@ -74,6 +74,7 @@ namespace SmsModemClient
             _hub.On<string, string>("onConnected", (id, commName) => DisplayInfo(id, commName));
             _hub.On("broadcast", x => MessageBox.Show(x));
             _hub.On("CommandArrived", x => ParseCommand(x));
+            _hub.On<string, List<object>>("InvokeMethod", (methodName, args) => InvokeMethod(methodName, args));
         }
 
         /// <summary>
@@ -84,6 +85,16 @@ namespace SmsModemClient
             string line = "Hello, Motherfucker!";
             _hub.Invoke("DetermineLength", line).Wait();
             _hub.Invoke("Connect", Manager.MacAddress).Wait();
+        }
+
+        /// <summary>
+        /// Вызывает метод данного класса по его имени
+        /// </summary>
+        /// <param name="methodName">Имя метода</param>
+        /// <param name="args">Аргументы</param>
+        public void InvokeMethod(string methodName, List<object> args)
+        {
+            GetType().GetMethod(methodName).Invoke(this, args.ToArray());
         }
 
         /// <summary>

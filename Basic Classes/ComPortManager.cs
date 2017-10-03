@@ -55,7 +55,8 @@ namespace SmsModemClient
             activeComs = activeComsQueue.ToList();
             GC.Collect();
             GetModemTels();
-            SetPortsReady();
+            //SetPortsReady(); //проверить, есть ли симки!
+
         }
 
         /// <summary>
@@ -117,8 +118,11 @@ namespace SmsModemClient
             {
                 if (comm.IsConnected())
                 {
-                    comm.SimBankId = this.MacAddress;
-                    activeComsQueue.Enqueue(comm);
+                    if (comm.IsSimPresent())
+                    {
+                        comm.SimBankId = this.MacAddress;
+                        activeComsQueue.Enqueue(comm);
+                    }
                 }
             }
         }
@@ -148,8 +152,8 @@ namespace SmsModemClient
         {
             SmsModemBlock comm = (SmsModemBlock)com;
 
-            GetModemOperator(comm);
             GetCurrentIMSI(comm);
+            GetModemOperator(comm);
             GetSignalLevel(comm);
             GetBalance(comm);
         }

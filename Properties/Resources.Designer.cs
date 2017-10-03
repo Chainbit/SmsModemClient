@@ -129,5 +129,15 @@ namespace SmsModemClient.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        /// </summary>
+        public static System.Drawing.Icon Sim {
+            get {
+                object obj = ResourceManager.GetObject("Sim", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
     }
 }

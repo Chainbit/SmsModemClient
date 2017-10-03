@@ -143,7 +143,7 @@ namespace SmsModemClient
             var senderGrid = (DataGridView)sender;
             
             if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn &&
-                e.RowIndex >= 0)
+                e.RowIndex >= 0) // если кнопка
             {
                 try
                 {
@@ -250,6 +250,7 @@ namespace SmsModemClient
         {
             SmsModemBlock.cts.Cancel();
             manager.CloseAllPorts();
+            Disconnect();
         }
 
         private async void refreshButton_Click(object sender, EventArgs e)
@@ -390,6 +391,20 @@ namespace SmsModemClient
             }
             ServerConnected = false;
             ToggleButtons();
+        }
+
+        private void ComPortsDataGrid_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            var senderGrid = (DataGridView)sender;
+
+            if (senderGrid.Columns[e.ColumnIndex] == ComPortsDataGrid.Columns["Balance"])
+            {
+                var portName = senderGrid.Rows[e.RowIndex].Cells["ComPortName"].Value.ToString();
+                var port = manager.activeComs.Find(com => com.PortName == portName);
+
+                port.GetBalance();
+                FillDatagrid();
+            }
         }
     }
 }

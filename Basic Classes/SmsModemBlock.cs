@@ -81,6 +81,9 @@ namespace SmsModemClient
             timer.Tick += Timer_Tick;
         }
 
+        /// <summary>
+        /// Начальное положение
+        /// </summary>
         public void OnReady()
         {
             isReady = true;
@@ -96,6 +99,39 @@ namespace SmsModemClient
             if (!isWaiting)
             {
                 ClearInbox();
+            }
+        }
+
+        /// <summary>
+        /// Проверяет наличие симки 
+        /// </summary>
+        /// <returns>Значение <see langword="true"/>, если сим-карта присутствует и <see langword="false"/>, если нет</returns>
+        public bool IsSimPresent()
+        {
+            lock (this)
+            {
+                try
+                {
+                    string input = GetProtocol().ExecAndReceiveMultiple("AT+CCID");
+                    string text = TrimLineBreaks(input);
+                    if (text.ToLower().Contains(("ERROR").ToLower()))
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    var x = ex.Message;
+                    return false;
+                }
+                finally
+                {
+                    ReleaseProtocol();
+                }
             }
         }
 
