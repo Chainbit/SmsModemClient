@@ -137,11 +137,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Basic Classes\RecievedSMS.cs" />
-    <Compile Include="Service References\CallbackService\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
     <EmbeddedResource Include="CommForm.resx">
       <DependentUpon>CommForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -182,27 +177,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Service References\CallbackService\CallbackService1.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\CallbackService\service1.wsdl" />
-    <None Include="Service References\CallbackService\service2.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\CallbackService\service21.xsd">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\CallbackService\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <None Include="Service References\CallbackService\configuration.svcinfo" />
-    <None Include="Service References\CallbackService\configuration91.svcinfo" />
     <None Include="Resources\ok.ico" />
     <None Include="Resources\excellent.ico" />
     <None Include="Resources\good.ico" />
@@ -211,12 +190,6 @@
     <None Include="Resources\disconnected.png" />
     <None Include="Resources\connected.png" />
     <Content Include="Resources\Sim.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadataStorage Include="Service References\CallbackService\" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
