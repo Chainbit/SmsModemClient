@@ -98,7 +98,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Basic Classes\ClientReceiver.cs" />
     <Compile Include="Basic Classes\CallbackHandler.cs" />
     <Compile Include="Basic Classes\CommandClass.cs" />
     <Compile Include="Basic Classes\CommStream.cs" />

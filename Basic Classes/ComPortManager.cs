@@ -37,10 +37,14 @@ namespace SmsModemClient
         /// <param name="e"></param>
         public void ComPortManager_NumberReceived(object sender, EventArgs e)
         {
-            if (sender is SmsModemBlock)
+            lock (this)
             {
-                AddItemToDb((SmsModemBlock)sender);
+                if (sender is SmsModemBlock)
+                {
+                    AddItemToDb((SmsModemBlock)sender);
+                }
             }
+
         }
 
         /// <summary>
@@ -57,6 +61,14 @@ namespace SmsModemClient
             GetModemTels();
             //SetPortsReady(); //проверить, есть ли симки!
 
+        }
+
+        private void Subscribe()
+        {
+            foreach (var item in activeComs)
+            {
+                item.NumberReceived += ComPortManager_NumberReceived;
+            }
         }
 
         /// <summary>
@@ -165,6 +177,7 @@ namespace SmsModemClient
         {
             using (ComContext db = new ComContext())
             {
+                
                 foreach (SmsModemBlock item in activeComs)
                 {
                     //ищем сходства в БД
@@ -175,9 +188,11 @@ namespace SmsModemClient
                     }
                     else // если нет посылаем запрос
                     {
-                        Thread thread = new Thread(new ParameterizedThreadStart(RequestTelNumber));
-                        thread.Name = item.PortName + " GetTelNumber";
-                        thread.Start(item);
+                        //Thread thread = new Thread(new ParameterizedThreadStart(RequestTelNumber));
+                        //thread.Name = item.PortName + " GetTelNumber";
+                        //thread.Start(item);
+                        Task task = new Task(() => RequestTelNumber(item));
+                        task.RunSynchronously();
                     }
                 }                
             }

@@ -31,11 +31,10 @@ namespace SmsModemClient
         {
             manager = new ComPortManager(this);
             //подписываемся на события
-            foreach (var item in manager.activeComs)
-            {
-                item.NumberReceived += refreshButton_Click;
-                item.NumberReceived += manager.ComPortManager_NumberReceived;
-            }
+            //foreach (var item in manager.activeComs)
+            //{
+            //    item.NumberReceived += refreshButton_Click;
+            //}
 
             FillDatagrid();
 
