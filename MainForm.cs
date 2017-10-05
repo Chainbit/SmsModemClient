@@ -424,20 +424,30 @@ namespace SmsModemClient
 
         private void callButton_Click(object sender, EventArgs e)
         {
-            if (ussdRadio.Checked)
+            if (!string.IsNullOrEmpty(numberTextBox.Text))
             {
-                USSDCheckForm form = new USSDCheckForm();
-                form.Show();
-
-                foreach (var comm in manager.activeComs)
+                if (ussdRadio.Checked)
                 {
-                    Task<bool> ussdTask = Task.Run(new Func<bool>(()=>comm.SendUSSD(numberTextBox.Text)));
-                    form.GetTask(ussdTask, comm.TelNumber, "USSD");
-                }
-            }
-            else if (callRadio.Checked)
-            {
+                    USSDCheckForm form = new USSDCheckForm();
+                    form.Show();
 
+                    foreach (var comm in manager.activeComs)
+                    {
+                        Task<bool> ussdTask = Task.Run(new Func<bool>(() => comm.SendUSSD(numberTextBox.Text)));
+                        form.GetTask(ussdTask, comm.TelNumber, "USSD");
+                    }
+                }
+                else if (callRadio.Checked)
+                {
+                    USSDCheckForm form = new USSDCheckForm();
+                    form.Show();
+
+                    foreach (var comm in manager.activeComs)
+                    {
+                        Task<bool> callTask = Task.Run(new Func<bool>(() => comm.CallTo(numberTextBox.Text)));
+                        form.GetTask(callTask, comm.TelNumber, "Звонок");
+                    }
+                }
             }
         }
     }

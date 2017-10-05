@@ -27,7 +27,7 @@ namespace SmsModemClient
 
         private void USSDCheckForm_Load(object sender, EventArgs e)
         {
-            TaskCompleted += new Action(WaitForAnything);
+            TaskCompleted += new Action(()=>WaitForAnything());
         }
 
         public void GetTask(Task<bool> task, string telNumber, string taskType)
@@ -67,17 +67,22 @@ namespace SmsModemClient
         /// <summary>
         /// Ждет выполнения любой задачи
         /// </summary>
-        private async void WaitForAnything()
+        private async Task WaitForAnything()
         {
-            if (!_taskList.Values.Any(t=>t.IsCompleted))
-            {
-                isWaiting = true;
-                await Task.WhenAny(_taskList.Values.ToArray());
-                UpdateGrid();
-                isWaiting = false;
-                TaskCompleted();
-            }
+            await Task.Run(async () =>
+             {
+                 if (!_taskList.Values.Any(t => t.IsCompleted))
+                 {
+                     isWaiting = true;
+                     await Task.WhenAny(_taskList.Values.ToArray());
+                     UpdateGrid();
+                     isWaiting = false;
+                     TaskCompleted();
+                 }
+             });
         }
+
+        
 
         private void UpdateGrid()
         {
@@ -104,6 +109,11 @@ namespace SmsModemClient
                     (dataGridView1.Rows[rowIndex].Cells["Result"] as DataGridViewImageCell).Value = img;
                 }
             }
+        }
+
+        private Task<bool> UpdateResult()
+        {
+            return Task.Run(()=> { return true; });
         }
     }
 }

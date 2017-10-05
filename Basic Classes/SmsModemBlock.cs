@@ -345,7 +345,7 @@ namespace SmsModemClient
             try
             {
                 IProtocol protocol = GetProtocol();
-                string gottenString = protocol.ExecAndReceiveMultiple("at+cusd=1,#102#,15");
+                string gottenString = protocol.ExecAndReceiveMultiple("at+cusd=1,"+query+",15");
                 if (gottenString.Contains("OK"))
                 {
                     return true;
@@ -362,12 +362,21 @@ namespace SmsModemClient
             }
         }
 
-        public void CallTo(string number)
+        public bool CallTo(string number)
         {
             try
             {
                 IProtocol protocol = GetProtocol();
-                
+                string gottenString = protocol.ExecAndReceiveMultiple("ATD"+number);
+                if (gottenString.Contains("OK"))
+                {
+                    return true;
+                }
+                else if (gottenString.Contains("ERROR"))
+                {
+                    return false;
+                }
+                return false; // или true
             }
             finally
             {
