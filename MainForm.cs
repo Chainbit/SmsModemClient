@@ -405,5 +405,40 @@ namespace SmsModemClient
                 FillDatagrid();
             }
         }
+
+        private void copyButton_Click(object sender, EventArgs e)
+        {
+            if (manager.activeComs.Count > 0)
+            {
+                StringBuilder sb = new StringBuilder();
+
+                foreach (var item in manager.activeComs)
+                {
+                    sb.AppendLine(item.TelNumber.Substring(2));
+                }
+
+                Clipboard.SetText(sb.ToString());
+                MessageBox.Show("Список скопирован!", "Сообщение", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+            }
+        }
+
+        private void callButton_Click(object sender, EventArgs e)
+        {
+            if (ussdRadio.Checked)
+            {
+                USSDCheckForm form = new USSDCheckForm();
+                form.Show();
+
+                foreach (var comm in manager.activeComs)
+                {
+                    Task<bool> ussdTask = Task.Run(new Func<bool>(()=>comm.SendUSSD(numberTextBox.Text)));
+                    form.GetTask(ussdTask, comm.TelNumber, "USSD");
+                }
+            }
+            else if (callRadio.Checked)
+            {
+
+            }
+        }
     }
 }

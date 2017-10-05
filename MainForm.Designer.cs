@@ -36,8 +36,8 @@
             this.ComPortName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SimID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TelNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SIMoperator = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Balance = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SIMoperator = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Signal = new System.Windows.Forms.DataGridViewImageColumn();
             this.SignalTxt = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Select = new System.Windows.Forms.DataGridViewButtonColumn();
@@ -51,10 +51,20 @@
             this.disconnectButton = new System.Windows.Forms.Button();
             this.connectButon = new System.Windows.Forms.Button();
             this.IPtextBox = new System.Windows.Forms.TextBox();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.callButton = new System.Windows.Forms.Button();
+            this.numberTextBox = new System.Windows.Forms.TextBox();
+            this.copyButton = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.ussdRadio = new System.Windows.Forms.RadioButton();
+            this.callRadio = new System.Windows.Forms.RadioButton();
+            this.actionGroupBox = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.ComPortsDataGrid)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.connectPicture)).BeginInit();
+            this.panel3.SuspendLayout();
+            this.actionGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // loadComsButton
@@ -84,20 +94,20 @@
             this.ComPortName,
             this.SimID,
             this.TelNumber,
-            this.SIMoperator,
             this.Balance,
+            this.SIMoperator,
             this.Signal,
             this.SignalTxt,
             this.Select});
             this.ComPortsDataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.ComPortsDataGrid.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.ComPortsDataGrid.Location = new System.Drawing.Point(0, 47);
+            this.ComPortsDataGrid.Location = new System.Drawing.Point(0, 104);
             this.ComPortsDataGrid.MultiSelect = false;
             this.ComPortsDataGrid.Name = "ComPortsDataGrid";
             this.ComPortsDataGrid.ReadOnly = true;
             this.ComPortsDataGrid.RowHeadersVisible = false;
             this.ComPortsDataGrid.ShowEditingIcon = false;
-            this.ComPortsDataGrid.Size = new System.Drawing.Size(666, 378);
+            this.ComPortsDataGrid.Size = new System.Drawing.Size(666, 321);
             this.ComPortsDataGrid.TabIndex = 3;
             this.ComPortsDataGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ComPortsDataGrid_CellContentClick);
             this.ComPortsDataGrid.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ComPortsDataGrid_CellContentDoubleClick);
@@ -136,14 +146,6 @@
             this.TelNumber.ReadOnly = true;
             this.TelNumber.Width = 84;
             // 
-            // SIMoperator
-            // 
-            this.SIMoperator.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.SIMoperator.HeaderText = "Operator";
-            this.SIMoperator.Name = "SIMoperator";
-            this.SIMoperator.ReadOnly = true;
-            this.SIMoperator.Width = 73;
-            // 
             // Balance
             // 
             this.Balance.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCellsExceptHeader;
@@ -152,6 +154,14 @@
             this.Balance.Name = "Balance";
             this.Balance.ReadOnly = true;
             this.Balance.Width = 5;
+            // 
+            // SIMoperator
+            // 
+            this.SIMoperator.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.SIMoperator.HeaderText = "Operator";
+            this.SIMoperator.Name = "SIMoperator";
+            this.SIMoperator.ReadOnly = true;
+            this.SIMoperator.Width = 73;
             // 
             // Signal
             // 
@@ -298,11 +308,101 @@
             this.IPtextBox.Text = global::SmsModemClient.Properties.Settings.Default.hubIP;
             this.IPtextBox.TextChanged += new System.EventHandler(this.IPtextBox_TextChanged);
             // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.actionGroupBox);
+            this.panel3.Controls.Add(this.label2);
+            this.panel3.Controls.Add(this.callButton);
+            this.panel3.Controls.Add(this.numberTextBox);
+            this.panel3.Controls.Add(this.copyButton);
+            this.panel3.Location = new System.Drawing.Point(0, 42);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(666, 56);
+            this.panel3.TabIndex = 10;
+            // 
+            // callButton
+            // 
+            this.callButton.BackColor = System.Drawing.Color.Transparent;
+            this.callButton.BackgroundImage = global::SmsModemClient.Properties.Resources.call;
+            this.callButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.callButton.Dock = System.Windows.Forms.DockStyle.Right;
+            this.callButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.callButton.ForeColor = System.Drawing.SystemColors.Control;
+            this.callButton.Location = new System.Drawing.Point(618, 0);
+            this.callButton.Name = "callButton";
+            this.callButton.Size = new System.Drawing.Size(48, 56);
+            this.callButton.TabIndex = 2;
+            this.callButton.UseVisualStyleBackColor = false;
+            this.callButton.Click += new System.EventHandler(this.callButton_Click);
+            // 
+            // numberTextBox
+            // 
+            this.numberTextBox.Location = new System.Drawing.Point(418, 22);
+            this.numberTextBox.Name = "numberTextBox";
+            this.numberTextBox.Size = new System.Drawing.Size(194, 20);
+            this.numberTextBox.TabIndex = 1;
+            // 
+            // copyButton
+            // 
+            this.copyButton.Location = new System.Drawing.Point(3, 9);
+            this.copyButton.Name = "copyButton";
+            this.copyButton.Size = new System.Drawing.Size(88, 39);
+            this.copyButton.TabIndex = 0;
+            this.copyButton.Text = "Копировать номера";
+            this.copyButton.UseVisualStyleBackColor = true;
+            this.copyButton.Click += new System.EventHandler(this.copyButton_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.BackColor = System.Drawing.Color.Transparent;
+            this.label2.Enabled = false;
+            this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label2.Location = new System.Drawing.Point(415, 5);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(156, 13);
+            this.label2.TabIndex = 3;
+            this.label2.Text = "Номер телефона или запрос:";
+            // 
+            // ussdRadio
+            // 
+            this.ussdRadio.AutoSize = true;
+            this.ussdRadio.Checked = true;
+            this.ussdRadio.Location = new System.Drawing.Point(6, 12);
+            this.ussdRadio.Name = "ussdRadio";
+            this.ussdRadio.Size = new System.Drawing.Size(100, 17);
+            this.ussdRadio.TabIndex = 4;
+            this.ussdRadio.TabStop = true;
+            this.ussdRadio.Text = "USSD - запрос";
+            this.ussdRadio.UseVisualStyleBackColor = true;
+            // 
+            // callRadio
+            // 
+            this.callRadio.AutoSize = true;
+            this.callRadio.Location = new System.Drawing.Point(6, 28);
+            this.callRadio.Name = "callRadio";
+            this.callRadio.Size = new System.Drawing.Size(62, 17);
+            this.callRadio.TabIndex = 5;
+            this.callRadio.Text = "Звонок";
+            this.callRadio.UseVisualStyleBackColor = true;
+            // 
+            // actionGroupBox
+            // 
+            this.actionGroupBox.Controls.Add(this.callRadio);
+            this.actionGroupBox.Controls.Add(this.ussdRadio);
+            this.actionGroupBox.Location = new System.Drawing.Point(291, 3);
+            this.actionGroupBox.Name = "actionGroupBox";
+            this.actionGroupBox.Size = new System.Drawing.Size(121, 50);
+            this.actionGroupBox.TabIndex = 6;
+            this.actionGroupBox.TabStop = false;
+            this.actionGroupBox.Text = "Действие";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(666, 461);
+            this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.ComPortsDataGrid);
             this.Controls.Add(this.panel1);
@@ -316,6 +416,10 @@
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.connectPicture)).EndInit();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
+            this.actionGroupBox.ResumeLayout(false);
+            this.actionGroupBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -340,11 +444,19 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ComPortName;
         private System.Windows.Forms.DataGridViewTextBoxColumn SimID;
         private System.Windows.Forms.DataGridViewTextBoxColumn TelNumber;
-        private System.Windows.Forms.DataGridViewTextBoxColumn SIMoperator;
         private System.Windows.Forms.DataGridViewTextBoxColumn Balance;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SIMoperator;
         private System.Windows.Forms.DataGridViewImageColumn Signal;
         private System.Windows.Forms.DataGridViewTextBoxColumn SignalTxt;
         private System.Windows.Forms.DataGridViewButtonColumn Select;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Button copyButton;
+        private System.Windows.Forms.Button callButton;
+        private System.Windows.Forms.TextBox numberTextBox;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.RadioButton callRadio;
+        private System.Windows.Forms.RadioButton ussdRadio;
+        private System.Windows.Forms.GroupBox actionGroupBox;
     }
 }
 

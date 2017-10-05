@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="hubIP" Type="System.String" Scope="User">
-      <Value Profile="(Default)">http://25.41.201.124</Value>
+      <Value Profile="(Default)">http://simsimsms.ru/</Value>
     </Setting>
     <Setting Name="autoconnect" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>

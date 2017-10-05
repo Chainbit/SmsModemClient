@@ -331,6 +331,51 @@ namespace SmsModemClient
         }
 
         /// <summary>
+        /// Отправлляет USSD запрос (в одну сторону)
+        /// </summary>
+        /// <param name="query">Запрос</param>
+        public bool SendUSSD(string query)
+        {
+            if (query.StartsWith("*"))
+            {
+                StringBuilder sb = new StringBuilder(query);
+                sb[query.IndexOf('*')] = '#';
+                query = sb.ToString();
+            }
+            try
+            {
+                IProtocol protocol = GetProtocol();
+                string gottenString = protocol.ExecAndReceiveMultiple("at+cusd=1,#102#,15");
+                if (gottenString.Contains("OK"))
+                {
+                    return true;
+                }
+                else if (gottenString.Contains("ERROR"))
+                {
+                    return false;
+                }
+                return false; // или true
+            }
+            finally
+            {
+                ReleaseProtocol();
+            }
+        }
+
+        public void CallTo(string number)
+        {
+            try
+            {
+                IProtocol protocol = GetProtocol();
+                
+            }
+            finally
+            {
+                ReleaseProtocol();
+            }
+        }
+
+        /// <summary>
         /// Находит сообщение от оператора
         /// </summary>
         private bool HasBeelineSms()

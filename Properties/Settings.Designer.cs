@@ -25,7 +25,7 @@ namespace SmsModemClient.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://25.41.201.124")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://simsimsms.ru/")]
         public string hubIP {
             get {
                 return ((string)(this["hubIP"]));
