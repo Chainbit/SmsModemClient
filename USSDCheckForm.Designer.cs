@@ -28,10 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.TelNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TaskCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Result = new System.Windows.Forms.DataGridViewImageColumn();
+            this.ResultText = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ResultImg = new System.Windows.Forms.DataGridViewImageColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -44,7 +46,8 @@
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.TelNumber,
             this.TaskCol,
-            this.Result});
+            this.ResultText,
+            this.ResultImg});
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
             this.dataGridView1.Name = "dataGridView1";
@@ -52,6 +55,7 @@
             this.dataGridView1.RowHeadersVisible = false;
             this.dataGridView1.Size = new System.Drawing.Size(412, 321);
             this.dataGridView1.TabIndex = 0;
+            this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
             // 
             // TelNumber
             // 
@@ -65,12 +69,23 @@
             this.TaskCol.Name = "TaskCol";
             this.TaskCol.ReadOnly = true;
             // 
-            // Result
+            // ResultText
             // 
-            this.Result.HeaderText = "Результат";
-            this.Result.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom;
-            this.Result.Name = "Result";
-            this.Result.ReadOnly = true;
+            this.ResultText.HeaderText = "ResultText";
+            this.ResultText.Name = "ResultText";
+            this.ResultText.ReadOnly = true;
+            this.ResultText.Visible = false;
+            // 
+            // ResultImg
+            // 
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.NullValue = "System.Drawing.Bitmap";
+            this.ResultImg.DefaultCellStyle = dataGridViewCellStyle2;
+            this.ResultImg.HeaderText = "Результат";
+            this.ResultImg.Image = global::SmsModemClient.Properties.Resources.waiting;
+            this.ResultImg.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom;
+            this.ResultImg.Name = "ResultImg";
+            this.ResultImg.ReadOnly = true;
             // 
             // USSDCheckForm
             // 
@@ -91,6 +106,7 @@
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.DataGridViewTextBoxColumn TelNumber;
         private System.Windows.Forms.DataGridViewTextBoxColumn TaskCol;
-        private System.Windows.Forms.DataGridViewImageColumn Result;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ResultText;
+        private System.Windows.Forms.DataGridViewImageColumn ResultImg;
     }
 }

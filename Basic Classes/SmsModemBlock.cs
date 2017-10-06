@@ -346,15 +346,28 @@ namespace SmsModemClient
             {
                 IProtocol protocol = GetProtocol();
                 string gottenString = protocol.ExecAndReceiveMultiple("at+cusd=1,"+query+",15");
-                if (gottenString.Contains("OK"))
+                int i = 0;
+                do
+                {
+                    protocol.Receive(out gottenString);
+                    ++i;
+                    Thread.Sleep(300);
+                } while (!(i >= 5 || gottenString.Contains("+CUSD")));
+
+                if (gottenString.Contains("OK")||gottenString.Contains("+CUSD: 2"))
                 {
                     return true;
                 }
-                else if (gottenString.Contains("ERROR"))
+                else if (gottenString.Contains("ERROR")||gottenString.Contains("+CUSD: 4"))
                 {
                     return false;
                 }
+                
                 return false; // или true
+            }
+            catch (Exception ex)
+            {
+                return false;
             }
             finally
             {
@@ -362,21 +375,37 @@ namespace SmsModemClient
             }
         }
 
+        /// <summary>
+        /// Совершить звонок
+        /// </summary>
+        /// <param name="number">Номер для звонка</param>
+        /// <returns></returns>
         public bool CallTo(string number)
         {
             try
             {
                 IProtocol protocol = GetProtocol();
-                string gottenString = protocol.ExecAndReceiveMultiple("ATD"+number);
+                string gottenString = protocol.ExecAndReceiveMultiple("ATD"+number+";");
+                int i=0;
+                do
+                {
+                    protocol.Receive(out gottenString);
+                    ++i;
+                    Thread.Sleep(300);
+                } while (!(i >= 5 || gottenString.Contains("OK")));
                 if (gottenString.Contains("OK"))
                 {
                     return true;
                 }
-                else if (gottenString.Contains("ERROR"))
+                else if (gottenString.Contains("ERROR")||gottenString.Contains("CARRIER"))
                 {
                     return false;
                 }
                 return false; // или true
+            }
+            catch(Exception ex)
+            {
+                return false;
             }
             finally
             {

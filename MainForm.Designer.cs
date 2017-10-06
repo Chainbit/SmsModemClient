@@ -52,13 +52,13 @@
             this.connectButon = new System.Windows.Forms.Button();
             this.IPtextBox = new System.Windows.Forms.TextBox();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.actionGroupBox = new System.Windows.Forms.GroupBox();
+            this.callRadio = new System.Windows.Forms.RadioButton();
+            this.ussdRadio = new System.Windows.Forms.RadioButton();
+            this.label2 = new System.Windows.Forms.Label();
             this.callButton = new System.Windows.Forms.Button();
             this.numberTextBox = new System.Windows.Forms.TextBox();
             this.copyButton = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.ussdRadio = new System.Windows.Forms.RadioButton();
-            this.callRadio = new System.Windows.Forms.RadioButton();
-            this.actionGroupBox = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.ComPortsDataGrid)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -107,7 +107,7 @@
             this.ComPortsDataGrid.ReadOnly = true;
             this.ComPortsDataGrid.RowHeadersVisible = false;
             this.ComPortsDataGrid.ShowEditingIcon = false;
-            this.ComPortsDataGrid.Size = new System.Drawing.Size(666, 321);
+            this.ComPortsDataGrid.Size = new System.Drawing.Size(653, 321);
             this.ComPortsDataGrid.TabIndex = 3;
             this.ComPortsDataGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ComPortsDataGrid_CellContentClick);
             this.ComPortsDataGrid.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ComPortsDataGrid_CellContentDoubleClick);
@@ -195,7 +195,7 @@
             this.toggleAutoUpdateBtn.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toggleAutoUpdateBtn.Location = new System.Drawing.Point(323, 0);
             this.toggleAutoUpdateBtn.Name = "toggleAutoUpdateBtn";
-            this.toggleAutoUpdateBtn.Size = new System.Drawing.Size(195, 36);
+            this.toggleAutoUpdateBtn.Size = new System.Drawing.Size(182, 36);
             this.toggleAutoUpdateBtn.TabIndex = 6;
             this.toggleAutoUpdateBtn.Text = "Автообновление: ";
             this.toggleAutoUpdateBtn.UseVisualStyleBackColor = true;
@@ -204,7 +204,7 @@
             // refreshButton
             // 
             this.refreshButton.Dock = System.Windows.Forms.DockStyle.Right;
-            this.refreshButton.Location = new System.Drawing.Point(518, 0);
+            this.refreshButton.Location = new System.Drawing.Point(505, 0);
             this.refreshButton.Name = "refreshButton";
             this.refreshButton.Size = new System.Drawing.Size(148, 36);
             this.refreshButton.TabIndex = 7;
@@ -220,7 +220,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Location = new System.Drawing.Point(0, 425);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(666, 36);
+            this.panel1.Size = new System.Drawing.Size(653, 36);
             this.panel1.TabIndex = 8;
             // 
             // panel2
@@ -234,7 +234,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(666, 44);
+            this.panel2.Size = new System.Drawing.Size(653, 44);
             this.panel2.TabIndex = 9;
             // 
             // autoconnectCheckBox
@@ -243,7 +243,7 @@
             this.autoconnectCheckBox.AutoSize = true;
             this.autoconnectCheckBox.Checked = global::SmsModemClient.Properties.Settings.Default.autoconnect;
             this.autoconnectCheckBox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::SmsModemClient.Properties.Settings.Default, "autoconnect", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.autoconnectCheckBox.Location = new System.Drawing.Point(480, 12);
+            this.autoconnectCheckBox.Location = new System.Drawing.Point(467, 12);
             this.autoconnectCheckBox.Name = "autoconnectCheckBox";
             this.autoconnectCheckBox.Size = new System.Drawing.Size(180, 17);
             this.autoconnectCheckBox.TabIndex = 11;
@@ -276,7 +276,7 @@
             // 
             this.disconnectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.disconnectButton.Enabled = false;
-            this.disconnectButton.Location = new System.Drawing.Point(379, 10);
+            this.disconnectButton.Location = new System.Drawing.Point(366, 10);
             this.disconnectButton.Name = "disconnectButton";
             this.disconnectButton.Size = new System.Drawing.Size(96, 23);
             this.disconnectButton.TabIndex = 3;
@@ -287,7 +287,7 @@
             // connectButon
             // 
             this.connectButon.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.connectButon.Location = new System.Drawing.Point(273, 10);
+            this.connectButon.Location = new System.Drawing.Point(260, 10);
             this.connectButon.Name = "connectButon";
             this.connectButon.Size = new System.Drawing.Size(101, 23);
             this.connectButon.TabIndex = 2;
@@ -303,7 +303,7 @@
             this.IPtextBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::SmsModemClient.Properties.Settings.Default, "hubIP", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.IPtextBox.Location = new System.Drawing.Point(101, 11);
             this.IPtextBox.Name = "IPtextBox";
-            this.IPtextBox.Size = new System.Drawing.Size(167, 20);
+            this.IPtextBox.Size = new System.Drawing.Size(154, 20);
             this.IPtextBox.TabIndex = 1;
             this.IPtextBox.Text = global::SmsModemClient.Properties.Settings.Default.hubIP;
             this.IPtextBox.TextChanged += new System.EventHandler(this.IPtextBox_TextChanged);
@@ -315,54 +315,32 @@
             this.panel3.Controls.Add(this.callButton);
             this.panel3.Controls.Add(this.numberTextBox);
             this.panel3.Controls.Add(this.copyButton);
-            this.panel3.Location = new System.Drawing.Point(0, 42);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel3.Location = new System.Drawing.Point(0, 44);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(666, 56);
+            this.panel3.Size = new System.Drawing.Size(653, 56);
             this.panel3.TabIndex = 10;
             // 
-            // callButton
+            // actionGroupBox
             // 
-            this.callButton.BackColor = System.Drawing.Color.Transparent;
-            this.callButton.BackgroundImage = global::SmsModemClient.Properties.Resources.call;
-            this.callButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.callButton.Dock = System.Windows.Forms.DockStyle.Right;
-            this.callButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.callButton.ForeColor = System.Drawing.SystemColors.Control;
-            this.callButton.Location = new System.Drawing.Point(618, 0);
-            this.callButton.Name = "callButton";
-            this.callButton.Size = new System.Drawing.Size(48, 56);
-            this.callButton.TabIndex = 2;
-            this.callButton.UseVisualStyleBackColor = false;
-            this.callButton.Click += new System.EventHandler(this.callButton_Click);
+            this.actionGroupBox.Controls.Add(this.callRadio);
+            this.actionGroupBox.Controls.Add(this.ussdRadio);
+            this.actionGroupBox.Location = new System.Drawing.Point(291, 3);
+            this.actionGroupBox.Name = "actionGroupBox";
+            this.actionGroupBox.Size = new System.Drawing.Size(121, 50);
+            this.actionGroupBox.TabIndex = 6;
+            this.actionGroupBox.TabStop = false;
+            this.actionGroupBox.Text = "Действие";
             // 
-            // numberTextBox
+            // callRadio
             // 
-            this.numberTextBox.Location = new System.Drawing.Point(418, 22);
-            this.numberTextBox.Name = "numberTextBox";
-            this.numberTextBox.Size = new System.Drawing.Size(194, 20);
-            this.numberTextBox.TabIndex = 1;
-            // 
-            // copyButton
-            // 
-            this.copyButton.Location = new System.Drawing.Point(3, 9);
-            this.copyButton.Name = "copyButton";
-            this.copyButton.Size = new System.Drawing.Size(88, 39);
-            this.copyButton.TabIndex = 0;
-            this.copyButton.Text = "Копировать номера";
-            this.copyButton.UseVisualStyleBackColor = true;
-            this.copyButton.Click += new System.EventHandler(this.copyButton_Click);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.BackColor = System.Drawing.Color.Transparent;
-            this.label2.Enabled = false;
-            this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.label2.Location = new System.Drawing.Point(415, 5);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(156, 13);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Номер телефона или запрос:";
+            this.callRadio.AutoSize = true;
+            this.callRadio.Location = new System.Drawing.Point(6, 28);
+            this.callRadio.Name = "callRadio";
+            this.callRadio.Size = new System.Drawing.Size(62, 17);
+            this.callRadio.TabIndex = 5;
+            this.callRadio.Text = "Звонок";
+            this.callRadio.UseVisualStyleBackColor = true;
             // 
             // ussdRadio
             // 
@@ -376,32 +354,59 @@
             this.ussdRadio.Text = "USSD - запрос";
             this.ussdRadio.UseVisualStyleBackColor = true;
             // 
-            // callRadio
+            // label2
             // 
-            this.callRadio.AutoSize = true;
-            this.callRadio.Location = new System.Drawing.Point(6, 28);
-            this.callRadio.Name = "callRadio";
-            this.callRadio.Size = new System.Drawing.Size(62, 17);
-            this.callRadio.TabIndex = 5;
-            this.callRadio.Text = "Звонок";
-            this.callRadio.UseVisualStyleBackColor = true;
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label2.AutoSize = true;
+            this.label2.BackColor = System.Drawing.Color.Transparent;
+            this.label2.Enabled = false;
+            this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label2.Location = new System.Drawing.Point(419, 5);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(156, 13);
+            this.label2.TabIndex = 3;
+            this.label2.Text = "Номер телефона или запрос:";
             // 
-            // actionGroupBox
+            // callButton
             // 
-            this.actionGroupBox.Controls.Add(this.callRadio);
-            this.actionGroupBox.Controls.Add(this.ussdRadio);
-            this.actionGroupBox.Location = new System.Drawing.Point(291, 3);
-            this.actionGroupBox.Name = "actionGroupBox";
-            this.actionGroupBox.Size = new System.Drawing.Size(121, 50);
-            this.actionGroupBox.TabIndex = 6;
-            this.actionGroupBox.TabStop = false;
-            this.actionGroupBox.Text = "Действие";
+            this.callButton.BackColor = System.Drawing.Color.Transparent;
+            this.callButton.BackgroundImage = global::SmsModemClient.Properties.Resources.call;
+            this.callButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.callButton.Dock = System.Windows.Forms.DockStyle.Right;
+            this.callButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.callButton.ForeColor = System.Drawing.SystemColors.Control;
+            this.callButton.Location = new System.Drawing.Point(605, 0);
+            this.callButton.Name = "callButton";
+            this.callButton.Size = new System.Drawing.Size(48, 56);
+            this.callButton.TabIndex = 2;
+            this.callButton.UseVisualStyleBackColor = false;
+            this.callButton.Click += new System.EventHandler(this.callButton_Click);
+            // 
+            // numberTextBox
+            // 
+            this.numberTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numberTextBox.Location = new System.Drawing.Point(420, 22);
+            this.numberTextBox.Name = "numberTextBox";
+            this.numberTextBox.Size = new System.Drawing.Size(173, 20);
+            this.numberTextBox.TabIndex = 1;
+            // 
+            // copyButton
+            // 
+            this.copyButton.Location = new System.Drawing.Point(3, 9);
+            this.copyButton.Name = "copyButton";
+            this.copyButton.Size = new System.Drawing.Size(88, 39);
+            this.copyButton.TabIndex = 0;
+            this.copyButton.Text = "Копировать номера";
+            this.copyButton.UseVisualStyleBackColor = true;
+            this.copyButton.Click += new System.EventHandler(this.copyButton_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(666, 461);
+            this.ClientSize = new System.Drawing.Size(653, 461);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.ComPortsDataGrid);

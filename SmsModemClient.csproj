@@ -190,6 +190,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\waiting.png" />
     <None Include="Resources\stop.png" />
     <None Include="Resources\ok.ico" />
     <None Include="Resources\excellent.ico" />

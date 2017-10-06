@@ -18,7 +18,6 @@ namespace SmsModemClient
         /// Вызывается, когда задача завершена
         /// </summary>
         private event Action TaskCompleted;
-        private bool isWaiting = false;
 
         public USSDCheckForm()
         {
@@ -27,93 +26,96 @@ namespace SmsModemClient
 
         private void USSDCheckForm_Load(object sender, EventArgs e)
         {
-            TaskCompleted += new Action(()=>WaitForAnything());
         }
 
-        public void GetTask(Task<bool> task, string telNumber, string taskType)
+        public async void GetTask(Task<bool> task, string telNumber, string taskType)
         {
             _taskList.Add(telNumber, task);
-            if (!isWaiting)
-            {
-                WaitForAnything();
-            }
+            task.ContinueWith(t => UpdateGrid(t));
 
+            await FillDataGridAsync(task, telNumber, taskType);
+        }
+
+        /// <summary>
+        /// Асинхронный вызов Метода <see cref="FillDataGrid(Task{bool}, string, string)"/>
+        /// </summary>
+        private Task FillDataGridAsync(Task<bool> task, string telNumber, string taskType)
+        {
+            return Task.Run(() =>
+            {
+                FillDataGrid(task, telNumber, taskType);
+            });
+        }
+
+        /// <summary>
+        /// Заполняет DataGridView переданными значениями
+        /// </summary>
+        /// <param name="task">Задача</param>
+        /// <param name="telNumber">Номер телефона</param>
+        /// <param name="taskType">Тип задачи</param>
+        private void FillDataGrid(Task<bool> task, string telNumber, string taskType)
+        {
+            if (this.InvokeRequired)
+            {
+                Invoke(new Action(() => FillDataGrid(task, telNumber, taskType)));
+                return;
+            }
             var i = dataGridView1.Rows.Add();
             dataGridView1.Rows[i].Cells["TelNumber"].Value = telNumber;
             dataGridView1.Rows[i].Cells["TaskCol"].Value = taskType;
 
-            var state = task.Result;
-            Bitmap img;
-            if (task.IsCompleted)
+            if (task.IsFaulted)//если что-то пошло не так
             {
-                if (task.Result == true)
-                {
-                    img = Properties.Resources.check;
-                    (dataGridView1.Rows[i].Cells["Result"] as DataGridViewImageCell).Value = img;
-                }
-                else
-                {
-                    img = Properties.Resources.stop;
-                    (dataGridView1.Rows[i].Cells["Result"] as DataGridViewImageCell).Value = img;
-                }
-            }
-            else if (task.IsFaulted)
-            {
-                img = Properties.Resources.disconnected;
-                (dataGridView1.Rows[i].Cells["Result"] as DataGridViewImageCell).Value = img;
+                Bitmap img = Properties.Resources.disconnected;
+                (dataGridView1.Rows[i].Cells["ResultImg"] as DataGridViewImageCell).Value = img;
             }
         }
 
         /// <summary>
-        /// Ждет выполнения любой задачи
+        /// Обновление датагрида
         /// </summary>
-        private async Task WaitForAnything()
+        /// <param name="t">Задача</param>
+        private void UpdateGrid(Task<bool> t)
         {
-            await Task.Run(async () =>
-             {
-                 if (!_taskList.Values.Any(t => t.IsCompleted))
-                 {
-                     isWaiting = true;
-                     await Task.WhenAny(_taskList.Values.ToArray());
-                     UpdateGrid();
-                     isWaiting = false;
-                     TaskCompleted();
-                 }
-             });
+            var searchValue = _taskList.First(pair => pair.Value == t).Key;
+            //перебираем все таски
+            int rowIndex = 0;
+
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                //если находим ряд с этой задачей, получаем его номер
+                if (row.Cells["TelNumber"].Value.ToString().Equals(searchValue))
+                {
+                    rowIndex = row.Index;
+                    break;
+                }
+            }
+            dataGridView1.Rows[rowIndex].Cells["ResultText"].Value = t.Result;
         }
 
-        
-
-        private void UpdateGrid()
+        private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            //перебираем все таски
-            foreach (var item in _taskList)
+            if (e.ColumnIndex == 2 && e.RowIndex != -1)
             {
-                string searchValue = item.Key;
-                int rowIndex = -1;
-                foreach (DataGridViewRow row in dataGridView1.Rows)
-                {
-                    //если находим ряд с этой задачей, получаем его номер
-                    if (row.Cells[1].Value.ToString().Equals(searchValue))
-                    {
-                        rowIndex = row.Index;
-                        break;
-                    }
-                }
-                // ну и обновляем картинку
-                var completed = item.Value.Result;
-                Bitmap img;
-                if (completed)
-                {
-                    img = Properties.Resources.check;
-                    (dataGridView1.Rows[rowIndex].Cells["Result"] as DataGridViewImageCell).Value = img;
-                }
+                SetImageInDatagrid(e.RowIndex);
             }
         }
 
-        private Task<bool> UpdateResult()
-        {
-            return Task.Run(()=> { return true; });
+        /// <summary>
+        /// Выставляет картинку для ряда
+        /// </summary>
+        /// <param name="rowIndex">Индекс ряда</param>
+        private void SetImageInDatagrid(int rowIndex)
+        {                        
+            var row = dataGridView1.Rows[rowIndex];            
+            if ((bool)row.Cells["ResultText"].Value) //если значение в соседней ячейке true
+            {
+                row.Cells["ResultImg"].Value = Properties.Resources.check;
+            }
+            else
+            {
+                row.Cells["ResultImg"].Value = Properties.Resources.stop;
+            }
         }
     }
 }

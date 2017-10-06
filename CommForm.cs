@@ -363,26 +363,29 @@ namespace SmsModemClient
             }
         }
 
-        private void sendButton_Click(object sender, EventArgs e)
+        private async void sendButton_Click(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(request.Text))
             {
-                lock (this)
+                await Task.Run(() =>
                 {
-                    try
+                    lock (comm)
                     {
-                        comm.GetProtocol().ExecAndReceiveMultiple(request.Text);
+                        try
+                        {
+                            comm.GetProtocol().ExecAndReceiveMultiple(request.Text);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                        }
+                        finally
+                        {
+                            System.Threading.Thread.Sleep(2000);
+                            comm.ReleaseProtocol();
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message);
-                    }
-                    finally
-                    {
-                        System.Threading.Thread.Sleep(2000);
-                        comm.ReleaseProtocol();
-                    }
-                }                
+                });           
             }
         }
 
@@ -394,26 +397,29 @@ namespace SmsModemClient
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
-            lock (this)
+            await Task.Run(() =>
             {
-                string temp;
-                try
+                lock (comm)
                 {
-                    comm.GetProtocol().Receive(out temp);
-                    Log(temp);
+                    string temp;
+                    try
+                    {
+                        comm.GetProtocol().Receive(out temp);
+                        Log(temp);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                    finally
+                    {
+                        System.Threading.Thread.Sleep(2000);
+                        comm.ReleaseProtocol();
+                    }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-                finally
-                {
-                    System.Threading.Thread.Sleep(2000);
-                    comm.ReleaseProtocol();
-                }
-            }
+            });
         }
     }
 }

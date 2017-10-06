@@ -434,7 +434,7 @@ namespace SmsModemClient
                     foreach (var comm in manager.activeComs)
                     {
                         Task<bool> ussdTask = Task.Run(new Func<bool>(() => comm.SendUSSD(numberTextBox.Text)));
-                        form.GetTask(ussdTask, comm.TelNumber, "USSD");
+                        form.GetTask(ussdTask, comm.TelNumber, "USSD "+numberTextBox.Text);
                     }
                 }
                 else if (callRadio.Checked)
@@ -445,7 +445,7 @@ namespace SmsModemClient
                     foreach (var comm in manager.activeComs)
                     {
                         Task<bool> callTask = Task.Run(new Func<bool>(() => comm.CallTo(numberTextBox.Text)));
-                        form.GetTask(callTask, comm.TelNumber, "Звонок");
+                        form.GetTask(callTask, comm.TelNumber, "Звонок "+numberTextBox.Text);
                     }
                 }
             }

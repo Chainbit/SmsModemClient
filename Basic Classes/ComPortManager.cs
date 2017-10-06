@@ -58,6 +58,7 @@ namespace SmsModemClient
             // дальше работаем с листом
             activeComs = activeComsQueue.ToList();
             GC.Collect();
+            Subscribe();
             GetModemTels();
             //SetPortsReady(); //проверить, есть ли симки!
 
@@ -68,6 +69,8 @@ namespace SmsModemClient
             foreach (var item in activeComs)
             {
                 item.NumberReceived += ComPortManager_NumberReceived;
+                //item.PhoneDisconnected += new EventHandler((sender,e) =>activeComs.Remove(item));
+                //item.PhoneConnected += new EventHandler((sender, e)=>activeComs.Add(item));
             }
         }
 
