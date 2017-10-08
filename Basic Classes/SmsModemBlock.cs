@@ -223,9 +223,38 @@ namespace SmsModemClient
         }
 
         /// <summary>
+        /// Получить номер телефона
+        /// </summary>
+        public void GetTelNumber()
+        {
+            this.SetWaiting(true);
+            try
+            {
+                switch (this.Operator.ToLower())
+                {
+                    case "beeline":
+                        this.GetNumBeeline();
+                        break;
+                    case "megafon":
+                        this.GetNumMegafon();
+                        break;
+                    case "mts rus":
+                        this.GetNumMTS();
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, this.PortName);
+            }
+        }
+
+        /// <summary>
         /// Запрашивет номер у Билайна
         /// </summary>
-        public async void GetNumBeeline()
+        private async void GetNumBeeline()
         {
             await WaitSMSBeeline();
         }
@@ -233,7 +262,7 @@ namespace SmsModemClient
         /// <summary>
         /// Запрашивет номер у Билайна
         /// </summary>
-        public async void GetNumMTS()
+        private async void GetNumMTS()
         {
             await WaitSMSMTS();
         }
@@ -241,7 +270,7 @@ namespace SmsModemClient
         /// <summary>
         /// Получает номер от Мегафона
         /// </summary>
-        public void GetNumMegafon()
+        private void GetNumMegafon()
         {
             // тут вроде все просто
             lock (this)
@@ -293,7 +322,7 @@ namespace SmsModemClient
             {
                 try
                 {
-                    IProtocol protocol = GetProtocol();
+                    IProtocol protocol = GetProtocol();                    
                     string gottenString = protocol.ExecAndReceiveMultiple("at+cusd=1,#102#,15");
                     string resp = string.Empty;
                     int i = 0;
@@ -301,14 +330,18 @@ namespace SmsModemClient
                     {
                         do
                         {
-                            protocol.Receive(out gottenString);
+                            string temp;
+                            protocol.Receive(out temp);
+                            gottenString += temp;
                             ++i;
-                        } while (!(i >= 5 || gottenString.Contains("+CUSD")));
+                        } while (!(i >= 8 || gottenString.Contains("+CUSD")));
                     }
                     if (gottenString.Contains("Vash balans") && !gottenString.Contains("aktiviruyetsya"))
                     {
                         int Pos1 = gottenString.IndexOf("Vash balans") + ("Vash balans").Length;
                         int Pos2 = gottenString.IndexOf(" r");
+                        System.Diagnostics.Debug.WriteLine(gottenString);
+                        System.Diagnostics.Debug.WriteLine(Pos1 + " " + Pos2);
                         string temp = gottenString.Substring(Pos1, Pos2 - Pos1).Trim();
                         temp = temp.Replace('.', ',');
                         Balance = decimal.Parse(temp);
@@ -320,7 +353,7 @@ namespace SmsModemClient
                 }
                 catch (Exception ex)
                 {
-                    var x = ex.Message;
+                    ErrorLog.LogError(ex);
                 }
                 finally
                 {
@@ -349,10 +382,12 @@ namespace SmsModemClient
                 int i = 0;
                 do
                 {
-                    protocol.Receive(out gottenString);
-                    ++i;
                     Thread.Sleep(300);
-                } while (!(i >= 5 || gottenString.Contains("+CUSD")));
+                    string temp;
+                    protocol.Receive(out temp);
+                    gottenString += temp;
+                    ++i;                    
+                } while (!(i >= 8 || gottenString.Contains("+CUSD")));
 
                 if (gottenString.Contains("OK")||gottenString.Contains("+CUSD: 2"))
                 {
@@ -367,6 +402,7 @@ namespace SmsModemClient
             }
             catch (Exception ex)
             {
+                ErrorLog.LogError(ex);
                 return false;
             }
             finally
@@ -389,7 +425,9 @@ namespace SmsModemClient
                 int i=0;
                 do
                 {
-                    protocol.Receive(out gottenString);
+                    string temp;
+                    protocol.Receive(out temp);
+                    gottenString += temp;
                     ++i;
                     Thread.Sleep(300);
                 } while (!(i >= 5 || gottenString.Contains("OK")));
@@ -397,14 +435,15 @@ namespace SmsModemClient
                 {
                     return true;
                 }
-                else if (gottenString.Contains("ERROR")||gottenString.Contains("CARRIER"))
+                else if (gottenString.Contains("ERROR"))//||gottenString.Contains("CARRIER"))
                 {
                     return false;
                 }
-                return false; // или true
+                return true; // или true
             }
             catch(Exception ex)
             {
+                ErrorLog.LogError(ex);
                 return false;
             }
             finally

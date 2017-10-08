@@ -219,28 +219,7 @@ namespace SmsModemClient
         public void RequestTelNumber(object b)
         {
             SmsModemBlock block = (SmsModemBlock)b;
-            block.SetWaiting(true);
-            try
-            {
-                switch (block.Operator.ToLower())
-                {
-                    case "beeline":
-                        block.GetNumBeeline();
-                        break;
-                    case "megafon":
-                        block.GetNumMegafon();
-                        break;
-                    case "mts rus":
-                        block.GetNumMTS();
-                        break;
-                    default:
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, block.PortName);
-            }
+            block.GetTelNumber();
         }
 
         /// <summary>

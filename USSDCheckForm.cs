@@ -117,5 +117,13 @@ namespace SmsModemClient
                 row.Cells["ResultImg"].Value = Properties.Resources.stop;
             }
         }
+
+        private void USSDCheckForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            foreach (var pair in _taskList)
+            {
+                pair.Value.Dispose();
+            }
+        }
     }
 }

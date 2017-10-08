@@ -28,12 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.TelNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TaskCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ResultText = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ResultImg = new System.Windows.Forms.DataGridViewImageColumn();
+            this.Response = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -47,13 +48,14 @@
             this.TelNumber,
             this.TaskCol,
             this.ResultText,
-            this.ResultImg});
+            this.ResultImg,
+            this.Response});
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.RowHeadersVisible = false;
-            this.dataGridView1.Size = new System.Drawing.Size(412, 321);
+            this.dataGridView1.Size = new System.Drawing.Size(501, 321);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
             // 
@@ -78,23 +80,35 @@
             // 
             // ResultImg
             // 
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.NullValue = "System.Drawing.Bitmap";
-            this.ResultImg.DefaultCellStyle = dataGridViewCellStyle2;
+            this.ResultImg.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.NullValue = "System.Drawing.Bitmap";
+            this.ResultImg.DefaultCellStyle = dataGridViewCellStyle1;
             this.ResultImg.HeaderText = "Результат";
             this.ResultImg.Image = global::SmsModemClient.Properties.Resources.waiting;
             this.ResultImg.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom;
             this.ResultImg.Name = "ResultImg";
             this.ResultImg.ReadOnly = true;
+            this.ResultImg.Width = 65;
+            // 
+            // Response
+            // 
+            this.Response.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.Response.FillWeight = 150F;
+            this.Response.HeaderText = "Ответ";
+            this.Response.Name = "Response";
+            this.Response.ReadOnly = true;
+            this.Response.Width = 62;
             // 
             // USSDCheckForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(412, 321);
+            this.ClientSize = new System.Drawing.Size(501, 321);
             this.Controls.Add(this.dataGridView1);
             this.Name = "USSDCheckForm";
             this.Text = "USSDCheckForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.USSDCheckForm_FormClosing);
             this.Load += new System.EventHandler(this.USSDCheckForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
@@ -108,5 +122,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn TaskCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn ResultText;
         private System.Windows.Forms.DataGridViewImageColumn ResultImg;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Response;
     }
 }

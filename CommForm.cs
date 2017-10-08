@@ -70,8 +70,8 @@ namespace SmsModemClient
 
         private void CommForm_Load(object sender, EventArgs e)
         {
-            comm.MessageReceived += new MessageReceivedEventHandler(comm_MessageReceived);
             comm.LoglineAdded += new LoglineAddedEventHandler(Main_LoglineAdded);
+            comm.MessageReceived += new MessageReceivedEventHandler(comm_MessageReceived);
         }
 
         /// <summary>
@@ -377,6 +377,7 @@ namespace SmsModemClient
                         }
                         catch (Exception ex)
                         {
+                            ErrorLog.LogError(ex);
                             MessageBox.Show(ex.Message);
                         }
                         finally

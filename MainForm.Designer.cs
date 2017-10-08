@@ -45,12 +45,10 @@
             this.refreshButton = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.autoconnectCheckBox = new System.Windows.Forms.CheckBox();
             this.connectPicture = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.disconnectButton = new System.Windows.Forms.Button();
             this.connectButon = new System.Windows.Forms.Button();
-            this.IPtextBox = new System.Windows.Forms.TextBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.actionGroupBox = new System.Windows.Forms.GroupBox();
             this.callRadio = new System.Windows.Forms.RadioButton();
@@ -59,6 +57,8 @@
             this.callButton = new System.Windows.Forms.Button();
             this.numberTextBox = new System.Windows.Forms.TextBox();
             this.copyButton = new System.Windows.Forms.Button();
+            this.autoconnectCheckBox = new System.Windows.Forms.CheckBox();
+            this.IPtextBox = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.ComPortsDataGrid)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -107,7 +107,7 @@
             this.ComPortsDataGrid.ReadOnly = true;
             this.ComPortsDataGrid.RowHeadersVisible = false;
             this.ComPortsDataGrid.ShowEditingIcon = false;
-            this.ComPortsDataGrid.Size = new System.Drawing.Size(653, 321);
+            this.ComPortsDataGrid.Size = new System.Drawing.Size(677, 321);
             this.ComPortsDataGrid.TabIndex = 3;
             this.ComPortsDataGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ComPortsDataGrid_CellContentClick);
             this.ComPortsDataGrid.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ComPortsDataGrid_CellContentDoubleClick);
@@ -195,7 +195,7 @@
             this.toggleAutoUpdateBtn.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toggleAutoUpdateBtn.Location = new System.Drawing.Point(323, 0);
             this.toggleAutoUpdateBtn.Name = "toggleAutoUpdateBtn";
-            this.toggleAutoUpdateBtn.Size = new System.Drawing.Size(182, 36);
+            this.toggleAutoUpdateBtn.Size = new System.Drawing.Size(206, 36);
             this.toggleAutoUpdateBtn.TabIndex = 6;
             this.toggleAutoUpdateBtn.Text = "Автообновление: ";
             this.toggleAutoUpdateBtn.UseVisualStyleBackColor = true;
@@ -204,7 +204,7 @@
             // refreshButton
             // 
             this.refreshButton.Dock = System.Windows.Forms.DockStyle.Right;
-            this.refreshButton.Location = new System.Drawing.Point(505, 0);
+            this.refreshButton.Location = new System.Drawing.Point(529, 0);
             this.refreshButton.Name = "refreshButton";
             this.refreshButton.Size = new System.Drawing.Size(148, 36);
             this.refreshButton.TabIndex = 7;
@@ -220,7 +220,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Location = new System.Drawing.Point(0, 425);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(653, 36);
+            this.panel1.Size = new System.Drawing.Size(677, 36);
             this.panel1.TabIndex = 8;
             // 
             // panel2
@@ -234,22 +234,8 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(653, 44);
+            this.panel2.Size = new System.Drawing.Size(677, 44);
             this.panel2.TabIndex = 9;
-            // 
-            // autoconnectCheckBox
-            // 
-            this.autoconnectCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.autoconnectCheckBox.AutoSize = true;
-            this.autoconnectCheckBox.Checked = global::SmsModemClient.Properties.Settings.Default.autoconnect;
-            this.autoconnectCheckBox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::SmsModemClient.Properties.Settings.Default, "autoconnect", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.autoconnectCheckBox.Location = new System.Drawing.Point(467, 12);
-            this.autoconnectCheckBox.Name = "autoconnectCheckBox";
-            this.autoconnectCheckBox.Size = new System.Drawing.Size(180, 17);
-            this.autoconnectCheckBox.TabIndex = 11;
-            this.autoconnectCheckBox.Text = "Подключаться автоматически";
-            this.autoconnectCheckBox.UseVisualStyleBackColor = true;
-            this.autoconnectCheckBox.CheckedChanged += new System.EventHandler(this.autoconnectCheckBox_CheckedChanged);
             // 
             // connectPicture
             // 
@@ -276,7 +262,7 @@
             // 
             this.disconnectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.disconnectButton.Enabled = false;
-            this.disconnectButton.Location = new System.Drawing.Point(366, 10);
+            this.disconnectButton.Location = new System.Drawing.Point(390, 10);
             this.disconnectButton.Name = "disconnectButton";
             this.disconnectButton.Size = new System.Drawing.Size(96, 23);
             this.disconnectButton.TabIndex = 3;
@@ -287,26 +273,13 @@
             // connectButon
             // 
             this.connectButon.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.connectButon.Location = new System.Drawing.Point(260, 10);
+            this.connectButon.Location = new System.Drawing.Point(284, 10);
             this.connectButon.Name = "connectButon";
             this.connectButon.Size = new System.Drawing.Size(101, 23);
             this.connectButon.TabIndex = 2;
             this.connectButon.Text = "Подключиться";
             this.connectButon.UseVisualStyleBackColor = true;
             this.connectButon.Click += new System.EventHandler(this.connectButon_Click);
-            // 
-            // IPtextBox
-            // 
-            this.IPtextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.IPtextBox.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.IPtextBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::SmsModemClient.Properties.Settings.Default, "hubIP", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.IPtextBox.Location = new System.Drawing.Point(101, 11);
-            this.IPtextBox.Name = "IPtextBox";
-            this.IPtextBox.Size = new System.Drawing.Size(154, 20);
-            this.IPtextBox.TabIndex = 1;
-            this.IPtextBox.Text = global::SmsModemClient.Properties.Settings.Default.hubIP;
-            this.IPtextBox.TextChanged += new System.EventHandler(this.IPtextBox_TextChanged);
             // 
             // panel3
             // 
@@ -318,7 +291,7 @@
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel3.Location = new System.Drawing.Point(0, 44);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(653, 56);
+            this.panel3.Size = new System.Drawing.Size(677, 56);
             this.panel3.TabIndex = 10;
             // 
             // actionGroupBox
@@ -376,7 +349,7 @@
             this.callButton.Dock = System.Windows.Forms.DockStyle.Right;
             this.callButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.callButton.ForeColor = System.Drawing.SystemColors.Control;
-            this.callButton.Location = new System.Drawing.Point(605, 0);
+            this.callButton.Location = new System.Drawing.Point(629, 0);
             this.callButton.Name = "callButton";
             this.callButton.Size = new System.Drawing.Size(48, 56);
             this.callButton.TabIndex = 2;
@@ -389,7 +362,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numberTextBox.Location = new System.Drawing.Point(420, 22);
             this.numberTextBox.Name = "numberTextBox";
-            this.numberTextBox.Size = new System.Drawing.Size(173, 20);
+            this.numberTextBox.Size = new System.Drawing.Size(197, 20);
             this.numberTextBox.TabIndex = 1;
             // 
             // copyButton
@@ -402,11 +375,38 @@
             this.copyButton.UseVisualStyleBackColor = true;
             this.copyButton.Click += new System.EventHandler(this.copyButton_Click);
             // 
+            // autoconnectCheckBox
+            // 
+            this.autoconnectCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.autoconnectCheckBox.AutoSize = true;
+            this.autoconnectCheckBox.Checked = global::SmsModemClient.Properties.Settings.Default.autoconnect;
+            this.autoconnectCheckBox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::SmsModemClient.Properties.Settings.Default, "autoconnect", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.autoconnectCheckBox.Location = new System.Drawing.Point(491, 12);
+            this.autoconnectCheckBox.Name = "autoconnectCheckBox";
+            this.autoconnectCheckBox.Size = new System.Drawing.Size(180, 17);
+            this.autoconnectCheckBox.TabIndex = 11;
+            this.autoconnectCheckBox.Text = "Подключаться автоматически";
+            this.autoconnectCheckBox.UseVisualStyleBackColor = true;
+            this.autoconnectCheckBox.CheckedChanged += new System.EventHandler(this.autoconnectCheckBox_CheckedChanged);
+            // 
+            // IPtextBox
+            // 
+            this.IPtextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.IPtextBox.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.IPtextBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::SmsModemClient.Properties.Settings.Default, "hubIP", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.IPtextBox.Location = new System.Drawing.Point(101, 11);
+            this.IPtextBox.Name = "IPtextBox";
+            this.IPtextBox.Size = new System.Drawing.Size(178, 20);
+            this.IPtextBox.TabIndex = 1;
+            this.IPtextBox.Text = global::SmsModemClient.Properties.Settings.Default.hubIP;
+            this.IPtextBox.TextChanged += new System.EventHandler(this.IPtextBox_TextChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(653, 461);
+            this.ClientSize = new System.Drawing.Size(677, 461);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.ComPortsDataGrid);

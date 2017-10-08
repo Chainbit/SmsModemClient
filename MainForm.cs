@@ -30,11 +30,6 @@ namespace SmsModemClient
         private void MainForm_Load(object sender, EventArgs e)
         {
             manager = new ComPortManager(this);
-            //подписываемся на события
-            //foreach (var item in manager.activeComs)
-            //{
-            //    item.NumberReceived += refreshButton_Click;
-            //}
 
             FillDatagrid();
 
@@ -159,53 +154,6 @@ namespace SmsModemClient
                 }
             }
         }
-
-        /// <summary>
-        /// метод для перекраски ячеек
-        /// </summary>
-        /// <param name="i"> номер ячейки</param>
-        private void CheckIfOpen(int i)
-        {
-            ComPortsDataGrid.Rows[i].Cells["isOpen"].Value = manager.activeComs[i].IsOpen();
-            var x = ComPortsDataGrid.Rows[i].Cells["ComPortName"].Value;
-
-            if (manager.activeComs[i].IsOpen() == false)
-            {
-                ComPortsDataGrid.Rows[i].Cells["isOpen"].Style.BackColor = Color.Red;
-            }
-            else
-            {
-                ComPortsDataGrid.Rows[i].Cells["isOpen"].Style.BackColor = Color.Green;
-            }
-        }
-
-        /// <summary>
-        /// метод для перекраски ячеек
-        /// </summary>
-        /// <param name="i"> номер ячейки</param>
-        private void CheckIfOpen(SmsModemBlock port)
-        {
-            int i=0;
-            foreach (DataGridViewRow row in ComPortsDataGrid.Rows)
-            {
-                if (row.Cells["ComPortName"].Value.ToString().Contains(port.PortName))
-                {
-                    i = row.Index;
-                }
-            }
-
-            ComPortsDataGrid.Rows[i].Cells["isOpen"].Value = port.IsOpen();
-
-            if (port.IsOpen() == false)
-            {
-                ComPortsDataGrid.Rows[i].Cells["isOpen"].Style.BackColor = Color.Red;
-            }
-            else
-            {
-                ComPortsDataGrid.Rows[i].Cells["isOpen"].Style.BackColor = Color.Green;
-            }
-        }
-
 
         /// <summary>
         /// Включено ли автообновление
@@ -403,6 +351,20 @@ namespace SmsModemClient
 
                 port.GetBalance();
                 FillDatagrid();
+            }else if (senderGrid.Columns[e.ColumnIndex] == ComPortsDataGrid.Columns["TelNumber"])
+            {
+                var telNumber = senderGrid.Rows[e.RowIndex].Cells["TelNumber"].Value.ToString();
+                if (telNumber.ToLower().Contains("ошибка"))
+                {
+                    var portName = senderGrid.Rows[e.RowIndex].Cells["ComPortName"].Value.ToString();
+                    var port = manager.activeComs.Find(com => com.PortName == portName);
+
+                    port.GetTelNumber();
+                    FillDatagrid();
+                }
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine(telNumber.Substring(2));
+                Clipboard.SetText(sb.ToString());
             }
         }
 
